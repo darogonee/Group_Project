@@ -1,0 +1,13 @@
+body{
+    background: #d4e7f4;
+}
+
+p{
+    color: rgb(255, 0, 0);
+    font-size: 32pt;
+}
+
+.h{
+    color: greenyellow;
+    padding: center;
+}
