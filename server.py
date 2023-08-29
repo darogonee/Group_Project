@@ -14,7 +14,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(bytes("<p>Request: %s</p>" % self.path, "utf-8"))
         self.wfile.write(bytes("<body>", "utf-8"))
         self.wfile.write(bytes("<p>This is an example web server.</p>", "utf-8"))
-        self.wfile.write(bytes("<a href='/abfjkhafbjhafjbhkafsbhjabjhkf/vasfghjasbhkj'>button</a>", "utf-8"))
+        self.wfile.write(bytes("<a href='https://www.andrews.edu/~theron/red%20page.html'>Red Button</a>", "utf-8"))
         self.wfile.write(bytes("</body></html>", "utf-8"))
 
 if __name__ == "__main__":        
