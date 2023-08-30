@@ -48,13 +48,18 @@ header = {'Authorization': 'Bearer ' + access_token}
 # The first loop, request_page_number will be set to one, so it requests the first page. Increment this number after
 # each request, so the next time we request the second page, then third, and so on...
 request_page_num = 1
+print(request_page_num)
 all_activities = []
+print(all_activities)
 
+
+# FIXME this part seems unnessasery
 while True:
     param = {'per_page': 200, 'page': request_page_num}
+    print(param)
     # initial request, where we request the first page of activities
     my_dataset = requests.get(activites_url, headers=header, params=param).json()
-
+    print(my_dataset)
     # check the response to make sure it is not empty. If it is empty, that means there is no more data left. So if you have
     # 1000 activities, on the 6th request, where we request page 6, there would be no more data left, so we will break out of the loop
     if len(my_dataset) == 0:
