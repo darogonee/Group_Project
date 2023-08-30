@@ -1,28 +1,3 @@
-# import requests
-
-# activate_url = "https://www.strava.com/api/v3/athlete/activities"
-
-# header = {'Authoriation': 'bearer' + "36d07eace45f649858cbbdbc6b00be92f3c88771"}
-# param = {'per page': 200, 'page': 1}
-# my_dataset = requests.get(activate_url, headers = header, params = param).json()
-
-
-# print(my_dataset)
-
-
-# import requests
-# import json
-
-# url="https://www.strava.com/api/v3/athlete/activities"
-
-# api_key = "36d07eace45f649858cbbdbc6b00be92f3c88771"
-
-# # city = input("which city -> ")
-# repsone = requests.get(url+api_key).content
-# # weather = json.loads(repsone)
-# print(repsone)
-
-
 import requests
 import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -40,7 +15,9 @@ payload = {
 
 print("Requesting Token...\n")
 res = requests.post(auth_url, data=payload, verify=False)
+print(res.json())
 access_token = res.json()['access_token']
+
 
 print("Access Token = {}\n".format(access_token))
 header = {'Authorization': 'Bearer ' + access_token}
