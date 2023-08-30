@@ -1,2 +1,2 @@
-print("Hi")
+print("Oliver you are gay")
 
