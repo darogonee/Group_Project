@@ -11,3 +11,8 @@ p{
     color: greenyellow;
     padding: center;
 }
+
+a{
+    text-align: center;
+    color: red;
+}
