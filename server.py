@@ -1,7 +1,11 @@
 # Python 3 server example
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time, os
+import Api
 
+Activity_data = Api.get_user_activites()
+print("Activity Name -", Activity_data[0]["name"])
+print("Activity Distance -", round(Activity_data[0]["distance"]/1000, 2),"km")
+print("Activity Time-", Activity_data[0]["moving_time"]/60,"/",round(Activity_data[0]["elapsed_time"]/60, 1),"m")
 
 hostName = "localhost"
 serverPort = 8080
@@ -16,7 +20,7 @@ class MyServer(BaseHTTPRequestHandler):
                 with open("web_templates/activities.html", "r") as activities_file:
                     with open("web_templates/activity.html", "r") as activity_file:
                         activity = activity_file.read()
-                        activity = activity.replace("template_name", )
+                        # activity = activity.replace("template_name", Api.get_user_activites()[0])
 
                         activity_final = (activities_file.read().replace("template_activities", activity))
                         self.wfile.write(bytes(activity_final))
