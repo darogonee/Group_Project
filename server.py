@@ -23,7 +23,7 @@ class MyServer(BaseHTTPRequestHandler):
                         activity = activity_file.read()
                         
                         Activity_data = Api.get_user_activites()
-
+                        
                         while i < 5:                           
                             activity = activity.replace("template_name", str(Activity_data[i]["name"]))
                             activity = activity.replace("template_type", str(Activity_data[i]["type"]))
