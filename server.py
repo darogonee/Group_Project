@@ -13,8 +13,15 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("index.html", "rb") as file:
-                    self.wfile.write(file.read().replace(b"Recent_Activites", b"Recent Activite's"))
+                with open("web_templates/activities.html", "r") as activities_file:
+                    with open("web_templates/activity.html", "r") as activity_file:
+                        activity = activity_file.read()
+                        activity = activity.replace("template_name", )
+
+                        activity_final = (activities_file.read().replace("template_activities", activity))
+                        self.wfile.write(bytes(activity_final))
+
+
                 # with open("activite.json", "rb") as file:
                 #     self.wfile.write(file.read())
 
