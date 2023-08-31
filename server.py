@@ -5,7 +5,7 @@ import time, os
 
 hostName = "localhost"
 serverPort = 8080
-
+u = b"hi"
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
         match self.path:
@@ -15,9 +15,8 @@ class MyServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("index.html", "rb") as file:
                     self.wfile.write(file.read().replace(b"Recent_Activites", b"Recent Activite's"))
-
-                    # with open("activite.json", "rb") as activtes:
-                        # self.wfile.write(file.read().replace(b"Recent_Activites", b"Recent Activite's"))
+                # with open("activite.json", "rb") as file:
+                #     self.wfile.write(file.read())
 
             case "/main.css":
                 self.send_response(200)
