@@ -21,22 +21,23 @@ class MyServer(BaseHTTPRequestHandler):
                 with open("web_templates/activities.html", "r") as activities_file:
                     with open("web_templates/activity.html", "r") as activity_file:
                         activity = activity_file.read()
+
+                        tbody = ""
                         
-                        Activity_data = Api.get_user_activites()
-                        
-                        while i < 5:                           
+                        while i < 5:  
+                            Activity_data = Api.get_user_activites()                         
                             activity = activity.replace("template_name", str(Activity_data[i]["name"]))
                             activity = activity.replace("template_type", str(Activity_data[i]["type"]))
-                            activity = activity.replace("template_distancekm", str(round(Activity_data[i]["distance"]/1000, 2)))
-                            activity = activity.replace("template_time", str(round(Activity_data[i]["moving_time"]/60, 1)))
-                            activity = activity.replace("template_elevgain", str(Activity_data[i]["total_elevation_gain"]))
+                            activity = activity.replace("template_distancekm", str(round(Activity_data[i]["distance"]/1000, 2))+" km")
+                            activity = activity.replace("template_time", str(round(Activity_data[i]["moving_time"]/60, 1))+" m")
+                            activity = activity.replace("template_elevgain", str(Activity_data[i]["total_elevation_gain"])+" m")
 
-
-
-                            activity_final = activities_file.read().replace("template_activities", activity*5)
-                            
-                            self.wfile.write(activity_final.encode())
+                            tbody += activity
                             i += 1
+
+                        activity_final = activities_file.read().replace("template_activities", tbody)
+                            
+                        self.wfile.write(activity_final.encode())
 
 
 
