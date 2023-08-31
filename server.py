@@ -12,7 +12,6 @@ serverPort = 8080
 u = b"hi"
 class MyServer(BaseHTTPRequestHandler):
     def do_GET(self):
-        i = 0
         match self.path:
             case  "/":
                 self.send_response(200)
@@ -23,16 +22,20 @@ class MyServer(BaseHTTPRequestHandler):
                         activity = activity_file.read()
 
                         tbody = ""
+                        i = 0
                         
                         while i < 5:  
-                            Activity_data = Api.get_user_activites()                         
-                            activity = activity.replace("template_name", str(Activity_data[i]["name"]))
-                            activity = activity.replace("template_type", str(Activity_data[i]["type"]))
-                            activity = activity.replace("template_distancekm", str(round(Activity_data[i]["distance"]/1000, 2))+" km")
-                            activity = activity.replace("template_time", str(round(Activity_data[i]["moving_time"]/60, 1))+" m")
-                            activity = activity.replace("template_elevgain", str(Activity_data[i]["total_elevation_gain"])+" m")
+                            print(i)
+                            Activity_data = Api.get_user_activites()[i]                      
+                            activity = activity.replace("template_name", str(Activity_data["name"]))
+                            activity = activity.replace("template_type", str(Activity_data["type"]))
+                            activity = activity.replace("template_distancekm", str(round(Activity_data["distance"]/1000, 2))+" km")
+                            activity = activity.replace("template_time", str(round(Activity_data["moving_time"]/60, 1))+" m")
+                            activity = activity.replace("template_elevgain", str(Activity_data["total_elevation_gain"])+" m")
 
                             tbody += activity
+                            # do i need to reset  the template body
+                            print(tbody)
                             i += 1
 
                         activity_final = activities_file.read().replace("template_activities", tbody)
