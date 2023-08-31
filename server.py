@@ -14,19 +14,25 @@ class MyServer(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 with open("index.html", "rb") as file:
-                    self.wfile.write(file.read().replace(b"hi", b"by"))
+                    self.wfile.write(file.read().replace(b"Recent_Activites", b"Recent Activite's"))
+
+                    # with open("activite.json", "rb") as activtes:
+                        # self.wfile.write(file.read().replace(b"Recent_Activites", b"Recent Activite's"))
+
             case "/main.css":
                 self.send_response(200)
                 self.send_header("Content-type", "text/css")
                 self.end_headers()
                 with open("main.css", "rb") as file:
                     self.wfile.write(file.read())
+
             case "/test":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 with open("index.html", "rb") as file:
-                    self.wfile.write(file.read().replace(b"hi", b"byfgdhjty"))
+                    self.wfile.write(file.read().replace(b"Recent_Activites", b"egegeg Activite's"))
+
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)
     print("Server started http://%s:%s" % (hostName, serverPort))
