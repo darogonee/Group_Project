@@ -26,7 +26,7 @@ class MyServer(BaseHTTPRequestHandler):
                         Activity_data = Api.get_user_activites() 
 
                         # change the number to how ever many activities you want to load
-                        while i < 200:      
+                        while i < 12:      
                             activity = activity_template                 
                             activity = activity.replace("template_name", str(Activity_data[i]["name"]))
                             activity = activity.replace("template_type", str(Activity_data[i]["type"]))
