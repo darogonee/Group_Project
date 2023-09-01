@@ -26,7 +26,9 @@ class MyServer(BaseHTTPRequestHandler):
                         Activity_data = Api.get_user_activites() 
 
                         # change the number to how ever many activities you want to load
-                        while i < 12:      
+                        while i < 12:  
+                            # if str(Activity_data[i]["name"]) != "Run":
+                            #     i += 1    
                             activity = activity_template                 
                             activity = activity.replace("template_name", str(Activity_data[i]["name"]))
                             activity = activity.replace("template_type", str(Activity_data[i]["type"]))
@@ -47,7 +49,7 @@ class MyServer(BaseHTTPRequestHandler):
                 with open("main.css", "rb") as file:
                     self.wfile.write(file.read())
 
-            case "/test":
+            case "/swim":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
