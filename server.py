@@ -19,30 +19,26 @@ class MyServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("web_templates/activities.html", "r") as activities_file:
                     with open("web_templates/activity.html", "r") as activity_file:
-                        activity = activity_file.read()
+                        activity_template = activity_file.read()
 
                         tbody = ""
                         i = 0
-                        
-                        while i < 5:  
-                            print(i)
-                            Activity_data = Api.get_user_activites()[i]                      
-                            activity = activity.replace("template_name", str(Activity_data["name"]))
-                            activity = activity.replace("template_type", str(Activity_data["type"]))
-                            activity = activity.replace("template_distancekm", str(round(Activity_data["distance"]/1000, 2))+" km")
-                            activity = activity.replace("template_time", str(round(Activity_data["moving_time"]/60, 1))+" m")
-                            activity = activity.replace("template_elevgain", str(Activity_data["total_elevation_gain"])+" m")
+                        Activity_data = Api.get_user_activites() 
+
+                        # change the 5 to how ever many activities you want to load
+                        while i < 5:      
+                            activity = activity_template                 
+                            activity = activity.replace("template_name", str(Activity_data[i]["name"]))
+                            activity = activity.replace("template_type", str(Activity_data[i]["type"]))
+                            activity = activity.replace("template_distancekm", str(round(Activity_data[i]["distance"]/1000, 2))+" km")
+                            activity = activity.replace("template_time", str(round(Activity_data[i]["moving_time"]/60, 1))+" m")
+                            activity = activity.replace("template_elevgain", str(Activity_data[i]["total_elevation_gain"])+" m")
 
                             tbody += activity
-                            # do i need to reset  the template body
-                            print(tbody)
                             i += 1
 
-                        activity_final = activities_file.read().replace("template_activities", tbody)
-                            
+                        activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
-
-
 
             case "/main.css":
                 self.send_response(200)
