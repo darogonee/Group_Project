@@ -27,6 +27,9 @@ class MyServer(BaseHTTPRequestHandler):
                 with open("web_templates/activities.html", "r") as activities_file:
                     with open("web_templates/activity.html", "r") as activity_file:
                         activity_template = activity_file.read()
+
+                        # later check
+                        Api.save(*Api.refresh_tokens(Api.client_id, Api.client_secret, Api.refresh_token), "users/me.json")
                         Activity_data = Api.get_user_activites()
                         tbody = ""
                          
