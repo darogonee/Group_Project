@@ -9,8 +9,15 @@ import Api
 
 hostName = "localhost"
 serverPort = 8080
-u = b"hi"
+
 class MyServer(BaseHTTPRequestHandler):
+    def redirect(self, link):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        with open("web_templates/redirect.html", "r") as file:
+            self.wfile.write(file.read().replace("url", link).encode())
+
     def do_GET(self):
         match self.path:
             case  "/":
@@ -47,11 +54,7 @@ class MyServer(BaseHTTPRequestHandler):
                     self.wfile.write(file.read())
 
             case "/swim":
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                with open("index.html", "rb") as file:
-                    self.wfile.write(file.read().replace(b"Recent_Activites", b"egegeg Activite's"))
+                self.redirect("/oauth")
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)

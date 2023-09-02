@@ -1,43 +1,31 @@
-import requests, json, urllib3
+import requests, json
 
-client_id = "112868"
-client_secret = "6357af21299074aba1ea779a5edac54131293873"
+user_info = json.load(open("users/me.json"))
+refresh_token = user_info["refresh_token"]
+access_token = user_info["access_token"]
+
+strava_api = json.load(open("strava_api.json"))
+client_secret = strava_api["client_secret"]
+client_id = strava_api["client_id"]
+
 code = "edbe9c425bc0c0c19a5580502ff01553f429ad1d"
 
-# res = requests.post(f"https://www.strava.com/oauth/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code")
-# with open("respones.json", "w") as file:
-#     json.dump(res.json(), file)
+def get_access(client_id, client_secret, code):
+    res = requests.post(f"https://www.strava.com/oauth/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code").json()
+    return res["access_token"], res["refresh_token"]
 
 
-refresh_toekn = "003ec2f9a8d3bdc38a569989fda4a6ce595c4988"
-
-res = requests.post(f"https://www.strava.com/oauth/token?client_id={client_id}&client_secret={client_secret}&refresh_token={refresh_toekn}&grant_type=refresh_token")
-with open("respones.json", "w") as file:
-    json.dump(res.json(), file)
+def refresh_tokens(client_id, client_secret, refresh_token):
+    res = requests.post(f"https://www.strava.com/oauth/token?client_id={client_id}&client_secret={client_secret}&refresh_token={refresh_token}&grant_type=refresh_token").json()
+    return res["access_token"], res["refresh_token"]
 
 
 def get_user_activites():
-    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-    auth_url = "https://www.strava.com/oauth/token"
     activites_url = "https://www.strava.com/api/v3/athlete/activities"
 
-    payload = {
-        'client_id': client_id,
-        'client_secret': client_secret,
-        'refresh_token': refresh_toekn,
-        'grant_type': "refresh_token",
-        'f': 'json'
-    }
-
-    print("Requesting Token...\n")
-    res = requests.post(auth_url, data=payload, verify=False)
-    access_token = res.json()['access_token']
-    print("Access Token = {}\n".format(access_token))
-
-    header = {'Authorization': 'Bearer ' + access_token}
+    header = {'Authorization': 'Bearer ' + refresh_tokens(client_id, client_secret, refresh_token)[0]}
     param = {'per_page': 200, 'page': 1}
-    my_dataset = requests.get(activites_url, headers=header, params=param).json()
+    my_dataset = requests.get(activites_url, headers = header, params = param).json()
 
     with open("activite.json", "w") as file:
         json.dump(my_dataset, file)
