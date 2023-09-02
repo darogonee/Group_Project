@@ -20,15 +20,13 @@ class MyServer(BaseHTTPRequestHandler):
                 with open("web_templates/activities.html", "r") as activities_file:
                     with open("web_templates/activity.html", "r") as activity_file:
                         activity_template = activity_file.read()
-
+                        Activity_data = Api.get_user_activites()
                         tbody = ""
-                        i = 0
-                        Activity_data = Api.get_user_activites() 
-
+                         
                         # change the number to how ever many activities you want to load
-                        while i < 12:  
+                        for i in range(12):  
                             # if str(Activity_data[i]["name"]) != "Run":
-                            #     i += 1    
+                              
                             activity = activity_template                 
                             activity = activity.replace("template_name", str(Activity_data[i]["name"]))
                             activity = activity.replace("template_type", str(Activity_data[i]["type"]))
@@ -37,7 +35,6 @@ class MyServer(BaseHTTPRequestHandler):
                             activity = activity.replace("template_elevgain", str(Activity_data[i]["total_elevation_gain"])+" m")
 
                             tbody += activity
-                            i += 1
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
