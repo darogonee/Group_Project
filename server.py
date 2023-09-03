@@ -1,6 +1,6 @@
 # Python 3 server example
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import Api
+import Api, os
 
 
 # print("Activity Name -", Activity_data["name"])
@@ -19,8 +19,11 @@ class MyServer(BaseHTTPRequestHandler):
             self.wfile.write(file.read().replace("url", link).encode())
 
     def do_GET(self):
-        match self.path:
+        match self.path.split("?")[0]:
             case  "/":
+                if not os.path.exists("users/me.json"):
+                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
+                    return
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -48,6 +51,17 @@ class MyServer(BaseHTTPRequestHandler):
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
+            case "/oauth":
+                quire_string = self.path.split("?")[1].split("&")
+                values = {}
+                for quire in quire_string:
+                    name = quire.split("=")[0]
+                    value = quire.split("=")[1]
+                    values[name] = value
+                code = values["code"]
+                                           
+                Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), "users/me.json")
+                self.redirect("/")
 
             case "/main.css":
                 self.send_response(200)
@@ -55,9 +69,6 @@ class MyServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("main.css", "rb") as file:
                     self.wfile.write(file.read())
-
-            case "/swim":
-                self.redirect("/oauth")
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)
