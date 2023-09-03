@@ -1,5 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import Api, os, random
+import datetime
+import time
 
 hostName = "localhost"
 serverPort = 8080
@@ -27,20 +29,34 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         # later check
                         Api.save(*Api.refresh_tokens(Api.client_id, Api.client_secret, Api.refresh_token), "users/me.json")
-                        Activity_data = Api.get_user_activites()
+                        activity_data = Api.get_user_activites()
                         tbody = ""
                          
                         # change the number to how ever many activities you want to load
-                        for i in range(12):  
-                            activity = activity_template                 
-                            activity = activity.replace("template_name", str(Activity_data[i]["name"]))
-                            activity = activity.replace("template_type", str(Activity_data[i]["type"]))
-                            activity = activity.replace("template_distancekm", str(round(Activity_data[i]["distance"]/1000, 2))+" km")
-                            activity = activity.replace("template_time", str(round(Activity_data[i]["moving_time"]/60, 1))+" m")
-                            activity = activity.replace("template_elevgain", str(Activity_data[i]["total_elevation_gain"])+" m")
-                            activity = activity.replace("template_date", str(Activity_data[i]["start_date"]))
+                        table_activity_data = []
+                        # change the 5 to how ever many activities you want to load
+                        for i in range(12):      
+                            activity = activity_template 
+                            activity = activity.replace("template_type", str(activity_data[i]["type"])) 
+
+                            input_datetime = datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+                            formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
+                            activity = activity.replace("template_date", str(formatted_date))
+
+                            activity = activity.replace("template_name", str(activity_data[i]["name"]))
+            
+                            formatted_time = time.strftime('%H:%M:%S', time.gmtime(activity_data[i]["moving_time"]))
+                                                           
+                            activity = activity.replace("template_time", str(formatted_time))
+                            distancekm = round(activity_data[i]["distance"]/1000, 2)
+                            activity = activity.replace("template_distancekm", str(distancekm)+" km")
+                            activity = activity.replace("template_elevgain", str(activity_data[i]["total_elevation_gain"])+" m")
 
                             tbody += activity
+
+                            table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
+
+
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
             case "/oauth":
@@ -64,10 +80,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(file.read())
 
             case "/dosomething":
-                self.send_response(200)
-                self.send_header("Content-type", "text/text")
-                self.end_headers()
-                self.wfile.write(random.choice(["hello", "hi", "hey"]).encode())
+                # self.send_response(200)
+                # self.send_header("Content-type", "text/text")
+                # self.end_headers()
+                # self.wfile.write(random.choice(["hello", "hi", "hey"]).encode())
+                activity_data_to_print =  activity_data[:5]
+                sorted_workouts = sorted(activity_data_to_print, key=lambda x: x["name"])
+                for workout in sorted_workouts:
+                    print(workout["name"])
+                print("Button clicked! Doing something...")
+
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), FittnessServer)
