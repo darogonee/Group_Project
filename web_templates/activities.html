@@ -9,61 +9,42 @@
 </head>
 <body>
 
-  <h1>Activitie's</h1>
+
+    <div class="container">
+        <nav class="navbar">
+            <ul>
+                <li><img src="temp_logo.png">3ffqrefr</li>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Activities</a></li>
+                <li><a href="#">My Program</a></li>
+                <li><a href="#">Food & Water</a></li>
+                <li class="dropdown">
+                  <a href="#"><img src="cycle.png">f34f34</a>
+                  <ul class="dropdown-content">
+                    <li><a href="#">My Profile</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Log out</a></li>
+                  </ul>
+                </li>
+                <li><a href="#"><img src="temp_logo.png"></a></li>
+            </ul>
+        </nav>
+    </div>
 
 
-    <!--Sorting options/search bar-->
+        </div>
+      </div>
+    </div>
+    <p>Home</p>
+    <p class="h">kk</p>
     <table>
       <thead>
         <tr>
-          <th>
-            <div class="dropdown">
-              <span>Type</span>
-              <div class="dropdown-content">
-                <p></p><a href="swim">Swim</p></a>
-                <p></p><a>Ride</p></a>
-                <p></p><a>Run</p></a>
-                <p></p><a>Gym</p></a>
-                <p></p><a>Triathlon</p></a>
-                <p></p><a>Walk</p></a>
-              </div>
-            </div>
-          </th>
-          <th>
-            <div class="dropdown">
-              <span>Distance</span>
-              <div class="dropdown-content">
-                <p></p><a>Lenght</p></a>
-                <p></p><a>Shortness</p></a>
-              </div>
-            </div>
-          </th>
-          <th>
-            <div class="dropdown">
-              <span>Time</span>
-              <div class="dropdown-content">
-                <p></p><a>Lenght</p></a>
-                <p></p><a>Shortness</p></a>
-                <p></p><a>Past</p></a>
-                <p></p><a>Recent</p></a>
-              </div>
-            </div>
-          </th>
-          <th>
-            <input type="text" placeholder="Search..">
-          </th>
-        </tr>
-      </thead>               
-    </table>
-
-    <!--Activates-->
-    <table>
-      <thead>
-        <tr>
-          <th>Workout</th>
           <th>Workout type</th>
-          <th>Distance</th>
+          <th>Date</th>
+          <th><button id="title_button">Title</button></th>
           <th>Time</th>
+          <th>Distance</th>
           <th>Elevation Gain</th>
         </tr>
       </thead>
@@ -73,7 +54,14 @@
         </tbody>
         
       </table>
-    <!-- <a href="test">Test</a> -->
+    <a href="test">Test</a>
 
+    <script>
+      document.getElementById("title_button").addEventListener("click", function() {
+        fetch("/dosomething", {
+            method: "GET"
+        })
+      });
+    </script>
 </body>
 </html>
