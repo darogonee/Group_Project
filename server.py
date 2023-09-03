@@ -61,6 +61,7 @@ class MyServer(BaseHTTPRequestHandler):
                 code = values["code"]
                                            
                 Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), "users/me.json")
+                Api.load()
                 self.redirect("/")
 
             case "/main.css":
