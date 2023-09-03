@@ -89,7 +89,14 @@ class FittnessServer(BaseHTTPRequestHandler):
                 for workout in sorted_workouts:
                     print(workout["name"])
                 print("Button clicked! Doing something...")
-
+            
+            case "/Home":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open(b"web_templates/home.html", "r") as file:
+                    home_page = file.read()                        
+                    self.wfile.write(home_page.encode())
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), FittnessServer)
