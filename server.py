@@ -1,5 +1,6 @@
 # Python 3 server example
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import random
 import Api, os
 
 
@@ -70,6 +71,12 @@ class MyServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("main.css", "rb") as file:
                     self.wfile.write(file.read())
+
+            case "/dosomething":
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                self.wfile.write(random.choice(["hello", "hi", "hey"]).encode())
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), MyServer)
