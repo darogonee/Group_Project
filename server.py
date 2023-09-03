@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import Api, os, random
-import datetime
+from datetime import datetime
 import time
 
 hostName = "localhost"
