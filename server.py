@@ -1,17 +1,10 @@
-# Python 3 server example
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import random
-import Api, os
-
-
-# print("Activity Name -", Activity_data["name"])
-# print("Activity Distance -", round(Activity_data["distance"]/1000, 2),"km")
-# print("Activity Time-", round(Activity_data["moving_time"]/60, 1),"m","/",round(Activity_data["elapsed_time"]/60, 1),"m")
+import Api, os, random
 
 hostName = "localhost"
 serverPort = 8080
 
-class MyServer(BaseHTTPRequestHandler):
+class FittnessServer(BaseHTTPRequestHandler):
     def redirect(self, link):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
@@ -39,17 +32,15 @@ class MyServer(BaseHTTPRequestHandler):
                          
                         # change the number to how ever many activities you want to load
                         for i in range(12):  
-                            # if str(Activity_data[i]["name"]) != "Run":
-                              
                             activity = activity_template                 
                             activity = activity.replace("template_name", str(Activity_data[i]["name"]))
                             activity = activity.replace("template_type", str(Activity_data[i]["type"]))
                             activity = activity.replace("template_distancekm", str(round(Activity_data[i]["distance"]/1000, 2))+" km")
                             activity = activity.replace("template_time", str(round(Activity_data[i]["moving_time"]/60, 1))+" m")
                             activity = activity.replace("template_elevgain", str(Activity_data[i]["total_elevation_gain"])+" m")
+                            activity = activity.replace("template_date", str(Activity_data[i]["start_date"]))
 
                             tbody += activity
-
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
             case "/oauth":
@@ -74,20 +65,16 @@ class MyServer(BaseHTTPRequestHandler):
 
             case "/dosomething":
                 self.send_response(200)
-                self.send_header("Content-type", "text/css")
+                self.send_header("Content-type", "text/text")
                 self.end_headers()
                 self.wfile.write(random.choice(["hello", "hi", "hey"]).encode())
 
 if __name__ == "__main__":        
-    webServer = HTTPServer((hostName, serverPort), MyServer)
-    print("Server started http://%s:%s" % (hostName, serverPort))
-
+    webServer = HTTPServer((hostName, serverPort), FittnessServer)
+    print(f"Server started http://{hostName}:{serverPort}")
     try:
         webServer.serve_forever(1)
     except KeyboardInterrupt:
         pass
-
     webServer.server_close()
     print("Server stopped.")
-
-# test
