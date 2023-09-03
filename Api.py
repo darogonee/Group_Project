@@ -40,5 +40,5 @@ def save(access_token, refresh_token, path):
                 "refresh_token": refresh_token,
                 "access_token": access_token
             },
-            file
+            file, indent = 4
         )
