@@ -22,6 +22,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                     return
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
+
+                # cookies
+                self.send_header("Set-Cookie", "user=oliver")
+                print(self.headers.get("Cookie").split(";"))
+
                 self.end_headers()
                 with open("web_templates/activities.html", "r") as activities_file:
                     with open("web_templates/activity.html", "r") as activity_file:
