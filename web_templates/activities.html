@@ -1,72 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="main.css">
-    <title>Fitness</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="main.css">
+  <title>Fitness</title>
 </head>
+
 <body>
-    <div class="container">
-        <nav class="navbar">
-            <ul>
-                <li><img src="/images/temp_logo.png"></li>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Activities</a></li>
-                <li><a href="#">My Program</a></li>
-                <li><a href="#">Food & Water</a></li>
-                <li class="dropdown">
-                  <a href="#"><img src="/images/user_icon.webp"></a>
-                  <ul class="dropdown-content">
-                    <li><a href="#">My Profile</a></li>
-                    <li><a href="#">Settings</a></li>
-                    <li><a href="#">Log out</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#"><img src="/images/plus.png"></a>
-                  <ul class="dropdown-content">
-                    <li><a href="#">Log exercise</a></li>
-                    <li><a href="#">Log food</a></li>
-                    <li><a href="#">Log water</a></li>
-                  </ul>
-                </li>
-            </ul>
-        </nav>
-    </div>
+  <div class="container">
+    <nav class="navbar">
+      <ul>
+        <li><img src="/images/temp_logo.png"></li>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Activities</a></li>
+        <li><a href="#">My Program</a></li>
+        <li><a href="#">Food & Water</a></li>
+        <li class="dropdown">
+          <a href="#"><img src="/images/user_icon.webp"></a>
+          <ul class="dropdown-content">
+            <li><a href="#">My Profile</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Log out</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a href="#"><img src="/images/plus.png"></a>
+          <ul class="dropdown-content">
+            <li><a href="#">Log exercise</a></li>
+            <li><a href="#">Log food</a></li>
+            <li><a href="#">Log water</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
 
-        </div>
-      </div>
-    </div>
-    <p>Home</p>
-    <table>
-      <thead>
-        <tr>
-          <th>Workout type</th>
-          <th>Date</th>
-          <th><button id="title_button">Title</button></th>
-          <th>Time</th>
-          <th>Distance</th>
-          <th>Elevation Gain</th>
-        </tr>
-      </thead>
-        
-        <tbody>
-            template_activities
-        </tbody>
-        
-      </table>
-    <a href="test">Test</a>
+  </div>
+  </div>
+  </div>
+  <p>Home</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Workout type</th>
+        <th>Date</th>
+        <th><button id="title_button">Title</button></th>
+        <th>Time</th>
+        <th>Distance</th>
+        <th>Elevation Gain</th>
+      </tr>
+    </thead>
 
-    <script>
-      document.getElementById("title_button").addEventListener("click", function() {
-        fetch("/dosomething", {
-            method: "GET"
-        }).then(response => response.text()).then(text => {
-            this.innerText = text;
-        });
+    <tbody>
+      template_activities
+    </tbody>
+
+  </table>
+  <a href="test">Test</a>
+
+  <script>
+    document.getElementById("title_button").addEventListener("click", function () {
+      fetch("/dosomething", {
+        method: "GET"
+      }).then(response => response.text()).then(text => {
+        this.innerText = text;
       });
-    </script>
+    });
+  </script>
 </body>
+
 </html>
