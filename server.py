@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import Api, os, random
 from datetime import datetime
-import time
+import time, json
 
 hostName = "localhost"
 serverPort = 8080
@@ -22,10 +22,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     return
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
-
-                # cookies
-                self.send_header("Set-Cookie", "user=oliver")
-                print(self.headers.get("Cookie").split(";"))
 
                 self.end_headers()
                 with open("web_templates/activities.html", "r") as activities_file:
@@ -95,13 +91,46 @@ class FittnessServer(BaseHTTPRequestHandler):
                     print(workout["name"])
                 print("Button clicked! Doing something...")
             
-            case "/Home":
+            case "/signin":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open(b"web_templates/home.html", "r") as file:
-                    home_page = file.read()                        
-                    self.wfile.write(home_page.encode())
+                with open("web_templates/login.html", "r") as file:
+                    login_page = file.read()                        
+                    self.wfile.write(login_page.encode())
+
+            case "/login":
+                quire_string = self.path.split("?")[1].split("&")
+                values = {}
+                for quire in quire_string:
+                    name = quire.split("=")[0]
+                    value = quire.split("=")[1]
+                    values[name] = value
+                username = values["username"]
+                password = values["password"]
+                print(username, password)
+
+
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                with open("passwords.json", "r") as file:
+                    data = json.load(file)  
+                if password == data[username]:
+                    self.send_header("Set-Cookie", f"user={username}")
+                self.end_headers()
+                with open("web_templates/redirect.html", "r") as file:
+                    self.wfile.write(file.read().replace("url", "/").encode())
+           
+                
+            case _:
+                self.send_response(200)
+                file_type = self.path.split(".")[-1]
+                self.send_header("Content-type", f"image/{file_type}")
+                self.end_headers()
+                with open("."+self.path, "rb") as file:
+                    file_data = file.read()                        
+                    self.wfile.write(file_data)
+
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), FittnessServer)
