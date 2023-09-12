@@ -127,6 +127,51 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("home.html", "rb") as file:
                     self.wfile.write(file.read())
+
+            case "/activities.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                with open("activities.html", "rb") as file:
+                    self.wfile.write(file.read())
+
+
+            case "/myprogram.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                with open("myprogram.html", "rb") as file:
+                    self.wfile.write(file.read())
+
+            case "/food&water.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                with open("food&water.html", "rb") as file:
+                    self.wfile.write(file.read())
+
+
+            case "/logexercise.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                with open("logexercise.html", "rb") as file:
+                    self.wfile.write(file.read())
+
+            case "/logfood&water.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                with open("logfood&water.html", "rb") as file:
+                    self.wfile.write(file.read())
+
+            case "/myprofile.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                with open("myprofile.html", "rb") as file:
+                    self.wfile.write(file.read())
+                
                 
             case _:
                 self.send_response(200)
