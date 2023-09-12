@@ -120,7 +120,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("web_templates/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/").encode())
-           
+
+            case "/home.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/css")
+                self.end_headers()
+                with open("home.html", "rb") as file:
+                    self.wfile.write(file.read())
                 
             case _:
                 self.send_response(200)

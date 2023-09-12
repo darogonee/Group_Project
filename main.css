@@ -49,6 +49,7 @@ body, ul {
 .navbar ul {
     list-style-type: none; 
     display: flex; 
+    align-items: center;
 }
 
 .navbar li {
@@ -57,12 +58,12 @@ body, ul {
     position: relative;
 }
 
-
 .navbar a {
     text-decoration: none;
     color: #fff;
     padding: 10px 20px; 
     transition: background-color 0.3s; 
+    font-size: 4vh;
 }
 
 .dropdown-content {
@@ -70,7 +71,7 @@ body, ul {
     position: absolute;
     background-color: #333;
     z-index: 1;
-    left: 0;
+    left: -90%;
     top: 100%;
     width: 200px; 
 }
@@ -88,6 +89,10 @@ body, ul {
     display: none;
 }
 
-.navbar a:hover {
+.navbar a:hover .dropdown-content:hover {
     background-color: #555; 
+}
+.right{
+    display: inline;
+    margin-left: auto;
 }
