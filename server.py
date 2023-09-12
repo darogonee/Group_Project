@@ -174,7 +174,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web_templates/myprofile.html", "r") as file:
                     myprofile_page = file.read()
                     self.wfile.write(myprofile_page.encode())
+
+            case "/signupquestions.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open("web_templates/signupquestions.html", "r") as file:
+                    signupquestions_page = file.read()
+                    self.wfile.write(signupquestions_page.encode())
             
+
             case _:
                 self.send_response(200)
                 file_type = self.path.split(".")[-1]
