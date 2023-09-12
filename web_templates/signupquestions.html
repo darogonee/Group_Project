@@ -31,12 +31,23 @@
     <br>
 
     <label for="weight">Weight: </label>
-    <input type="text" id="weight" name="weight">
+    <input type="number" id="weight" name="weight">
+
+    <select name="weight-units" id="weight-units">
+      <option value="kg">kg</option>
+      <option value="lb">lb</option>
+      <option value="st">st</option>
+    </select>
 
     <br>
 
     <label for="height">Height: </label>
-    <input type="text" id="height" name="height">
+    <input type="number" id="height" name="height">
+
+    <select name="height-units" id="height-units">
+      <option value="in">in</option>
+      <option value="cm">cm</option>
+    </select>
 
     <br>
 
@@ -148,7 +159,10 @@
     <input type="checkbox" id="sunday" name="days" value="Sunday">
     <label for="sunday">Sunday</label>
     
-    <input type="submit" value="Submit">
+    <br><br><br>
+
+    <input type="submit" id="submit" value="Submit">
+
   </form>
 </body>
 </html>

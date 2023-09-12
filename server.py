@@ -121,6 +121,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web_templates/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/").encode())
 
+            case "/signupqs":
+                # for signup questions
+                # ensure that all fields are inputted     
+                query_string = self.path.split("?")[1].split("&")
+                print(query_string)
+
             case "/home.html":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
