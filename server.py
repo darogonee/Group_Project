@@ -123,56 +123,58 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/home.html":
                 self.send_response(200)
-                self.send_header("Content-type", "text/css")
+                self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("home.html", "rb") as file:
-                    self.wfile.write(file.read())
+                with open("web_templates/home.html", "r") as file:
+                    home_page = file.read()                        
+                    self.wfile.write(home_page.encode())
 
             case "/activities.html":
-                self.send_response(200)
-                self.send_header("Content-type", "text/css")
-                self.end_headers()
-                with open("activities.html", "rb") as file:
-                    self.wfile.write(file.read())
+                pass
+            # put activities page here
 
 
             case "/myprogram.html":
                 self.send_response(200)
-                self.send_header("Content-type", "text/css")
+                self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("myprogram.html", "rb") as file:
-                    self.wfile.write(file.read())
+                with open("web_templates/myprogram.html", "r") as file:
+                    myprogram_page = file.read()                        
+                    self.wfile.write(myprogram_page.encode())
 
             case "/food&water.html":
                 self.send_response(200)
-                self.send_header("Content-type", "text/css")
+                self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("food&water.html", "rb") as file:
-                    self.wfile.write(file.read())
+                with open("web_templates/food&water.html", "r") as file:
+                    foodwater_page = file.read()
+                    self.wfile.write(foodwater_page.encode())
 
 
             case "/logexercise.html":
                 self.send_response(200)
-                self.send_header("Content-type", "text/css")
+                self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("logexercise.html", "rb") as file:
-                    self.wfile.write(file.read())
+                with open("web_templates/logexercise.html", "r") as file:
+                    logexercise_page = file.read()
+                    self.wfile.write(logexercise_page.encode())
 
-            case "/logfood&water.html":
+            case "/logfoodwater.html":
                 self.send_response(200)
-                self.send_header("Content-type", "text/css")
+                self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("logfood&water.html", "rb") as file:
-                    self.wfile.write(file.read())
+                with open("web_templates/logfoodwater.html", "r") as file:
+                    logfoodwater_page = file.read()
+                    self.wfile.write(logfoodwater_page.encode())
 
             case "/myprofile.html":
                 self.send_response(200)
-                self.send_header("Content-type", "text/css")
+                self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("myprofile.html", "rb") as file:
-                    self.wfile.write(file.read())
-                
-                
+                with open("web_templates/myprofile.html", "r") as file:
+                    myprofile_page = file.read()
+                    self.wfile.write(myprofile_page.encode())
+            
             case _:
                 self.send_response(200)
                 file_type = self.path.split(".")[-1]
