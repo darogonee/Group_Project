@@ -145,7 +145,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/activities.html":
                 pass
-            # put activities page here
+            # put activities page here when homepage is done
 
 
             case "/myprogram.html":
