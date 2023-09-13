@@ -91,7 +91,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     print(workout["name"])
                 print("Button clicked! Doing something...")
             
-            case "/signin":
+            case "/signin.html":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -99,12 +99,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                     login_page = file.read()                        
                     self.wfile.write(login_page.encode())
 
-            case "/login":
-                quire_string = self.path.split("?")[1].split("&")
+            case "/login.html":
+                query_string = self.path.split("?")[1].split("&")
                 values = {}
-                for quire in quire_string:
-                    name = quire.split("=")[0]
-                    value = quire.split("=")[1]
+                for query in query_string:
+                    name = query.split("=")[0]
+                    value = query.split("=")[1]
                     values[name] = value
                 username = values["username"]
                 password = values["password"]
@@ -121,7 +121,15 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web_templates/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/").encode())
 
-            case "/signupqs":
+            case "/signup.html":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open("web_templates/signup.html", "r") as file:
+                    signup_page = file.read()                        
+                    self.wfile.write(signup_page.encode())
+
+            case "/signupqs.html":
                 # for signup questions
                 # ensure that all fields are inputted     
                 query_string = self.path.split("?")[1].split("&")
@@ -165,11 +173,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logexercise_page = file.read()
                     self.wfile.write(logexercise_page.encode())
 
-            case "/logfoodwater.html":
+            case "/logfood&water.html":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/logfoodwater.html", "r") as file:
+                with open("web_templates/logfood&water.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
