@@ -1,24 +1,24 @@
 from openpyxl import load_workbook
-import json
+import json, pyperclip
 
 workbook = load_workbook(filename="exercises.xlsx")
 sheet = workbook.active
-exercise_dict = {}
-for value in sheet.iter_rows(min_row=1,min_col=2, max_col=272, max_row=1,values_only=True):
+exercises = []
+for value in sheet.iter_rows(min_row=3,min_col=1, max_col=9, max_row=272,values_only=True):
     print(value)
+    exercise_id = value[0]
+    muscle_group = value[1]
+    exercise_name = value[2]
+    level = value[3]
+    ulc = value[4]
+    pp = value[5]
+    modality = value[6]
+    joint = value[7]
+    equipment = value[8]
 
+    exercises.append({"exercise_id":exercise_id, "muscle_group":muscle_group, "exercise_name":exercise_name, "level":level, "ulc":ulc, "pp":pp, "modality":modality, "joint":joint, "equipment":equipment})
 
-
-muscle_group = sheet["B"]
-exercise = sheet["C"]
-level = sheet["D"]
-ulc = sheet["E"]
-pp = sheet["F"]
-modality = sheet["G"]
-joint = sheet["H"]
-equipment = sheet["I"]
-
-
+pyperclip.copy(str(exercises))
 
 # {exercise_id: {"muscle_group":muscle_group, "exercise":exercise, "level"}}
 
