@@ -99,7 +99,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     login_page = file.read()                        
                     self.wfile.write(login_page.encode())
 
-            case "/login.html":
+            case "/login":
                 query_string = self.path.split("?")[1].split("&")
                 values = {}
                 for query in query_string:
