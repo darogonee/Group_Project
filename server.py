@@ -110,11 +110,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                 password = values["password"]
                 print(username, password)
 
-
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 with open("passwords.json", "r") as file:
                     data = json.load(file)  
+
+                    if username not in data:
+                        data[username] = password
+                        with open("passwords.json", "w") as file:
+                            json.dump(data, file, indent = 4)
+
                 if password == data[username]:
                     self.send_header("Set-Cookie", f"user={username}")
                 self.end_headers()
