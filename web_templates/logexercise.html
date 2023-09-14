@@ -33,4 +33,51 @@
             </ul>
         </nav>
     </div>
+    <h1>Log Exercise</h1>
+    <form action="logexercise" method="get">
+      <label for="title">Title: </label>
+      <input type="text" id="title" name="title">
+      <br>
+      <label for="sport">Sport: </label>
+      <select name="sport" id="sport">
+        <option value="Weightlifting">Strength Training</option>
+        <option value="Running">Running</option>
+        <option value="Weightlifting">Cycling</option>
+        <option value="Running">Swimming</option>
+      </select>
+      <br>
+      <label for="workout-date">Date: </label>
+      <input type="date" id="workout-date" name="workout-date">
+      <br>
+      <label for="workout-time">Time: </label>
+      <input type="time" id="workout-time" name="workout-time">
+      <br>
+      <label for="workout-hrs">Duration:</label>
+      <input type="number" id="workout-hrs" name="workout-hrs" min="0" max="24">
+      <label for="workout-hrs">hrs</label>
+      <input type="number" id="workout-mins" name="workout-mins" min="0" max="59">
+      <label for="workout-mins">mins</label>
+      <input type="number" id="workout-secs" name="workout-secs" min="0" max="59">
+      <label for="workout-secs">secs</label>
+      <br>
+      <label for="percieved-exertion">Percieved Exertion Rate: </label>
+      <select name="percieved-exertion" id="percieved-exertion">
+        <option value="1/10">1/10 (Very Light)</option>
+        <option value="2/10">2/10 (Light)</option>
+        <option value="3/10">3/10 (Light)</option>
+        <option value="4/10">4/10 (Moderate)</option>
+        <option value="5/10">5/10 (Moderate)</option>
+        <option value="6/10">6/10 (Moderate)</option>
+        <option value="7/10">7/10 (Vigorous)</option>
+        <option value="8/10">8/10 (Vigorous)</option>
+        <option value="9/10">9/10 (Very Hard)</option>
+        <option value="10/10">10/10 (Maximum Exertion)</option>
+      </select>
+    </form>
+    <!-- if workout is weight training: show table to input exercises -->
+    <!-- if workout is cardio: ask for elevation gain -->
+    <!-- estimated calories for cardio -->
+    
+
+
 </body>

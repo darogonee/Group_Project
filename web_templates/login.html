@@ -7,7 +7,7 @@
         <nav class="navbar">
             <ul>
                 <li><img src="/images/temp_logo.png" height="50px" width="50px"></li>
-                <li class="right"><a href="signup.html" class="button">Sign Up</a></li>
+                <li class="right"><a href="signup.html" id="signup-bt">Sign Up</a></li>
             </ul>
         </nav>
     </div>
@@ -30,7 +30,7 @@
                     </div>
                     <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
                     <br>
-                    <input type="submit" value="Log In" id="submit">
+                    <input type="submit" value="Log In" id="login-bt">
                 </form>
             </div>
         </div>
@@ -41,16 +41,16 @@
     const showPasswordIcon = document.getElementById('show-password');
     const hidePasswordIcon = document.getElementById('hide-password');
 
-    showPasswordIcon.addEventListener('click', () => {
+    showPasswordIcon.addEventListener('click', function () {
         passwordInput.type = 'text';
         showPasswordIcon.style.display = 'none';
         hidePasswordIcon.style.display = 'block';
     });
 
-    hidePasswordIcon.addEventListener('click', () => {
+    hidePasswordIcon.addEventListener('click', function () {
         passwordInput.type = 'password';
         showPasswordIcon.style.display = 'block';
         hidePasswordIcon.style.display = 'none';
-    });
+});
 </script>
 </html>
