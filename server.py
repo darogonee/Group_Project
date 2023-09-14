@@ -99,6 +99,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("main.css", "rb") as file:
                     self.wfile.write(file.read())
+            
+            case "/main.js":
+                self.send_response(200)
+                self.send_header("Content-type", "application/javascript")
+                self.end_headers()
+                with open("main.js", "rb") as file:
+                    self.wfile.write(file.read())
 
             case "/dosomething":
                 activity_data_to_print =  activity_data[:5]
