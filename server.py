@@ -24,6 +24,8 @@ class FittnessServer(BaseHTTPRequestHandler):
         return values
 
     def cookie(self):
+        if self.headers.get("Cookie") is None:
+            return {}
         cookie = self.headers.get("Cookie").split(";")
         values = {}
         for query in cookie:
@@ -36,6 +38,9 @@ class FittnessServer(BaseHTTPRequestHandler):
         match self.path.split("?")[0]:
             case  "/":
                 cookie = self.cookie()
+                if "user" not in cookie:
+                    self.redirect("/signin")
+                    return
                 if not Api.load(cookie["user"]):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
                     return
@@ -81,9 +86,11 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/oauth":
                 values = self.query()
                 code = values["code"]
-                cookie = self.cookie()                
+                cookie = self.cookie()   
+                if "user" not in cookie:
+                    self.redirect("/signin")
+                    return             
                 Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), f"users/{cookie['user']}.json")
-                Api.load()
                 self.redirect("/")
 
             case "/main.css":
@@ -248,6 +255,3 @@ if __name__ == "__main__":
         pass
     webServer.server_close()
     print("Server stopped.")
-
-    #test
-    #test
