@@ -81,15 +81,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(file.read())
 
             case "/dosomething":
-                # self.send_response(200)
-                # self.send_header("Content-type", "text/text")
-                # self.end_headers()
-                # self.wfile.write(random.choice(["hello", "hi", "hey"]).encode())
                 activity_data_to_print =  activity_data[:5]
                 sorted_workouts = sorted(activity_data_to_print, key=lambda x: x["name"])
                 for workout in sorted_workouts:
                     print(workout["name"])
-                print("Button clicked! Doing something...")
             
             case "/signin.html":
                 self.send_response(200)
@@ -108,8 +103,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     values[name] = value
                 username = values["username"]
                 password = values["password"]
-                print(username, password)
-
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 with open("passwords.json", "r") as file:
@@ -138,7 +131,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 # for signup questions
                 # ensure that all fields are inputted     
                 query_string = self.path.split("?")[1].split("&")
-                print(query_string)
 
             case "/home.html":
                 self.send_response(200)
