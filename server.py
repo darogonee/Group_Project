@@ -25,7 +25,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 self.end_headers()
                 with open("web_templates/activities.html", "r") as activities_file:
-                    with open("web_templates/activity.html", "r") as activity_file:
+                    with open("web_templates/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
 
                         # later check
