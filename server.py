@@ -13,11 +13,30 @@ class FittnessServer(BaseHTTPRequestHandler):
         self.end_headers()
         with open("web_templates/redirect.html", "r") as file:
             self.wfile.write(file.read().replace("url", link).encode())
+    
+    def query(self):
+        query_string = self.path.split("?")[1].split("&")
+        values = {}
+        for query in query_string:
+            name = query.split("=")[0]
+            value = query.split("=")[1]
+            values[name] = value
+        return values
+
+    def cookie(self):
+        cookie = self.headers.get("Cookie").split(";")
+        values = {}
+        for query in cookie:
+            name = query.split("=")[0].strip()
+            value = query.split("=")[1].strip()
+            values[name] = value
+        return values
 
     def do_GET(self):
         match self.path.split("?")[0]:
             case  "/":
-                if not os.path.exists("users/me.json"):
+                cookie = self.cookie()
+                if not Api.load(cookie["user"]):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
                     return
                 self.send_response(200)
@@ -27,9 +46,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web_templates/activities.html", "r") as activities_file:
                     with open("web_templates/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
-
                         # later check
-                        Api.save(*Api.refresh_tokens(Api.client_id, Api.client_secret, Api.refresh_token), "users/me.json")
+                        Api.save(*Api.refresh_tokens(Api.client_id, Api.client_secret, Api.refresh_token), f"users/{cookie['user']}.json")
                         activity_data = Api.get_user_activites()
                         tbody = ""
                          
@@ -61,15 +79,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
             case "/oauth":
-                quire_string = self.path.split("?")[1].split("&")
-                values = {}
-                for quire in quire_string:
-                    name = quire.split("=")[0]
-                    value = quire.split("=")[1]
-                    values[name] = value
+                values = self.query()
                 code = values["code"]
-                                           
-                Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), "users/me.json")
+                cookie = self.cookie()                
+                Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), f"users/{cookie['user']}.json")
                 Api.load()
                 self.redirect("/")
 
@@ -86,40 +99,61 @@ class FittnessServer(BaseHTTPRequestHandler):
                 for workout in sorted_workouts:
                     print(workout["name"])
             
-            case "/signin.html":
+            case "/signin":
+
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/login.html", "r") as file:
+                with open("web_templates/signin.html", "r") as file:
                     login_page = file.read()                        
                     self.wfile.write(login_page.encode())
 
-            case "/login":
-                query_string = self.path.split("?")[1].split("&")
-                values = {}
-                for query in query_string:
-                    name = query.split("=")[0]
-                    value = query.split("=")[1]
-                    values[name] = value
+            case "/action_signin":
+                values = self.query()
                 username = values["username"]
                 password = values["password"]
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 with open("passwords.json", "r") as file:
                     data = json.load(file)  
+                if username in data:
+                    if password == data[username]:
+                        self.send_header("Set-Cookie", f"user={username}")
+                        self.end_headers()
+                        with open("web_templates/redirect.html", "r") as file:
+                            self.wfile.write(file.read().replace("url", "/").encode())
+                        return
+                self.redirect("/signin")
+            
+            case "/action_signup":
+                values = self.query()
+                username = values["username"]
+                password = values["password"]
 
-                    if username not in data:
-                        data[username] = password
-                        with open("passwords.json", "w") as file:
-                            json.dump(data, file, indent = 4)
+                if len(username) < 3 or len(username) > 13 or not username.isalnum():
+                    self.redirect("/signup")
+                    # check for "_" later
+                    return
+   
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                with open("passwords.json", "r") as file:
+                    data = json.load(file)  
 
-                if password == data[username]:
-                    self.send_header("Set-Cookie", f"user={username}")
+                    if username in data:
+                        self.redirect("/signup")
+                        return
+
+                    data[username] = password
+                    with open("passwords.json", "w") as file:
+                        json.dump(data, file, indent = 4)
+
+                self.send_header("Set-Cookie", f"user={username}")
                 self.end_headers()
                 with open("web_templates/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/").encode())
 
-            case "/signup.html":
+            case "/signup":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()

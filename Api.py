@@ -1,12 +1,13 @@
 import requests, json, os
 
-def load():
-    if os.path.exists("users/me.json"):
+def load(user):
+    if os.path.exists(f"users/{user}.json"):
         global refresh_token, access_token
-        user_info = json.load(open("users/me.json"))
+        user_info = json.load(open(f"users/{user}.json"))
         refresh_token = user_info["refresh_token"]
         access_token = user_info["access_token"]
-load()
+        return True
+    return False
 
 strava_api = json.load(open("strava_api.json"))
 client_secret = strava_api["client_secret"]
