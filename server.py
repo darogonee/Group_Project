@@ -168,6 +168,29 @@ class FittnessServer(BaseHTTPRequestHandler):
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
+            # case "/signup":
+            #     values = {}
+            #     query_string = self.path.split("?")[1].split("&")
+                
+            #     for query in query_string:
+            #         name = query.split("=")[0]
+            #         print(name)
+            #         value = query.split("=")[1]
+            #         values[name] = value
+                
+            #     username = values["username"]
+            #     password = values["password"]
+            #     password_reentry = values["password-reentry"]
+
+            #     print(f"User: {username}")
+            #     print(f"Pw: {password}")
+            #     print(f"Pw re: {password_reentry}")
+                          
+            #     with open("web_templates/redirect.html", "r") as file:
+            #         self.wfile.write(file.read().replace("url", "/").encode())
+
+
+
             case "/signupqs.html":
                 # for signup questions
                 # ensure that all fields are inputted     
