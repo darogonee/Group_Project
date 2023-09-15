@@ -59,7 +59,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
                         # change the 5 to how ever many activities you want to load
-                        for i in range(12):      
+                        for i in range(min(12, len(activity_data))):      
                             activity = activity_template 
                             activity = activity.replace("template_type", str(activity_data[i]["type"])) 
 
