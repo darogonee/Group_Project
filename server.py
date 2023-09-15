@@ -36,7 +36,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         match self.path.split("?")[0]:
-            case  "/":
+            case  "/activities":
                 cookie = self.cookie()
                 if "user" not in cookie:
                     self.redirect("/signin")
@@ -203,7 +203,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 # ensure that all fields are inputted     
                 query_string = self.path.split("?")[1].split("&")
 
-            case "/home.html":
+            case "/":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
