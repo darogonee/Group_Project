@@ -181,3 +181,6 @@ p {
     flex: 0.1;
 }
   
+.tb {
+    border: 2px solid black;
+}

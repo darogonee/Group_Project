@@ -41,10 +41,10 @@
       <br>
       <label for="sport">Sport: </label>
       <select name="sport" id="sport">
-        <option value="Weightlifting">Strength Training</option>
+        <option value="Strength Training">Strength Training</option>
         <option value="Running">Running</option>
-        <option value="Weightlifting">Cycling</option>
-        <option value="Running">Swimming</option>
+        <option value="Cycling">Cycling</option>
+        <option value="Swimming">Swimming</option>
       </select>
       <br>
       <label for="workout-date">Date: </label>
@@ -74,9 +74,123 @@
         <option value="9/10">9/10 (Very Hard)</option>
         <option value="10/10">10/10 (Maximum Exertion)</option>
       </select>
+
+      <div id="reps-sets" class="reps-sets" style="display:block">
+        <button id="add-exercise-to-table" class="add-exercise-to-table">+</button>
+        <!-- <button id="delete-exercise-from-table" class="delete-exercise-from-table">-</button> -->
+        <table class="tb" id="tb">
+          <thead>
+            <tr>
+              <th>Exercise</th>
+              <th>Reps/time</th>
+              <th>Sets</th>
+              <th>Rest per set</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div class="elev-gain" id="elev-gain" style="display:none">
+        <label for="elev-gain">Elevation gain: </label>
+        <input type="number" id="elev-gain" name="elev-gain" min="0">
+      </div>
+
+      <div class="distance" id="distance" style="display:none">
+        <label for="distance">Distance: </label>
+        <input type="number" id="distance" name="distance" min="0">
+      </div>
+
+      <input type="submit" value="Submit">
+
     </form>
-    <!-- if workout is weight training: show table to input exercises -->
-    <!-- if workout is cardio: ask for elevation gain -->
-    <!-- estimated calories for cardio -->
 
 </body>
+<script>
+
+    activitySelect = document.getElementById("sport")
+
+    elevGainInput = document.getElementById("elev-gain")
+
+    
+    distanceInput = document.getElementById("distance")
+
+
+    repsSetsInput = document.getElementById("reps-sets")
+
+
+
+    activitySelect.addEventListener('change', function () {
+        if (activitySelect.value == 'Strength Training') {
+            repsSetsInput.style.display = 'block';
+            elevGainInput.style.display = 'none';
+            distanceInput.style.display = 'none';
+
+        } else {
+            repsSetsInput.style.display = 'none';
+            elevGainInput.style.display = 'block';
+            distanceInput.style.display = 'block';
+        }
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const addRow = document.getElementById("add-exercise-to-table");
+      const deleteRow = document.getElementById("delete-exercise-from-table");
+      const tableBody = document.querySelector("#tb tbody");
+
+
+      addRow.addEventListener("click", function () {
+          const newRow = document.createElement("tr");
+          const exerciseCell = document.createElement("td");
+          const repstimeCell = document.createElement("td");
+          const setsCell = document.createElement("td");
+          const restCell = document.createElement("td");
+
+          const exerciseInput = document.createElement("input");
+          const repstimeInput = document.createElement("input");
+          const setsInput = document.createElement("input");
+          const restInput = document.createElement("input");
+
+          exerciseInput.type = "text"
+          exerciseInput.name = "exercise_input"
+
+          repstimeInput.type = "number"
+          repstimeInput.min = "0"
+          repstimeInput.name = "repstime_input"
+
+          setsInput.type = "number"
+          setsInput.name = "sets_input"
+          setsInput.min = "0"
+
+          restInput.type = "number"
+          restInput.name = "rest_input"
+          restInput.min = "0"
+
+          const deleteRow = document.createElement("button")
+          deleteRow.textContent = "Delete"
+          deleteRow.addEventListener("click", function(){
+            tableBody.removeChild(newRow);
+          });
+
+          exerciseCell.appendChild(exerciseInput)
+          repstimeCell.appendChild(repstimeInput)
+          setsCell.appendChild(setsInput)
+          restCell.appendChild(restInput)
+          exerciseCell.appendChild(deleteRow)
+
+          
+          newRow.appendChild(exerciseCell)
+          newRow.appendChild(repstimeCell)
+          newRow.appendChild(setsCell)
+          newRow.appendChild(restCell)
+
+          tableBody.appendChild(newRow);
+
+      });
+    });
+
+
+</script>
+</html>
