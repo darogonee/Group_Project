@@ -141,13 +141,18 @@ class FittnessServer(BaseHTTPRequestHandler):
             
             case "/action_signup":
                 values = self.query()
-                username = values["username"]
+                # replace the .replace funtion with something to remove special charicters
+                username = values["username"].split("%")[0].replace("_", "")
+                print(username)
                 password = hash(values["password"])
                 passwordrentry = hash(values["password-rentry"])
                 print(password,"-",passwordrentry)
 
-                if len(username) < 3 or len(username) > 13 or not username.isalnum() or password != passwordrentry:
+                # maby add this back if code doesnt work
+                # or not username.isalnum() 
+                if len(username) < 3 or len(username) > 13 or password != passwordrentry:
                     self.redirect("/signup")
+
                     # check for "_" later
                     return
    
