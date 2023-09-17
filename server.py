@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import Api, os, random
+from hash_function import password_hash 
 from datetime import datetime
 import time, json
 
@@ -125,7 +126,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/action_signin":
                 values = self.query()
                 username = values["username"]
-                password = hash(values["password"])
+                password = password_hash(values["password"])
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 with open("passwords.json", "r") as file:
@@ -142,20 +143,14 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/action_signup":
                 values = self.query()
                 # replace the .replace funtion with something to remove special charicters
-                username = values["username"].split("%")[0].replace("_", "")
+                username = values["username"]
                 print(username)
-                password = hash(values["password"])
-                passwordrentry = hash(values["password-rentry"])
-                print(password,"-",passwordrentry)
-
-                # maby add this back if code doesnt work
-                # or not username.isalnum() 
-                if len(username) < 3 or len(username) > 13 or password != passwordrentry:
+                password = password_hash(values["password"])
+                passwordrentry = password_hash(values["password-rentry"])
+                if len(username) < 3 or len(username) > 13 or password != passwordrentry or not username.isalnum():
                     self.redirect("/signup")
-
-                    # check for "_" later
                     return
-   
+
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 with open("passwords.json", "r") as file:
@@ -172,7 +167,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_header("Set-Cookie", f"user={username}")
                 self.end_headers()
                 with open("web_templates/redirect.html", "r") as file:
-                    self.wfile.write(file.read().replace("url", "/").encode())
+                    self.wfile.write(file.read().replace("url", "/signupqs").encode())
 
             case "/signup":
                 self.send_response(200)
@@ -182,10 +177,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
-            case "/signupqs.html":
+            case "/signupqs":
                 # for signup questions
                 # ensure that all fields are inputted     
                 query_string = self.path.split("?")[1].split("&")
+                # FIX
 
             case "/":
                 self.send_response(200)

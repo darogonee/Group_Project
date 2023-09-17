@@ -1,13 +1,9 @@
-PRIMES = [2347692443, 88763557]
-
-def random_hash(x):
+PRIMES = [702085535438096506588889820143, 524902178649231079293636409829]
+def _hash(x):
     return((x + 1) * PRIMES[0]) % PRIMES[1]
 
 def password_hash(password):
     value = 1
     for char in password:
-        value = random_hash(value) + ord(char)
+        value = _hash(value + ord(char))
     return value
-
-print(password_hash("ABC"))
-print(password_hash("BCA"))
