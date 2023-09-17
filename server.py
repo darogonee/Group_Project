@@ -125,7 +125,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/action_signin":
                 values = self.query()
                 username = values["username"]
-                password = values["password"]
+                password = hash(values["password"])
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 with open("passwords.json", "r") as file:
@@ -142,9 +142,11 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/action_signup":
                 values = self.query()
                 username = values["username"]
-                password = values["password"]
+                password = hash(values["password"])
+                passwordrentry = hash(values["password-rentry"])
+                print(password,"-",passwordrentry)
 
-                if len(username) < 3 or len(username) > 13 or not username.isalnum():
+                if len(username) < 3 or len(username) > 13 or not username.isalnum() or password != passwordrentry:
                     self.redirect("/signup")
                     # check for "_" later
                     return
