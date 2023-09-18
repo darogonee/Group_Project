@@ -1,4 +1,5 @@
 import requests, json, os
+from functools import cache
 
 def load(user):
     if os.path.exists(f"users/{user}.json"):
@@ -23,6 +24,8 @@ def refresh_tokens(client_id, client_secret, refresh_token):
         f"https://www.strava.com/oauth/token?client_id={client_id}&client_secret={client_secret}&refresh_token={refresh_token}&grant_type=refresh_token").json()
     return res["access_token"], res["refresh_token"]
 
+# line 27 single handly more then triples the loading speed of the activites
+@cache
 def get_user_activites():
     activites_url = "https://www.strava.com/api/v3/athlete/activities"
 

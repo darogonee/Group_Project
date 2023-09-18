@@ -3,6 +3,7 @@ import Api, os, random
 from hash_function import password_hash 
 from datetime import datetime
 import time, json
+from functools import cache
 
 hostName = "localhost"
 serverPort = 8080
@@ -34,17 +35,15 @@ class FittnessServer(BaseHTTPRequestHandler):
             value = query.split("=")[1].strip()
             values[name] = value
         return values
+    
+    def user():
+        ...
 
+    # @cache
     def do_GET(self):
         match self.path.split("?")[0]:
             case  "/activities":
                 cookie = self.cookie()
-                if "user" not in cookie:
-                    self.redirect("/signin")
-                    return
-                if not Api.load(cookie["user"]):
-                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
-                    return
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
 
@@ -190,6 +189,14 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web_templates/home.html", "r") as file:
                     home_page = file.read()                        
                     self.wfile.write(home_page.encode())
+
+                cookie = self.cookie()
+                if "user" not in cookie:
+                    self.redirect("/signin")
+                    return
+                if not Api.load(cookie["user"]):
+                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
+                    return
 
             case "/activities.html":
                 pass
