@@ -52,7 +52,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("web_templates/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
                         # later check
-                        Api.save(*Api.refresh_tokens(Api.client_id, Api.client_secret, Api.refresh_token), f"users/{cookie['user']}.json")
+                        Api.refresh(cookie["user"])
                         activity_data = Api.get_user_activites()
                         tbody = ""
                          
@@ -194,7 +194,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if "user" not in cookie:
                     self.redirect("/signin")
                     return
-                if not Api.load(cookie["user"]):
+                if not Api.check(cookie["user"]):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
                     return
 
