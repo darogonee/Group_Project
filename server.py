@@ -177,10 +177,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(signup_page.encode())
 
             case "/signupqs":
-                # for signup questions
-                # ensure that all fields are inputted     
-                query_string = self.path.split("?")[1].split("&")
-                # FIX
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open("web_templates/signupquestions.html", "r") as file:
+                    signup_page = file.read()                        
+                    self.wfile.write(signup_page.encode())
+
 
             case "/":
                 self.send_response(200)
