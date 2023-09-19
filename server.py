@@ -35,9 +35,6 @@ class FittnessServer(BaseHTTPRequestHandler):
             value = query.split("=")[1].strip()
             values[name] = value
         return values
-    
-    def user():
-        ...
 
     # @cache
     def do_GET(self):
@@ -124,7 +121,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/action_signin":
                 values = self.query()
-                username = values["username"]
+                username = values["username"].lower()
                 password = password_hash(values["password"])
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -142,7 +139,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/action_signup":
                 values = self.query()
                 # replace the .replace funtion with something to remove special charicters
-                username = values["username"]
+                username = values["username"].lower()
                 print(username)
                 password = password_hash(values["password"])
                 passwordrentry = password_hash(values["password-rentry"])
@@ -201,12 +198,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
                     return
 
-            case "/activities.html":
+            case "/activities":
                 pass
             # put activities page here when homepage is done
 
 
-            case "/myprogram.html":
+            case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -214,7 +211,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprogram_page = file.read()                        
                     self.wfile.write(myprogram_page.encode())
 
-            case "/food&water.html":
+            case "/food&water":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -223,7 +220,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(foodwater_page.encode())
 
 
-            case "/logexercise.html":
+            case "/logexercise":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -231,7 +228,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logexercise_page = file.read()
                     self.wfile.write(logexercise_page.encode())
 
-            case "/logfood&water.html":
+            case "/logfood&water":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -239,7 +236,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
-            case "/myprofile.html":
+            case "/myprofile":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -247,7 +244,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprofile_page = file.read()
                     self.wfile.write(myprofile_page.encode())
 
-            case "/signupquestions.html":
+            case "/signupquestions":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -275,3 +272,14 @@ if __name__ == "__main__":
         pass
     webServer.server_close()
     print("Server stopped.")
+
+# TODO
+# 1 - fix cache to incress load speed
+
+# 2 - finish cookies
+
+# 3 - upload info from sign up questions into users json file
+
+# 4 - add activaites when user trys too
+
+# 5 - put stuff in the home page
