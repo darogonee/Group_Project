@@ -30,5 +30,6 @@ def calculate_goal_cals(eer, weight_goal):
         goal_cals = eer + 400
     elif weight_goal == "maintain":
         goal_cals = eer
-    elif weight_
+    elif weight_goal == "lose":
+        goal_cals = eer - 400
     return goal_cals
