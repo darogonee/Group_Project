@@ -50,9 +50,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                         activity_template = activity_file.read()
                         # later check
                         Api.refresh(cookie["user"])
-                        activity_data = Api.get_user_activites()
+                        activity_data = Api.get_user_activites(cookie['user'])
                         tbody = ""
-                         
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
                         # change the 5 to how ever many activities you want to load
