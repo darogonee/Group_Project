@@ -25,7 +25,7 @@ def calculate_eer(age, weight, height, sex, pal):
                 eer = 447.6 - 7.95*age  + pal*(11.4* weight + 619* height)
 
     return eer
-
+# there nothing checking if the value is exaclty the coresponding number
 def calculate_goal_cals(eer, weight_goal):
     if weight_goal == "gain":
         goal_cals = eer + 400
