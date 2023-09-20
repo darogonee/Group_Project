@@ -1,5 +1,6 @@
 
-def calculate_eer(age, weight, height, sex, bmi, pal):
+def calculate_eer(age, weight, height, sex, pal):
+    bmi = weight/(height^2)
     if bmi < 25:
         if age < 18:
             if sex == "male":
@@ -24,7 +25,7 @@ def calculate_eer(age, weight, height, sex, bmi, pal):
                 eer = 447.6 - 7.95*age  + pal*(11.4* weight + 619* height)
 
     return eer
-
+# there nothing checking if the value is exaclty the coresponding number
 def calculate_goal_cals(eer, weight_goal):
     if weight_goal == "gain":
         goal_cals = eer + 500
@@ -33,3 +34,4 @@ def calculate_goal_cals(eer, weight_goal):
     elif weight_goal == "lose":
         goal_cals = eer - 500
     return goal_cals
+
