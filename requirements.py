@@ -27,9 +27,9 @@ def calculate_eer(age, weight, height, sex, bmi, pal):
 
 def calculate_goal_cals(eer, weight_goal):
     if weight_goal == "gain":
-        goal_cals = eer + 400
+        goal_cals = eer + 500
     elif weight_goal == "maintain":
         goal_cals = eer
     elif weight_goal == "lose":
-        goal_cals = eer - 400
+        goal_cals = eer - 500
     return goal_cals
