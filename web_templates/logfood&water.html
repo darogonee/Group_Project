@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="main.css">
     <script src="main.js" defer></script>
     <title>Fitness</title>
+    <script>
+      window.onload = function(){
+        
+      }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -35,8 +40,27 @@
         </nav>
     </div>
     <form method="post" action="retrieve-nutrition.py">
+      <input type="date" id="log_food_date" name="log_food_date">
+      <br>
       <label for="food_name">Enter food name:</label>
       <input type="text" id="food_name" name="food_name">
       <input type="submit" value="Look up">
+    
+      <button id="add-food-to-table" class="add-exercise-to-table">+</button>
+      <table class="tb" id="tb">
+        <thead>
+          <tr>
+            <th>Food name</th>
+            <th>Calories (kcal)</th>
+            <th>Carbs (g)</th>
+            <th>Protein (g)</th>
+            <th>Fat (g)</th>
+          </tr>
+        </thead>
+        <tbody>
+        
+        </tbody>
+      </table>
     </form>
 </body>
+</html>
