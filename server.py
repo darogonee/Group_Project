@@ -79,6 +79,20 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
+
+            case "/refresh":
+                print("...")
+                self.redirect("/activities")
+
+                # grab tranning info of strava
+                # grab information in cach
+
+                # check if strava data and cach are the same
+
+                # if true: do nothing 
+                # if false: load strava information
+
+                
             case "/oauth":
                 values = self.query()
                 code = values["code"]
@@ -110,7 +124,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     print(workout["name"])
             
             case "/signin":
-
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -198,7 +211,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     return
 
             case "/activities":
-                pass
+                ...
             # put activities page here when homepage is done
 
 
@@ -273,7 +286,7 @@ if __name__ == "__main__":
     print("Server stopped.")
 
 # TODO / FIXME
-# 1 - fix cache to incress load speed
+# 1 - fix cache reloading acctivites
 
 # 2 - finish cookies
 
@@ -282,3 +295,5 @@ if __name__ == "__main__":
 # 4 - add activaites when user trys too
 
 # 5 - put stuff in the home page
+
+# 6 - hrass lewis
