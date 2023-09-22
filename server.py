@@ -331,9 +331,9 @@ if __name__ == "__main__":
     print("Server stopped.")
 
 # NOTE
-# 1 - 
+# 1 - finish cookies
 
-# 2 - finish cookies
+# 2 - remove the defult case off get
 
 # 3 - 
 

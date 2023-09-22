@@ -19,7 +19,9 @@ function addToTable() {
         const repstimeInput = document.createElement("input");
         const setsInput = document.createElement("input");
         const restInput = document.createElement("input");
-
+        
+        // make names not the same betwwen rows
+        // so that they dohnt over right each other
         exerciseInput.type = "text"
         exerciseInput.name = "exercise_input"
 
