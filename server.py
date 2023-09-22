@@ -194,7 +194,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if not Api.check(cookie["user"]):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
                     return
+                # FIXME
+                if not os.path.isfile(f"user_data/{cookie['user']}.json"):
+                    self.redirect("/signupquestions")
 
+                # check if user has data file
             case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -246,8 +250,6 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/signupquestions_action":
                 cookie = self.cookie()
-                goals = 1
-
                 with open(f"user_data/{cookie['user']}.json", "w") as file:
                     value = self.query()
                     print(value)
@@ -310,7 +312,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 )
                 
                 self.redirect("/")
-                # make a new file for each user
 
             case _:
                 self.send_response(200)
