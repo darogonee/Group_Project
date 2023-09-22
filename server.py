@@ -269,10 +269,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         "height-units": value['height-units'],
                         "height": value['height'],
                         "dob": value['date_of_birth'],
-                        "sex": {
-                            "male": "male" in value,
-                            "female": "female" in value,
-                        },
+                        "sex": value['sex'],
                         "equipment": {
                             "bench": "equipment_bench" in value,
                             "medicine-ball": "equipment_medicine-ball" in value,
