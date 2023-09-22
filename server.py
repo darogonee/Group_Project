@@ -317,6 +317,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 file_type = self.path.split(".")[-1]
                 self.send_header("Content-type", f"image/{file_type}")
                 self.end_headers()
+                print(os.curdir)
                 with open("."+self.path, "rb") as file:
                     file_data = file.read()                        
                     self.wfile.write(file_data)
