@@ -77,7 +77,7 @@
       </select>
 
       <div id="reps-sets" class="reps-sets" style="display:block">
-        <button id="add-exercise-to-table" class="add-exercise-to-table">+</button>
+        <button id="add-to-table" class="add-to-table" type="button">+</button>
         <!-- <button id="delete-exercise-from-table" class="delete-exercise-from-table">-</button> -->
         <table class="tb" id="tb">
           <thead>
@@ -110,88 +110,35 @@
 
 </body>
 <script>
+    setTimeout(() => {
+        
+      activitySelect = document.getElementById("sport")
 
-    activitySelect = document.getElementById("sport")
+      elevGainInput = document.getElementById("elev-gain")
 
-    elevGainInput = document.getElementById("elev-gain")
-
-    
-    distanceInput = document.getElementById("distance")
-
-
-    repsSetsInput = document.getElementById("reps-sets")
+      
+      distanceInput = document.getElementById("distance")
 
 
-
-    activitySelect.addEventListener('change', function () {
-        if (activitySelect.value == 'Strength Training') {
-            repsSetsInput.style.display = 'block';
-            elevGainInput.style.display = 'none';
-            distanceInput.style.display = 'none';
-
-        } else {
-            repsSetsInput.style.display = 'none';
-            elevGainInput.style.display = 'block';
-            distanceInput.style.display = 'block';
-        }
-    });
-
-    document.addEventListener("DOMContentLoaded", function () {
-      const addRow = document.getElementById("add-exercise-to-table");
-      const deleteRow = document.getElementById("delete-exercise-from-table");
-      const tableBody = document.querySelector("#tb tbody");
+      repsSetsInput = document.getElementById("reps-sets")
 
 
-      addRow.addEventListener("click", function () {
-          const newRow = document.createElement("tr");
-          const exerciseCell = document.createElement("td");
-          const repstimeCell = document.createElement("td");
-          const setsCell = document.createElement("td");
-          const restCell = document.createElement("td");
 
-          const exerciseInput = document.createElement("input");
-          const repstimeInput = document.createElement("input");
-          const setsInput = document.createElement("input");
-          const restInput = document.createElement("input");
+      activitySelect.addEventListener('change', function () {
+          if (activitySelect.value == 'Strength Training') {
+              repsSetsInput.style.display = 'block';
+              elevGainInput.style.display = 'none';
+              distanceInput.style.display = 'none';
 
-          exerciseInput.type = "text"
-          exerciseInput.name = "exercise_input"
-
-          repstimeInput.type = "number"
-          repstimeInput.min = "0"
-          repstimeInput.name = "repstime_input"
-
-          setsInput.type = "number"
-          setsInput.name = "sets_input"
-          setsInput.min = "0"
-
-          restInput.type = "number"
-          restInput.name = "rest_input"
-          restInput.min = "0"
-
-          const deleteRow = document.createElement("button")
-          deleteRow.textContent = "Delete"
-          deleteRow.addEventListener("click", function(){
-            tableBody.removeChild(newRow);
-          });
-
-          exerciseCell.appendChild(exerciseInput)
-          repstimeCell.appendChild(repstimeInput)
-          setsCell.appendChild(setsInput)
-          restCell.appendChild(restInput)
-          exerciseCell.appendChild(deleteRow)
-
-          
-          newRow.appendChild(exerciseCell)
-          newRow.appendChild(repstimeCell)
-          newRow.appendChild(setsCell)
-          newRow.appendChild(restCell)
-
-          tableBody.appendChild(newRow);
-
+          } else {
+              repsSetsInput.style.display = 'none';
+              elevGainInput.style.display = 'block';
+              distanceInput.style.display = 'block';
+          }
       });
-    });
 
+      addToTable()
 
+  }, 100)
 </script>
 </html>
