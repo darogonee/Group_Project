@@ -2,8 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import Api, os, random
 from hash_function import password_hash 
 from datetime import datetime
-import time, json
-from functools import cache
+import time, json, datetime
+
 
 hostName = "localhost"
 serverPort = 8080
@@ -49,16 +49,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                         activity_template = activity_file.read()
                         # later check
                         Api.refresh(cookie["user"])
-                        activity_data = Api.get_user_activites_cached(cookie['user'])
+                        activity_data = Api.get_user_activites(cookie['user'])
                         tbody = ""
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
                         # change the 5 to how ever many activities you want to load
-                        for i in range(min(12, len(activity_data))):      
+                        for i in range(min(200, len(activity_data))):      
                             activity = activity_template 
                             activity = activity.replace("template_type", str(activity_data[i]["type"])) 
 
-                            input_datetime = datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+                            input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                             formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                             activity = activity.replace("template_date", str(formatted_date))
 
@@ -81,7 +81,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             # FIXME
             case "/refresh":
                 cookie = self.cookie()
-                Api.get_user_activites(cookie['user'])
+                Api.get_user_activites.clear(cookie['user'])
                 self.redirect("/activities")
               
             case "/oauth":
@@ -126,7 +126,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     data = json.load(file)  
                 if username in data:
                     if password == data[username]:
-                        self.send_header("Set-Cookie", f"user={username}")
+                        expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
+                        self.send_header("Set-Cookie", f"user={username}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
                         self.end_headers()
                         with open("web_templates/redirect.html", "r") as file:
                             self.wfile.write(file.read().replace("url", "/").encode())
@@ -156,7 +157,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("passwords.json", "w") as file:
                         json.dump(data, file, indent = 4)
 
-                self.send_header("Set-Cookie", f"user={username}")
+                expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
+                self.send_header("Set-Cookie", f"user={username}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
                 self.end_headers()
                 with open("web_templates/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/signupqs").encode())
@@ -316,7 +318,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 file_type = self.path.split(".")[-1]
                 self.send_header("Content-type", f"image/{file_type}")
                 self.end_headers()
-                print(os.curdir)
                 with open("."+self.path, "rb") as file:
                     file_data = file.read()                        
                     self.wfile.write(file_data)
@@ -332,8 +333,8 @@ if __name__ == "__main__":
     webServer.server_close()
     print("Server stopped.")
 
-# TODO / FIXME
-# 1 - add expiry date to the cached info
+# NOTE
+# 1 - 
 
 # 2 - finish cookies
 
@@ -345,7 +346,8 @@ if __name__ == "__main__":
 
 # 6 - hrass lewis
 
+# NOTE/BUG/FIXME/TODO
 
-### Think done needs bug testing TODO
+### Think done needs bug testing BUG 
 
 # 1 - upload info from sign up questions into users json file
