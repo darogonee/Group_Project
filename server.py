@@ -1,7 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import Api, os, random
+from hash_function import password_hash 
 from datetime import datetime
 import time, json
+from functools import cache
 
 hostName = "localhost"
 serverPort = 8080
@@ -36,14 +38,8 @@ class FittnessServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         match self.path.split("?")[0]:
-            case  "/":
+            case  "/activities":
                 cookie = self.cookie()
-                if "user" not in cookie:
-                    self.redirect("/signin")
-                    return
-                if not Api.load(cookie["user"]):
-                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
-                    return
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
 
@@ -52,14 +48,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("web_templates/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
                         # later check
-                        Api.save(*Api.refresh_tokens(Api.client_id, Api.client_secret, Api.refresh_token), f"users/{cookie['user']}.json")
-                        activity_data = Api.get_user_activites()
+                        Api.refresh(cookie["user"])
+                        activity_data = Api.get_user_activites_cached(cookie['user'])
                         tbody = ""
-                         
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
                         # change the 5 to how ever many activities you want to load
-                        for i in range(12):      
+                        for i in range(min(12, len(activity_data))):      
                             activity = activity_template 
                             activity = activity.replace("template_type", str(activity_data[i]["type"])) 
 
@@ -83,6 +78,12 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
+            # FIXME
+            case "/refresh":
+                cookie = self.cookie()
+                Api.get_user_activites(cookie['user'])
+                self.redirect("/activities")
+              
             case "/oauth":
                 values = self.query()
                 code = values["code"]
@@ -99,15 +100,15 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("main.css", "rb") as file:
                     self.wfile.write(file.read())
-
-            case "/dosomething":
-                activity_data_to_print =  activity_data[:5]
-                sorted_workouts = sorted(activity_data_to_print, key=lambda x: x["name"])
-                for workout in sorted_workouts:
-                    print(workout["name"])
+            
+            case "/main.js":
+                self.send_response(200)
+                self.send_header("Content-type", "application/javascript")
+                self.end_headers()
+                with open("main.js", "rb") as file:
+                    self.wfile.write(file.read())
             
             case "/signin":
-
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -117,8 +118,8 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/action_signin":
                 values = self.query()
-                username = values["username"]
-                password = values["password"]
+                username = values["username"].lower()
+                password = password_hash(values["password"])
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 with open("passwords.json", "r") as file:
@@ -134,14 +135,14 @@ class FittnessServer(BaseHTTPRequestHandler):
             
             case "/action_signup":
                 values = self.query()
-                username = values["username"]
-                password = values["password"]
-
-                if len(username) < 3 or len(username) > 13 or not username.isalnum():
+                # replace the .replace funtion with something to remove special charicters
+                username = values["username"].lower()
+                password = password_hash(values["password"])
+                passwordrentry = password_hash(values["password-rentry"])
+                if len(username) < 3 or len(username) > 13 or password != passwordrentry or not username.isalnum():
                     self.redirect("/signup")
-                    # check for "_" later
                     return
-   
+
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 with open("passwords.json", "r") as file:
@@ -158,7 +159,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_header("Set-Cookie", f"user={username}")
                 self.end_headers()
                 with open("web_templates/redirect.html", "r") as file:
-                    self.wfile.write(file.read().replace("url", "/").encode())
+                    self.wfile.write(file.read().replace("url", "/signupqs").encode())
 
             case "/signup":
                 self.send_response(200)
@@ -168,12 +169,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
-            case "/signupqs.html":
-                # for signup questions
-                # ensure that all fields are inputted     
-                query_string = self.path.split("?")[1].split("&")
+            case "/signupqs":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open("web_templates/signupquestions.html", "r") as file:
+                    signup_page = file.read()                        
+                    self.wfile.write(signup_page.encode())
 
-            case "/home.html":
+
+            case "/":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -181,12 +186,19 @@ class FittnessServer(BaseHTTPRequestHandler):
                     home_page = file.read()                        
                     self.wfile.write(home_page.encode())
 
-            case "/activities.html":
-                pass
-            # put activities page here when homepage is done
+                cookie = self.cookie()
+                if "user" not in cookie:
+                    self.redirect("/signin")
+                    return
+                if not Api.check(cookie["user"]):
+                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
+                    return
+                # FIXME
+                if not os.path.isfile(f"user_data/{cookie['user']}.json"):
+                    self.redirect("/signupquestions")
 
-
-            case "/myprogram.html":
+                # check if user has data file
+            case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -194,7 +206,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprogram_page = file.read()                        
                     self.wfile.write(myprogram_page.encode())
 
-            case "/food&water.html":
+            case "/food&water":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -203,7 +215,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(foodwater_page.encode())
 
 
-            case "/logexercise.html":
+            case "/logexercise":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -211,7 +223,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logexercise_page = file.read()
                     self.wfile.write(logexercise_page.encode())
 
-            case "/logfood&water.html":
+            case "/logfood&water":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -219,7 +231,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
-            case "/myprofile.html":
+            case "/myprofile":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -227,20 +239,84 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprofile_page = file.read()
                     self.wfile.write(myprofile_page.encode())
 
-            case "/signupquestions.html":
+            case "/signupquestions":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 with open("web_templates/signupquestions.html", "r") as file:
                     signupquestions_page = file.read()
                     self.wfile.write(signupquestions_page.encode())
-            
+
+            case "/signupquestions_action":
+                cookie = self.cookie()
+                with open(f"user_data/{cookie['user']}.json", "w") as file:
+                    value = self.query()
+
+                    json.dump(
+                    {
+                        "goals": {
+                            "cardio": "fitness_goals_cardio" in value,
+                            "strength": "fitness_goals_strength" in value,
+                            "hypertrophy": "fitness_goals_hypertrophy" in value,
+                            "weightloss": "fitness_goals_weightloss" in value,
+                            "endurance": "fitness_goals_endurance" in value,
+                            "weightgain": "fitness_goals_weightgain" in value,                            
+                        },
+                        "weight-units": value['weight-units'],
+                        "weight": value['weight'],
+                        "height-units": value['height-units'],
+                        "height": value['height'],
+                        "dob": value['date_of_birth'],
+                        "sex": {
+                            "male": "male" in value,
+                            "female": "female" in value,
+                        },
+                        "equipment": {
+                            "bench": "equipment_bench" in value,
+                            "medicine-ball": "equipment_medicine-ball" in value,
+                            "cable-machine": "equipment_cable-machine" in value,  
+                            "torso-rotation-machine": "equipment_torso-rotation-machine" in value,  
+                            "ab-roller": "equipment_ab-roller" in value,  
+                            "dumbbell": "equipment_dumbbell" in value,  
+                            "barbell": "equipment_barbell" in value,  
+                            "assisted-pullup-machine": "equipment_assisted-pullup-machine" in value,  
+                            "lat-pulldown-machine": "equipment_lat-pulldown-machine" in value,  
+                            "pullup-bar": "equipment_pullup-bar" in value,   
+                            "v-bar": "equipment_v-bar" in value,           
+                            "machine-row": "equipment_machine-row" in value,           
+                            "ez-bar": "equipment_ez-bar" in value,           
+                            "preacher-curl-machine": "equipment_preacher-curl-machine" in value,           
+                            "rope": "equipment_rope" in value,           
+                            "leg-press-machine": "equipment_leg-press-machine" in value,           
+                            "smith-machine": "equipment_smith-machine" in value,           
+                            "calf-raise-machine": "equipment_calf-raise-machine" in value,          
+                            "chest-press-machine": "equipment_chest-press-machine" in value,          
+                            "bench-press-machine": "equipment_bench-press-machine" in value,          
+                            "plates": "equipment_plate" in value,          
+                            "dip-assist-machine": "equipment_dip-assist-machine" in value,          
+                            "dip-machine": "equipment_dip-machine" in value,                           
+                        },
+                        "training_days": {
+                            "monday": "monday" in value,
+                            "tuesday": "tuesday" in value,
+                            "wednesday": "wednesday" in value,
+                            "thursday": "thursday" in value,
+                            "friday": "friday" in value,
+                            "saturday": "saturday" in value,
+                            "sunday": "sunday" in value,
+                        },
+                        "rhr": value['rhr']
+                    }, file, indent = 4
+                )
+                
+                self.redirect("/")
 
             case _:
                 self.send_response(200)
                 file_type = self.path.split(".")[-1]
                 self.send_header("Content-type", f"image/{file_type}")
                 self.end_headers()
+                print(os.curdir)
                 with open("."+self.path, "rb") as file:
                     file_data = file.read()                        
                     self.wfile.write(file_data)
@@ -255,3 +331,21 @@ if __name__ == "__main__":
         pass
     webServer.server_close()
     print("Server stopped.")
+
+# TODO / FIXME
+# 1 - add expiry date to the cached info
+
+# 2 - finish cookies
+
+# 3 - 
+
+# 4 - add activaites when user trys too
+
+# 5 - put stuff in the home page
+
+# 6 - hrass lewis
+
+
+### Think done needs bug testing TODO
+
+# 1 - upload info from sign up questions into users json file

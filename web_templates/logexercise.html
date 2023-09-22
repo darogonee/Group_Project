@@ -5,29 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
+    <script src="main.js" defer></script>
     <title>Fitness</title>
+    <link rel="shortcut icon" href="images/zamologo.png" type="image/x-icon">
 </head>
 <body>
     <div class="container">
         <nav class="navbar">
             <ul>
-                <li><img src="/images/temp_logo.png" height="50px" width="50px"></li>
-                <li><a href="home.html">Home</a></li>
-                <li><a href="/">Activities</a></li>
-                <li><a href="myprogram.html">My Program</a></li>
-                <li><a href="food&water.html">Food & Water</a></li>
+                <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/activities">Activities</a></li>
+                <li><a href="myprogram">My Program</a></li>
+                <li><a href="food&water">Food & Water</a></li>
                 <li class="dropdown right">
                   <a href="#"><img src="/images/plus.png" height="50px" width="50"></a>
                   <ul class="dropdown-content">
-                    <li><a href="logexercise.html">Log exercise</a></li>
-                    <li><a href="logfood&water.html">Log food/water</a></li>
+                    <li><a href="logexercise">Log exercise</a></li>
+                    <li><a href="logfood&water">Log food/water</a></li>
                   </ul>
                 </li>
                 <li class="dropdown">
                   <a href="#"><img src="/images/user_icon.webp" height="50px" width="50px"></a>
                   <ul class="dropdown-content">
-                    <li><a href="myprofile.html">My Profile</a></li>
-                    <li><a href="#">Log out</a></li>
+                    <li><a href="myprofile">My Profile</a></li>
+                    <li><button onclick="logout()">Log out</button></li>
                   </ul>
                 </li>
             </ul>
@@ -40,10 +42,10 @@
       <br>
       <label for="sport">Sport: </label>
       <select name="sport" id="sport">
-        <option value="Weightlifting">Strength Training</option>
+        <option value="Strength Training">Strength Training</option>
         <option value="Running">Running</option>
-        <option value="Weightlifting">Cycling</option>
-        <option value="Running">Swimming</option>
+        <option value="Cycling">Cycling</option>
+        <option value="Swimming">Swimming</option>
       </select>
       <br>
       <label for="workout-date">Date: </label>
@@ -73,9 +75,70 @@
         <option value="9/10">9/10 (Very Hard)</option>
         <option value="10/10">10/10 (Maximum Exertion)</option>
       </select>
+
+      <div id="reps-sets" class="reps-sets" style="display:block">
+        <button id="add-to-table" class="add-to-table" type="button">+</button>
+        <!-- <button id="delete-exercise-from-table" class="delete-exercise-from-table">-</button> -->
+        <table class="tb" id="tb">
+          <thead>
+            <tr>
+              <th>Exercise</th>
+              <th>Reps/time</th>
+              <th>Sets</th>
+              <th>Rest per set</th>
+            </tr>
+          </thead>
+          <tbody>
+
+          </tbody>
+        </table>
+      </div>
+
+      <div class="elev-gain" id="elev-gain" style="display:none">
+        <label for="elev-gain">Elevation gain: </label>
+        <input type="number" id="elev-gain" name="elev-gain" min="0">
+      </div>
+
+      <div class="distance" id="distance" style="display:none">
+        <label for="distance">Distance: </label>
+        <input type="number" id="distance" name="distance" min="0">
+      </div>
+
+      <input type="submit" value="Submit">
+
     </form>
-    <!-- if workout is weight training: show table to input exercises -->
-    <!-- if workout is cardio: ask for elevation gain -->
-    <!-- estimated calories for cardio -->
 
 </body>
+<script>
+    setTimeout(() => {
+        
+      activitySelect = document.getElementById("sport")
+
+      elevGainInput = document.getElementById("elev-gain")
+
+      
+      distanceInput = document.getElementById("distance")
+
+
+      repsSetsInput = document.getElementById("reps-sets")
+
+
+
+      activitySelect.addEventListener('change', function () {
+          if (activitySelect.value == 'Strength Training') {
+              repsSetsInput.style.display = 'block';
+              elevGainInput.style.display = 'none';
+              distanceInput.style.display = 'none';
+
+          } else {
+              repsSetsInput.style.display = 'none';
+              elevGainInput.style.display = 'block';
+              distanceInput.style.display = 'block';
+          }
+      });
+
+      addToTable()
+
+  }, 100)
+</script>
+</html>

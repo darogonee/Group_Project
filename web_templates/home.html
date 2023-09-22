@@ -5,33 +5,70 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
+    <script src="main.js" defer></script>
     <title>Fitness</title>
 </head>
 <body>
     <div class="container">
         <nav class="navbar">
             <ul>
-                <li><img src="/images/temp_logo.png" height="50px" width="50px"></li>
-                <li><a href="home.html">Home</a></li>
-                <li><a href="/">Activities</a></li>
-                <li><a href="myprogram.html">My Program</a></li>
-                <li><a href="food&water.html">Food & Water</a></li>
+                <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/activities">Activities</a></li>
+                <li><a href="myprogram">My Program</a></li>
+                <li><a href="food&water">Food & Water</a></li>
                 <li class="dropdown right">
                   <a href="#"><img src="/images/plus.png" height="50px" width="50"></a>
                   <ul class="dropdown-content">
-                    <li><a href="logexercise.html">Log exercise</a></li>
-                    <li><a href="logfood&water.html">Log food/water</a></li>
+                    <li><a href="logexercise">Log exercise</a></li>
+                    <li><a href="logfood&water">Log food/water</a></li>
                   </ul>
                 </li>
                 <li class="dropdown">
                   <a href="#"><img src="/images/user_icon.webp" height="50px" width="50px"></a>
                   <ul class="dropdown-content">
-                    <li><a href="myprofile.html">My Profile</a></li>
-                    <li><a href="#">Log out</a></li>
+                    <li><a href="myprofile">My Profile</a></li>
+                    <li><button onclick="logout()">Log out</button></li>
                   </ul>
                 </li>
             </ul>
         </nav>
     </div>
-    <h1>Hello</h1>
+    <h1>Home</h1>
+    <div class="dashboard-container">
+      <div class="recent-activity home-box">
+        <!-- recent exercise stats + map -->
+        <h3>Recent exercise</h3>
+      </div>
+      <div class="nutrition-water-box-container">
+        <div class="estimated-calories home-box">
+          <h3>Calories</h3>
+        </div>
+        <div class="macros home-box">
+          <h3>Macros</h3>
+        </div>
+        <div class="water home-box">
+          <h3>Water</h3>
+        </div>
+      </div>
+      <div class="training-box-container">
+        <div class="training-calendar home-box">
+          <h3>Training Calendar</h3>
+        </div>
+        <div class="last-month home-box">
+          <h3>Last month</h3>
+        </div>
+      </div>
+
+      <div class="recent-badges home-box">
+        <div class="exercise-streak home-box">
+
+        </div>
+        <h3>Recent Badges</h3>
+      </div>
+    
+    </div>
+
+
+
 </body>
