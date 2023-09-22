@@ -137,7 +137,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 values = self.query()
                 # replace the .replace funtion with something to remove special charicters
                 username = values["username"].lower()
-                print(username)
                 password = password_hash(values["password"])
                 passwordrentry = password_hash(values["password-rentry"])
                 if len(username) < 3 or len(username) > 13 or password != passwordrentry or not username.isalnum():
@@ -252,7 +251,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 cookie = self.cookie()
                 with open(f"user_data/{cookie['user']}.json", "w") as file:
                     value = self.query()
-                    print(value)
 
                     json.dump(
                     {
