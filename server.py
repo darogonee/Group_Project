@@ -339,10 +339,15 @@ if __name__ == "__main__":
 
 # 2 - finish cookies
 
-# 3 - upload info from sign up questions into users json file
+# 3 - 
 
 # 4 - add activaites when user trys too
 
 # 5 - put stuff in the home page
 
 # 6 - hrass lewis
+
+
+### Think done needs bug testing TODO
+
+# 1 - upload info from sign up questions into users json file
