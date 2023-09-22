@@ -36,7 +36,6 @@ class FittnessServer(BaseHTTPRequestHandler):
             values[name] = value
         return values
 
-    # @cache
     def do_GET(self):
         match self.path.split("?")[0]:
             case  "/activities":
@@ -50,7 +49,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         activity_template = activity_file.read()
                         # later check
                         Api.refresh(cookie["user"])
-                        activity_data = Api.get_user_activites(cookie['user'])
+                        activity_data = Api.get_user_activites_cached(cookie['user'])
                         tbody = ""
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
@@ -79,20 +78,12 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
-
+            # FIXME
             case "/refresh":
-                print("...")
+                cookie = self.cookie()
+                Api.get_user_activites(cookie['user'])
                 self.redirect("/activities")
-
-                # grab tranning info of strava
-                # grab information in cach
-
-                # check if strava data and cach are the same
-
-                # if true: do nothing 
-                # if false: load strava information
-
-                
+              
             case "/oauth":
                 values = self.query()
                 code = values["code"]
@@ -116,12 +107,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.end_headers()
                 with open("main.js", "rb") as file:
                     self.wfile.write(file.read())
-
-            case "/dosomething":
-                activity_data_to_print =  activity_data[:5]
-                sorted_workouts = sorted(activity_data_to_print, key=lambda x: x["name"])
-                for workout in sorted_workouts:
-                    print(workout["name"])
             
             case "/signin":
                 self.send_response(200)
@@ -210,11 +195,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
                     return
 
-            case "/activities":
-                ...
-            # put activities page here when homepage is done
-
-
             case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -263,7 +243,74 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web_templates/signupquestions.html", "r") as file:
                     signupquestions_page = file.read()
                     self.wfile.write(signupquestions_page.encode())
-            
+
+            case "/signupquestions_action":
+                cookie = self.cookie()
+                goals = 1
+
+                with open(f"user_data/{cookie['user']}.json", "w") as file:
+                    value = self.query()
+                    print(value)
+
+                    json.dump(
+                    {
+                        "goals": {
+                            "cardio": "fitness_goals_cardio" in value,
+                            "strength": "fitness_goals_strength" in value,
+                            "hypertrophy": "fitness_goals_hypertrophy" in value,
+                            "weightloss": "fitness_goals_weightloss" in value,
+                            "endurance": "fitness_goals_endurance" in value,
+                            "weightgain": "fitness_goals_weightgain" in value,                            
+                        },
+                        "weight-units": value['weight-units'],
+                        "weight": value['weight'],
+                        "height-units": value['height-units'],
+                        "height": value['height'],
+                        "dob": value['date_of_birth'],
+                        "sex": {
+                            "male": "male" in value,
+                            "female": "female" in value,
+                        },
+                        "equipment": {
+                            "bench": "equipment_bench" in value,
+                            "medicine-ball": "equipment_medicine-ball" in value,
+                            "cable-machine": "equipment_cable-machine" in value,  
+                            "torso-rotation-machine": "equipment_torso-rotation-machine" in value,  
+                            "ab-roller": "equipment_ab-roller" in value,  
+                            "dumbbell": "equipment_dumbbell" in value,  
+                            "barbell": "equipment_barbell" in value,  
+                            "assisted-pullup-machine": "equipment_assisted-pullup-machine" in value,  
+                            "lat-pulldown-machine": "equipment_lat-pulldown-machine" in value,  
+                            "pullup-bar": "equipment_pullup-bar" in value,   
+                            "v-bar": "equipment_v-bar" in value,           
+                            "machine-row": "equipment_machine-row" in value,           
+                            "ez-bar": "equipment_ez-bar" in value,           
+                            "preacher-curl-machine": "equipment_preacher-curl-machine" in value,           
+                            "rope": "equipment_rope" in value,           
+                            "leg-press-machine": "equipment_leg-press-machine" in value,           
+                            "smith-machine": "equipment_smith-machine" in value,           
+                            "calf-raise-machine": "equipment_calf-raise-machine" in value,          
+                            "chest-press-machine": "equipment_chest-press-machine" in value,          
+                            "bench-press-machine": "equipment_bench-press-machine" in value,          
+                            "plates": "equipment_plate" in value,          
+                            "dip-assist-machine": "equipment_dip-assist-machine" in value,          
+                            "dip-machine": "equipment_dip-machine" in value,                           
+                        },
+                        "training_days": {
+                            "monday": "monday" in value,
+                            "tuesday": "tuesday" in value,
+                            "wednesday": "wednesday" in value,
+                            "thursday": "thursday" in value,
+                            "friday": "friday" in value,
+                            "saturday": "saturday" in value,
+                            "sunday": "sunday" in value,
+                        },
+                        "rhr": value['rhr']
+                    }, file, indent = 4
+                )
+                
+                self.redirect("/")
+                # make a new file for each user
 
             case _:
                 self.send_response(200)
@@ -286,7 +333,7 @@ if __name__ == "__main__":
     print("Server stopped.")
 
 # TODO / FIXME
-# 1 - fix cache reloading acctivites
+# 1 - add expiry date to the cached info
 
 # 2 - finish cookies
 

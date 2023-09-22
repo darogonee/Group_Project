@@ -31,7 +31,12 @@ def refresh_tokens(client_id, client_secret, refresh_token):
         return None
 
 # line 27 single handly more then triples the loading speed of the activites
+
+# make cach expir after five miniutes
 @cache
+def get_user_activites_cached(user):
+    return get_user_activites(user)
+
 def get_user_activites(user):
     activites_url = "https://www.strava.com/api/v3/athlete/activities"
 
@@ -48,7 +53,7 @@ def save(access_token, refresh_token, path):
         json.dump(
             {
                 "refresh_token": refresh_token,
-                "access_token": access_token
+                "access_token": access_token,
             },
             file, indent = 4
         )
