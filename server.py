@@ -224,6 +224,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprogram_page = file.read()                        
                     self.wfile.write(myprogram_page.encode())
 
+                print(self.get_cookie())
+
             case "/food&water":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
