@@ -163,9 +163,35 @@
     <input type="number" id="rhr" name="rhr" value="" min="0" max="220">
 
     <br><br><br>
-    <input type="submit" id="submit" value="Submit">
+
+    <input type="submit" id="submit" value="submit">
 
 
   </form>
 </body>
+<script>
+  function validateForm() {
+      // Get all day checkboxes
+      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      var atLeastOneChecked = false;
+
+      // Check if at least one checkbox is checked
+      for (var i = 0; i < checkboxes.length; i++) {
+        if (checkboxes[i].checked) {
+          atLeastOneChecked = true;
+          break; // Exit the loop if one checkbox is checked
+        }
+      }
+
+      // If at least one checkbox is checked, allow form submission
+      if (atLeastOneChecked) {
+        return true;
+      } else {
+        // Display an error message (you can customize this part)
+        alert("Please select at least one day to work out.");
+        return false; // Prevent form submission
+      }
+    }
+
+</script>
 </html>
