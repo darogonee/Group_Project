@@ -2,11 +2,14 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import Api, os, random
 from hash_function import password_hash 
 from datetime import datetime
-import time, json, datetime
+import time, json, datetime, uuid
 
+# NOTE restart server aprox 30 days NOTE
 
 hostName = "localhost"
 serverPort = 8080
+
+uuid2user = {}
 
 class FittnessServer(BaseHTTPRequestHandler):
     def redirect(self, link):
@@ -25,7 +28,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             values[name] = value
         return values
 
-    def cookie(self):
+    def get_cookie(self):
         if self.headers.get("Cookie") is None:
             return {}
         cookie = self.headers.get("Cookie").split(";")
@@ -35,11 +38,24 @@ class FittnessServer(BaseHTTPRequestHandler):
             value = query.split("=")[1].strip()
             values[name] = value
         return values
+        
+    def set_cookie(self, user):
+        user_uuid = uuid.uuid4().hex
+        uuid2user[user_uuid] = user
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
+        self.send_header("Set-Cookie", f"user={user_uuid}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
+        self.end_headers()
 
+    def get_username(self):
+        cookie = self.get_cookie()
+        if cookie["user"] in uuid2user:
+            return uuid2user[cookie["user"]]
+        self.redirect("/signin")
+        
     def do_GET(self):
         match self.path.split("?")[0]:
             case  "/activities":
-                cookie = self.cookie()
+                user = self.get_username()
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
 
@@ -48,8 +64,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("web_templates/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
                         # later check
-                        Api.refresh(cookie["user"])
-                        activity_data = Api.get_user_activites(cookie['user'])
+                        Api.refresh(user)
+                        activity_data = Api.get_user_activites(user)
                         tbody = ""
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
@@ -78,20 +94,23 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
-            # FIXME
+
+            case "/logout":
+                uuid2user.pop(self.get_cookie()['user'])
+
             case "/refresh":
-                cookie = self.cookie()
-                Api.get_user_activites.clear(cookie['user'])
+                user = self.get_username()
+                Api.get_user_activites.clear(user)
                 self.redirect("/activities")
               
             case "/oauth":
                 values = self.query()
                 code = values["code"]
-                cookie = self.cookie()   
+                user = self.get_username()   
                 if "user" not in cookie:
                     self.redirect("/signin")
                     return             
-                Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), f"users/{cookie['user']}.json")
+                Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), f"users/{user}.json")
                 self.redirect("/")
 
             case "/main.css":
@@ -126,9 +145,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     data = json.load(file)  
                 if username in data:
                     if password == data[username]:
-                        expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
-                        self.send_header("Set-Cookie", f"user={username}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
-                        self.end_headers()
+                        self.set_cookie(username)
                         with open("web_templates/redirect.html", "r") as file:
                             self.wfile.write(file.read().replace("url", "/").encode())
                         return
@@ -157,9 +174,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("passwords.json", "w") as file:
                         json.dump(data, file, indent = 4)
 
-                expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
-                self.send_header("Set-Cookie", f"user={username}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
-                self.end_headers()
+                self.set_cookie(username)
+                
                 with open("web_templates/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/signupqs").encode())
 
@@ -188,18 +204,18 @@ class FittnessServer(BaseHTTPRequestHandler):
                     home_page = file.read()                        
                     self.wfile.write(home_page.encode())
 
-                cookie = self.cookie()
+                cookie = self.get_cookie()
                 if "user" not in cookie:
                     self.redirect("/signin")
                     return
-                if not Api.check(cookie["user"]):
+                user = self.get_username()
+                if not Api.check(user):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
                     return
-                # FIXME
-                if not os.path.isfile(f"user_data/{cookie['user']}.json"):
+                if not os.path.exists(f"user_data/{user}.json"):
                     self.redirect("/signupquestions")
+                    return
 
-                # check if user has data file
             case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -250,8 +266,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(signupquestions_page.encode())
 
             case "/signupquestions_action":
-                cookie = self.cookie()
-                with open(f"user_data/{cookie['user']}.json", "w") as file:
+                user = self.get_username()
+                with open(f"user_data/{user}.json", "w") as file:
                     value = self.query()
 
                     json.dump(
@@ -331,9 +347,9 @@ if __name__ == "__main__":
     print("Server stopped.")
 
 # NOTE
-# 1 - finish cookies
+# 1 - remove the defult case off get for lewis to do
 
-# 2 - remove the defult case off get
+# 2 - 
 
 # 3 - 
 
@@ -341,7 +357,7 @@ if __name__ == "__main__":
 
 # 5 - put stuff in the home page
 
-# 6 - hrass lewis
+# 6 - 
 
 # NOTE/BUG/FIXME/TODO
 
