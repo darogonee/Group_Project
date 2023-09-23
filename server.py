@@ -94,7 +94,6 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
-
             case "/logout":
                 uuid2user.pop(self.get_cookie()['user'])
 
@@ -106,10 +105,11 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/oauth":
                 values = self.query()
                 code = values["code"]
-                user = self.get_username()   
+                cookie = self.get_cookie()  
                 if "user" not in cookie:
                     self.redirect("/signin")
-                    return             
+                    return  
+                user = self.get_username()            
                 Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), f"users/{user}.json")
                 self.redirect("/")
 
@@ -210,7 +210,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     return
                 user = self.get_username()
                 if not Api.check(user):
-                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all")
+                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
                     return
                 if not os.path.exists(f"user_data/{user}.json"):
                     self.redirect("/signupquestions")
@@ -334,7 +334,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("."+self.path, "rb") as file:
                     file_data = file.read()                        
                     self.wfile.write(file_data)
-
 
 if __name__ == "__main__":        
     webServer = HTTPServer((hostName, serverPort), FittnessServer)

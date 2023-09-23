@@ -53,3 +53,20 @@ def save(access_token, refresh_token, path):
         )
 def refresh(user):
     save(*refresh_tokens(client_id, client_secret, load(user)[0]), f"users/{user}.json")
+
+
+# LOOK AT ME i work!
+def upload(user, name, type, sport_type, start_date_local, elapsed_time, distance, description = "", trainer = 0, commute = 0):
+    return requests.post(f"https://www.strava.com/api/v3/activities", params= {
+            "name": name, 
+            "type": type, 
+            "sport_type": sport_type, 
+            "start_date_local": start_date_local,
+            "elapsed_time": elapsed_time ,
+            "description": description,
+            "distance": distance, 
+            "trainer": trainer,
+            "commute": commute,
+        },
+        headers = {"Authorization": "Bearer "  + refresh_tokens(client_id, client_secret, load(user)[0])[0]
+    }) 
