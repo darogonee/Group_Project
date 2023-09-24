@@ -16,7 +16,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
         self.end_headers()
-        with open("web_templates/redirect.html", "r") as file:
+        with open("web/html/redirect.html", "r") as file:
             self.wfile.write(file.read().replace("url", link).encode())
     
     def query(self):
@@ -110,8 +110,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
 
                 self.end_headers()
-                with open("web_templates/activities.html", "r") as activities_file:
-                    with open("web_templates/activity-template.html", "r") as activity_file:
+                with open("web/html/activities.html", "r") as activities_file:
+                    with open("web/html/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
                         # later check
                         Api.refresh(user)
@@ -167,21 +167,21 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/css")
                 self.end_headers()
-                with open("main.css", "rb") as file:
+                with open("web/css/main.css", "rb") as file:
                     self.wfile.write(file.read())
             
             case "/main.js":
                 self.send_response(200)
                 self.send_header("Content-type", "application/javascript")
                 self.end_headers()
-                with open("main.js", "rb") as file:
+                with open("web/js/main.js", "rb") as file:
                     self.wfile.write(file.read())
             
             case "/signin":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/signin.html", "r") as file:
+                with open("web/html/signin.html", "r") as file:
                     login_page = file.read()                        
                     self.wfile.write(login_page.encode())
 
@@ -196,7 +196,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if username in data:
                     if password == data[username]:
                         self.set_cookie(username)
-                        with open("web_templates/redirect.html", "r") as file:
+                        with open("web/html/redirect.html", "r") as file:
                             self.wfile.write(file.read().replace("url", "/").encode())
                         return
                 self.redirect("/signin")
@@ -226,14 +226,14 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 self.set_cookie(username)
                 
-                with open("web_templates/redirect.html", "r") as file:
+                with open("web/html/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/signupqs").encode())
 
             case "/signup":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/signup.html", "r") as file:
+                with open("web/html/signup.html", "r") as file:
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
@@ -241,7 +241,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/signupquestions.html", "r") as file:
+                with open("web/html/signupquestions.html", "r") as file:
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
@@ -250,7 +250,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/home.html", "r") as file:
+                with open("web/html/home.html", "r") as file:
                     home_page = file.read()                        
                     self.wfile.write(home_page.encode())
 
@@ -270,7 +270,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/myprogram.html", "r") as file:
+                with open("web/html/myprogram.html", "r") as file:
                     myprogram_page = file.read()                        
                     self.wfile.write(myprogram_page.encode())
 
@@ -290,7 +290,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/food&water.html", "r") as file:
+                with open("web/html/food&water.html", "r") as file:
                     foodwater_page = file.read()
                     self.wfile.write(foodwater_page.encode())
 
@@ -299,7 +299,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/logexercise.html", "r") as file:
+                with open("web/html/logexercise.html", "r") as file:
                     logexercise_page = file.read()
                     self.wfile.write(logexercise_page.encode())
 
@@ -307,7 +307,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/logfood&water.html", "r") as file:
+                with open("web/html/logfood&water.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
@@ -315,7 +315,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/myprofile.html", "r") as file:
+                with open("web/html/myprofile.html", "r") as file:
                     myprofile_page = file.read()
                     self.wfile.write(myprofile_page.encode())
 
@@ -323,7 +323,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web_templates/signupquestions.html", "r") as file:
+                with open("web/html/signupquestions.html", "r") as file:
                     signupquestions_page = file.read()
                     self.wfile.write(signupquestions_page.encode())
 
@@ -392,7 +392,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 file_type = self.path.split(".")[-1]
                 self.send_header("Content-type", f"image/{file_type}")
                 self.end_headers()
-                with open("."+self.path, "rb") as file:
+                with open("web/"+self.path, "rb") as file:
                     file_data = file.read()                        
                     self.wfile.write(file_data)
 
