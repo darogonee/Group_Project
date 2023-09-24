@@ -191,7 +191,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 password = password_hash(values["password"])
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
-                with open("passwords.json", "r") as file:
+                with open("data/passwords.json", "r") as file:
                     data = json.load(file)  
                 if username in data:
                     if password == data[username]:
@@ -213,7 +213,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
-                with open("passwords.json", "r") as file:
+                with open("data/passwords.json", "r") as file:
                     data = json.load(file)  
 
                     if username in data:
@@ -221,7 +221,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         return
 
                     data[username] = password
-                    with open("passwords.json", "w") as file:
+                    with open("data/passwords.json", "w") as file:
                         json.dump(data, file, indent = 4)
 
                 self.set_cookie(username)

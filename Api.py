@@ -12,7 +12,7 @@ def load(user):
         return refresh_token, access_token
     raise FileNotFoundError(f"User '{user}' has no data file. Perhaps it was deleted?")
 
-strava_api = json.load(open("strava_api.json"))
+strava_api = json.load(open("data/strava_api.json"))
 client_secret = strava_api["client_secret"]
 client_id = strava_api["client_id"]
 
