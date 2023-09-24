@@ -51,7 +51,30 @@ class FittnessServer(BaseHTTPRequestHandler):
         if cookie["user"] in uuid2user:
             return uuid2user[cookie["user"]]
         self.redirect("/signin")
+
+    def get_user_data(self):
+        user = self.get_username()
+        user_data_file = f"/user_data/{user}.json"
+        with open(user_data_file, "r") as file:
+            data = json.load(file)
+
+        print(data)
+
+    def create_program(self, data):
+        cardio = False
+        weights = False
+        fitness_goals = []
+        for key,value in data["goals"].items():
+            if value:
+                fitness_goals.append(key)
+
+        for goal in fitness_goals:
+            if goal == "cardio":
+                cardio = True
         
+            # elif goal == ""
+
+
     def do_GET(self):
         match self.path.split("?")[0]:
             case  "/activities":
@@ -224,7 +247,17 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprogram_page = file.read()                        
                     self.wfile.write(myprogram_page.encode())
 
-                print(self.get_cookie())
+                user = self.get_username()
+                print(user)
+                user_data_file = f"user_data/{user}.json"
+                with open(user_data_file, "r") as file:
+                    data = json.load(file)
+
+                print(data)
+                self.create_program(data)
+    
+
+
 
             case "/food&water":
                 self.send_response(200)
@@ -274,14 +307,13 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     json.dump(
                     {
-                        "goals": {
+                        "fitness-goals": {
                             "cardio": "fitness_goals_cardio" in value,
                             "strength": "fitness_goals_strength" in value,
                             "hypertrophy": "fitness_goals_hypertrophy" in value,
-                            "weightloss": "fitness_goals_weightloss" in value,
                             "endurance": "fitness_goals_endurance" in value,
-                            "weightgain": "fitness_goals_weightgain" in value,                            
                         },
+                        "weight-goal": value['weight-goal'],
                         "weight-units": value['weight-units'],
                         "weight": value['weight'],
                         "height-units": value['height-units'],
