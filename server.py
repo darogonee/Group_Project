@@ -89,7 +89,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             program[day] = day in training_days
 
         if "endurance" in fitness_goals or "strength" in fitness_goals or "hypertrophy" in fitness_goals:
-            
+           ... 
             
 
         
