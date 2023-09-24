@@ -61,18 +61,45 @@ class FittnessServer(BaseHTTPRequestHandler):
         print(data)
 
     def create_program(self, data):
-        cardio = False
-        weights = False
+        program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None}
+        weight_programs = {1:"full-body", 2:"upper-lower", 3:"ppl", 4:"upper-lower-twice", 5:"ulppl", 6:"ppl-twice"}
         fitness_goals = []
-        for key,value in data["goals"].items():
+        equipment = []
+        training_days = []
+        
+        for key,value in data["fitness-goals"].items():
             if value:
                 fitness_goals.append(key)
-
-        for goal in fitness_goals:
-            if goal == "cardio":
-                cardio = True
         
-            # elif goal == ""
+        for key,value in data["equipment"].items():
+            if value:
+                equipment.append(key)
+
+        for key,value in data["training_days"].items():
+            if value:
+                training_days.append(key)
+
+        # rest day if all days ticked
+        if training_days.count() > 6:
+            rest_day = random.choice(training_days)
+            training_days.remove(rest_day)
+
+        #available days True and unavailable days False
+        for day in program.keys():
+            program[day] = day in training_days
+
+        if "endurance" in fitness_goals or "strength" in fitness_goals or "hypertrophy" in fitness_goals:
+            
+            
+
+        
+
+
+        
+
+        
+        
+        
 
 
     def do_GET(self):
@@ -319,7 +346,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         "height-units": value['height-units'],
                         "height": value['height'],
                         "dob": value['date_of_birth'],
-                        "sex": value['sex'],
+                      "sex": value['sex'],
                         "equipment": {
                             "bench": "equipment_bench" in value,
                             "medicine-ball": "equipment_medicine-ball" in value,
