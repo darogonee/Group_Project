@@ -308,8 +308,8 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 
                 date = value['workout-date'].split("-")
-                time = value['workout-time'].split("%3A")
-                timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]))
+                times = value['workout-time'].split("%3A")
+                timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(times[0]), int(times[1]))
 
                 print(Api.upload(user, value['title'], value['sport'], value['sport'], f"{timestamp}", 50, 50))
 
