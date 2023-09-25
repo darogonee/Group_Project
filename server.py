@@ -89,7 +89,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             program[day] = day in training_days
 
         if "endurance" in fitness_goals or "strength" in fitness_goals or "hypertrophy" in fitness_goals:
-           ... 
+           ...
             
 
         
@@ -352,6 +352,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "hypertrophy": "fitness_goals_hypertrophy" in value,
                             "endurance": "fitness_goals_endurance" in value,
                         },
+                        "fav-"
                         "weight-goal": value['weight-goal'],
                         "weight-units": value['weight-units'],
                         "weight": value['weight'],
