@@ -1,5 +1,5 @@
 import requests, json, os
-from cache import cache
+from python.cache import cache
 
 def check(user):
     return os.path.exists(f"users/{user}.json")

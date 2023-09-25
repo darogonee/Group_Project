@@ -1,8 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import Api, os, random
-from hash_function import password_hash 
+import python.Api, os, random
+from python.hash_function import password_hash 
 from datetime import datetime
 import time, json, datetime, uuid
+
 
 # NOTE restart server aprox 30 days NOTE
 
@@ -114,8 +115,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("web/html/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
                         # later check
-                        Api.refresh(user)
-                        activity_data = Api.get_user_activites(user)
+                        python.Api.refresh(user)
+                        activity_data = python.Api.get_user_activites(user)
                         tbody = ""
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
@@ -151,7 +152,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/refresh":
                 user = self.get_username()
                 # print("Ballz (pay ID 0499076683, pay me)")
-                Api.get_user_activites.clear(user)
+                python.Api.get_user_activites.clear(user)
                 self.redirect("/activities")
               
             case "/oauth":
@@ -162,7 +163,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.redirect("/signin")
                     return  
                 user = self.get_username()            
-                Api.save(*Api.get_access(Api.client_id, Api.client_secret, code), f"users/{user}.json")
+                python.Api.save(*python.Api.get_access(python.Api.client_id, python.Api.client_secret, code), f"users/{user}.json")
                 self.redirect("/")
 
             case "/main.css":
@@ -261,7 +262,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.redirect("/signin")
                     return
                 user = self.get_username()
-                if not Api.check(user):
+                if not python.Api.check(user):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
                     return
                 if not os.path.exists(f"user_data/{user}.json"):
@@ -311,7 +312,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 times = value['workout-time'].split("%3A")
                 timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(times[0]), int(times[1]))
 
-                print(Api.upload(user, value['title'], value['sport'], value['sport'], f"{timestamp}", 50, 50))
+                print(python.Api.upload(user, value['title'], value['sport'], value['sport'], f"{timestamp}", 50, 50))
 
 
 
@@ -420,13 +421,13 @@ if __name__ == "__main__":
     print("Server stopped.")
 
 # NOTE
-# 1 - remove the defult case off get for lewis to do
+# 1 - food thing
 
 # 2 - 
 
-# 3 - 
+# 3 - remove the defult case off get for lewis to do
 
-# 4 - add activaites when user trys too
+# 4 - 
 
 # 5 - put stuff in the home page
 
@@ -437,3 +438,5 @@ if __name__ == "__main__":
 ### Think done needs bug testing BUG 
 
 # 1 - upload info from sign up questions into users json file
+
+# 2 - add activaites when user trys too
