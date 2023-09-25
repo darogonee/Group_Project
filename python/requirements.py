@@ -34,4 +34,3 @@ def calculate_goal_cals(eer, weight_goal):
     elif weight_goal == "lose":
         goal_cals = eer - 500
     return goal_cals
-

@@ -54,8 +54,6 @@ def save(access_token, refresh_token, path):
 def refresh(user):
     save(*refresh_tokens(client_id, client_secret, load(user)[0]), f"users/{user}.json")
 
-
-# LOOK AT ME i work!
 def upload(user:str, name:str, type:str, start_date_local:str, 
         elapsed_time:int, distance:float = 0, elevation:float = 0, 
         description:str = "", trainer:int = 0, commute:int = 0,
