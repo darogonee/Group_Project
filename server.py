@@ -444,15 +444,15 @@ if __name__ == "__main__":
 # NOTE
 # 1 - food thing
 
-# 2 - 
+# 2 - individual activities view
 
-# 3 - remove the defult case off get for lewis to do
+# 3 - activities sorter
 
 # 4 - 
 
 # 5 - put stuff in the home page
 
-# 6 - 
+# 6 - remove the defult case off get for lewis to do
 
 # NOTE/BUG/FIXME/TODO
 
