@@ -41,10 +41,57 @@
       <br>
       <label for="sport">Sport: </label>
       <select name="sport" id="sport">
-        <option value="Strength Training">Strength Training</option>
-        <option value="Running">Running</option>
-        <option value="Cycling">Cycling</option>
-        <option value="Swimming">Swimming</option>
+        <option value="Virtual Ride">Virtual Ride</option>
+        <option value="Run">Run</option>
+        <option value="Swim">Swim</option>
+        <option value="Ride">Ride</option>
+        <option value="Workout">Workout</option>
+        <option value="Walk">Walk</option>
+        <option value="Hike">Hike</option>
+        <option value="Trail Run">Trail Run</option>
+        <option value="Mountain Bike Ride">Mountain Bike Ride</option>
+        <option value="Gravel Ride">Gravel Ride</option>
+        <option value="E-Bike Ride">E-Bike Ride</option>
+        <option value="E-Mountain Bike Ride">E-Mountain Bike Ride</option>
+        <option value="Alpine">Alpine</option>
+        <option value="Badminton">Badminton</option>
+        <option value="Backcountry Ski">Backcountry Ski</option>
+        <option value="Canoe">Canoe</option>
+        <option value="Crossfit">Crossfit</option> 
+        <option value="Elliptical">Elliptical</option>
+        <option value="Golf">Golf</option>
+        <option value="Ice Skate">Ice Skate</option>
+        <option value="Inline Skate">Inline Skate</option>
+        <option value="Handcycle">Handcycle</option>
+        <option value="HIIT">HIIT</option>
+        <option value="Kayaking">Kayaking</option>
+        <option value="Kitesurf">Kitesurf</option>
+        <option value="Nordic Ski">Nordic Ski</option>
+        <option value="Pickleball">Pickleball</option>
+        <option value="Workout">Pilates</option>
+        <option value="Racquetball">Racquetball</option>
+        <option value="Rock Climb">Rock Climb</option>
+        <option value="Roller Ski">Roller Ski</option>
+        <option value="Rowing">Rowing</option>
+        <option value="Sail">Sail</option>
+        <option value="Skateboard">Skateboard</option>
+        <option value="Snowboard">Snowboard</option>
+        <option value="Snowshoe">Snowshoe</option>
+        <option value="Soccer">Football (Soccer)</option>
+        <option value="Squash">Squash</option>
+        <option value="Stand Up Paddling">Stand Up Paddling</option>
+        <option value="Stair-Stepper">Stair-Stepper</option>
+        <option value="Surfing">Surfing</option>
+        <option value="Table Tennis">Table Tennis</option>
+        <option value="Tennis">Tennis</option>
+        <option value="Velomoblie">Velomoblie</option>
+        <option value="Virtual Run">Virtual Run</option>
+        <option value="Virtual Rowing">Virtual Rowing</option>
+        <option value="Workout">Weight Training</option>
+        <option value="Windsurf">Windsurf</option>
+        <option value="Wheelchair">Wheelchair</option>
+        <option value="Workout">Yoga</option>
+
       </select>
       <br>
       <label for="workout-date">Date: </label>
@@ -104,6 +151,7 @@
       </div>
 
       <input type="submit" value="Submit">
+      <a href="upload_exercise">Submite</a>
 
     </form>
 
@@ -122,7 +170,7 @@
 
 
       activitySelect.addEventListener('change', function () {
-          if (activitySelect.value == 'Strength Training') {
+          if (activitySelect.value == 'Workout') {
               repsSetsInput.style.display = 'block';
               elevGainInput.style.display = 'none';
               distanceInput.style.display = 'none';

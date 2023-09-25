@@ -45,7 +45,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
         self.send_header("Set-Cookie", f"user={user_uuid}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
         self.end_headers()
-
+        datetime.datetime.isoformat
     def get_username(self):
         cookie = self.get_cookie()
         if cookie["user"] in uuid2user:
@@ -144,11 +144,13 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
+                        # Api.upload(user, "9/11", "Run", "Run", "2001-9-11T19:20:30+01:00", 120, 100000, "The sencond plain is on its way", 1, 1)
             case "/logout":
                 uuid2user.pop(self.get_cookie()['user'])
 
             case "/refresh":
                 user = self.get_username()
+                # print("Ballz (pay ID 0499076683, pay me)")
                 Api.get_user_activites.clear(user)
                 self.redirect("/activities")
               
@@ -282,8 +284,6 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 print(data)
                 self.create_program(data)
-    
-
 
 
             case "/food&water":
@@ -302,6 +302,18 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/logexercise.html", "r") as file:
                     logexercise_page = file.read()
                     self.wfile.write(logexercise_page.encode())
+                
+                user = self.get_username()
+                value = self.query() 
+
+                
+                date = value['workout-date'].split("-")
+                time = value['workout-time'].split("%3A")
+                timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]))
+
+                print(Api.upload(user, value['title'], value['sport'], value['sport'], f"{timestamp}", 50, 50))
+
+
 
             case "/logfood&water":
                 self.send_response(200)
@@ -392,7 +404,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 file_type = self.path.split(".")[-1]
                 self.send_header("Content-type", f"image/{file_type}")
                 self.end_headers()
-                with open("web/"+self.path, "rb") as file:
+                with open("web"+self.path, "rb") as file:
                     file_data = file.read()                        
                     self.wfile.write(file_data)
 

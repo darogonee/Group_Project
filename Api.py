@@ -56,7 +56,7 @@ def refresh(user):
 
 
 # LOOK AT ME i work!
-def upload(user, name, type, sport_type, start_date_local, elapsed_time, distance, description = "", trainer = 0, commute = 0):
+def upload(user:str, name:str, type:str, sport_type:str, start_date_local:str, elapsed_time:int, distance:int, description:str = "", trainer:int = 0, commute:int = 0):
     return requests.post(f"https://www.strava.com/api/v3/activities", params= {
             "name": name, 
             "type": type, 
@@ -70,3 +70,5 @@ def upload(user, name, type, sport_type, start_date_local, elapsed_time, distanc
         },
         headers = {"Authorization": "Bearer "  + refresh_tokens(client_id, client_secret, load(user)[0])[0]
     }) 
+# print(upload("oliver", "Ru11n", "Run", "Run", "2014-10-20T19:20:30+01:00", 50, 50, "gg"))
+
