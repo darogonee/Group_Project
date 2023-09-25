@@ -56,19 +56,26 @@ def refresh(user):
 
 
 # LOOK AT ME i work!
-def upload(user:str, name:str, type:str, sport_type:str, start_date_local:str, elapsed_time:int, distance:int, description:str = "", trainer:int = 0, commute:int = 0):
+def upload(user:str, name:str, type:str, start_date_local:str, 
+        elapsed_time:int, distance:float = 0, elevation:float = 0, 
+        description:str = "", trainer:int = 0, commute:int = 0,
+        percieved_exertion:int = 5, exercises = {}):
+
+    ex_description = description + "\nZAMO_DATA\n" + json.dumps({
+        "percieved_exertion": percieved_exertion,
+        "exercises": exercises
+    })
     return requests.post(f"https://www.strava.com/api/v3/activities", params= {
             "name": name, 
             "type": type, 
-            "sport_type": sport_type, 
+            "sport_type": type, 
             "start_date_local": start_date_local,
             "elapsed_time": elapsed_time ,
-            "description": description,
+            "description": ex_description,
             "distance": distance, 
+            "elevation": elevation,
             "trainer": trainer,
             "commute": commute,
         },
         headers = {"Authorization": "Bearer "  + refresh_tokens(client_id, client_secret, load(user)[0])[0]
     }) 
-# print(upload("oliver", "Ru11n", "Run", "Run", "2014-10-20T19:20:30+01:00", 50, 50, "gg"))
-

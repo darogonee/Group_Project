@@ -305,16 +305,37 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(logexercise_page.encode())
                 
                 user = self.get_username()
-                value = self.query() 
-
-                
+                value = self.query()             
                 date = value['workout-date'].split("-")
                 times = value['workout-time'].split("%3A")
+                workout_time = (int(value['workout-hrs'])*3600) + (int(value['workout-mins'])*60) + int(value['workout-secs']) 
                 timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(times[0]), int(times[1]))
 
-                print(python.Api.upload(user, value['title'], value['sport'], value['sport'], f"{timestamp}", 50, 50))
-
-
+                exercises = {}
+                for item in value:
+                    if item.startswith("exercise_input"):
+                        number = int(item[len("exercise_input"):])
+                        current = exercises.get(number, {})
+                        current['name'] = value[item]
+                        exercises[number] = current
+                    elif item.startswith("repstime_input"):
+                        number = int(item[len("repstime_input"):])
+                        current = exercises.get(number, {})
+                        current['reps'] = value[item]
+                        exercises[number] = current
+                    elif item.startswith("sets_input"):
+                        number = int(item[len("sets_input"):])
+                        current = exercises.get(number, {})
+                        current['sets'] = value[item]
+                        exercises[number] = current
+                    elif item.startswith("rest_input"):
+                        number = int(item[len("rest_input"):])
+                        current = exercises.get(number, {})
+                        current['rest'] = value[item]
+                        exercises[number] = current
+                python.Api.upload(user, value['title'], value['sport'], str(timestamp), 
+                    workout_time, value['distance'], value['elev-gain'], "hello?", 0, 0, 
+                    int(value['percieved-exertion']), exercises)
 
             case "/logfood&water":
                 self.send_response(200)
