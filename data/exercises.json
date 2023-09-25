@@ -1,0 +1,542 @@
+[
+    {"exercise_id": 1, "muscle_group": "Abdominals - Lower", "exercise_name": "Full Reverse Crunch", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 2, "muscle_group": "Abdominals - Lower", "exercise_name": "Incline Hip Thrust", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "bench"
+    },
+    {"exercise_id": 3, "muscle_group": "Abdominals - Lower", "exercise_name": "Incline Reverse Crunch", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 4, "muscle_group": "Abdominals - Lower", "exercise_name": "Lying Hip Thrust", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 5, "muscle_group": "Abdominals - Lower", "exercise_name": "Reverse Crunch", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 6, "muscle_group": "Abdominals - Lower", "exercise_name": "Reverse Medicine Ball Crunch", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "medicine ball"
+    },
+    {"exercise_id": 7, "muscle_group": "Abdominals - Obliques", "exercise_name": "Alternating Heel Touch", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 8, "muscle_group": "Abdominals - Obliques", "exercise_name": "Bent-Knee Medicine Ball Hip Rotation", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "medicine ball"
+    },
+    {"exercise_id": 9, "muscle_group": "Abdominals - Obliques", "exercise_name": "Cable Chop", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "C", "joint": "M", "equipment": "cable machine"
+    },
+    {"exercise_id": 10, "muscle_group": "Abdominals - Obliques", "exercise_name": "Cross Crunch", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 11, "muscle_group": "Abdominals - Obliques", "exercise_name": "Cross Crunch w/ Medicine Ball", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "medicine ball"
+    },
+    {"exercise_id": 12, "muscle_group": "Abdominals - Obliques", "exercise_name": "Decline Cross Sit-Up", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "bench"
+    },
+    {"exercise_id": 13, "muscle_group": "Abdominals - Obliques", "exercise_name": "Decline Sit-Up w/ Twist", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "bench"
+    },
+    {"exercise_id": 14, "muscle_group": "Abdominals - Obliques", "exercise_name": "Reverse Cable Chop", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "C", "joint": "M", "equipment": "cable machine"
+    },
+    {"exercise_id": 15, "muscle_group": "Abdominals - Obliques", "exercise_name": "Seated Medicine Ball Twist", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "medicine ball"
+    },
+    {"exercise_id": 16, "muscle_group": "Abdominals - Obliques", "exercise_name": "Trunk Rotator", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "torso rotation machine"
+    },
+    {"exercise_id": 17, "muscle_group": "Abdominals - Total", "exercise_name": "Front Plank (from knees)", "level": "Beginner", "ulc": "Core", "pp": "Static", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 18, "muscle_group": "Abdominals - Total", "exercise_name": "Front Plank (from toes)", "level": "Intermediate", "ulc": "Core", "pp": "Static", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 19, "muscle_group": "Abdominals - Total", "exercise_name": "Front Plank (tripod - 1 arm and 2 legs or 2 legs and 1 arm)", "level": "Advanced", "ulc": "Core", "pp": "Static", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 20, "muscle_group": "Abdominals - Total", "exercise_name": "Side-Plank (from knees)", "level": "Intermediate", "ulc": "Core", "pp": "Static", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 21, "muscle_group": "Abdominals - Total", "exercise_name": "Side-Plank (hip lift)", "level": "Beginner", "ulc": "Core", "pp": "Static", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 22, "muscle_group": "Abdominals - Total", "exercise_name": "Side-Plank (from toes)", "level": "Advanced", "ulc": "Core", "pp": "Static", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 23, "muscle_group": "Abdominals - Total", "exercise_name": "Ab Cycle", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 24, "muscle_group": "Abdominals - Total", "exercise_name": "Kneeling Ab Rollout", "level": "Intermediate", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "Ab roller"
+    },
+    {"exercise_id": 25, "muscle_group": "Abdominals - Total", "exercise_name": "Medicine Ball V-Up", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "medicine ball"
+    },
+    {"exercise_id": 26, "muscle_group": "Abdominals - Total", "exercise_name": "V-Up", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 27, "muscle_group": "Abdominals - Total", "exercise_name": "Weighted V-Up", "level": "Intermediate", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "medicine ball"
+    },
+    {"exercise_id": 28, "muscle_group": "Abdominals - Upper", "exercise_name": "Bent Knee Sit-Up", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 29, "muscle_group": "Abdominals - Upper", "exercise_name": "Bent-Knee Crunch", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 30, "muscle_group": "Abdominals - Upper", "exercise_name": "Crunch", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 31, "muscle_group": "Abdominals - Upper", "exercise_name": "Crunch", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 32, "muscle_group": "Abdominals - Upper", "exercise_name": "Decline Crunch", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "bench"
+    },
+    {"exercise_id": 33, "muscle_group": "Abdominals - Upper", "exercise_name": "Decline Sit-Up", "level": "Advanced", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "bench"
+    },
+    {"exercise_id": 34, "muscle_group": "Abdominals - Upper", "exercise_name": "Heel Touch", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 35, "muscle_group": "Abdominals - Upper", "exercise_name": "Sit-Up", "level": "Beginner", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 36, "muscle_group": "Abdominals - Upper", "exercise_name": "Weighted Crunch", "level": "Intermediate", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "medicine ball"
+    },
+    {"exercise_id": 37, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "Assisted Pull-Up", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "assisted pullup machine"
+    },
+    {"exercise_id": 38, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "Close-Grip Lat Pulldown", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "M", "joint": "M", "equipment": "lat pulldown machine"
+    },
+    {"exercise_id": 39, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "Inverted Pull-Up", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 40, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "Lat Pulldown", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "lat pulldown machine"
+    },
+    {"exercise_id": 41, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "Pull-Up", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "pullup bar"
+    },
+    {"exercise_id": 42, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "Reverse-Grip Lat Pullown", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "lat pulldown machine"
+    },
+    {"exercise_id": 43, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "Reverse-Grip Pull-Up", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "pullup bar"
+    },
+    {"exercise_id": 44, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "V-Bar Pull-Up", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "vbar, pullup bar"
+    },
+    {"exercise_id": 45, "muscle_group": "Back - Latissimus Dorsi", "exercise_name": "Wide-Grip Lat Pulldown", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "lat pulldown machine"
+    },
+    {"exercise_id": 46, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Bent-Over Alternating Dumbbell Row", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 47, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Bent-Over Barbell Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 48, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Bent-Over Dumbbell Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 49, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Bent-Over Hammer Dumbbell Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 50, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Bent-Over Long Barbell Row", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 51, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Bent-Over Reverse-Grip Barbell Row", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 52, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Bent-Over Single-Arm Long Barbell Row", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 53, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Machine Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "M", "joint": "M", "equipment": "machine row"
+    },
+    {"exercise_id": 54, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "One Arm Dumbbell Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 55, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Reverse Incline Dumbbell Row", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 56, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Rope Cable Row", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "cable machine"
+    },
+    {"exercise_id": 57, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Seated Cable Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "cable machine"
+    },
+    {"exercise_id": 58, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Seated Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "cable machine"
+    },
+    {"exercise_id": 59, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Single-Arm Cable Row", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "cable machine"
+    },
+    {"exercise_id": 60, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Single-Arm Dumbbell Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 61, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Single-Arm Lat Pulldown", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "lat pulldown machine"
+    },
+    {"exercise_id": 62, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Standing Cable Row", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "cable machine"
+    },
+    {"exercise_id": 63, "muscle_group": "Back - Lat.Dorsi/Rhomboids", "exercise_name": "Standing Single-Arm Cable Row", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "M", "equipment": "cable machine"
+    },
+    {"exercise_id": 64, "muscle_group": "Biceps", "exercise_name": "Alternating Dumbbell Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 65, "muscle_group": "Biceps", "exercise_name": "Alternating Hammer Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 66, "muscle_group": "Biceps", "exercise_name": "Barbell Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "Barbell"
+    },
+    {"exercise_id": 67, "muscle_group": "Biceps", "exercise_name": "Bicep Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 68, "muscle_group": "Biceps", "exercise_name": "Bottom/Top/Full Curls", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 69, "muscle_group": "Biceps", "exercise_name": "Cable Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 70, "muscle_group": "Biceps", "exercise_name": "Concentration Dumbbell Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 71, "muscle_group": "Biceps", "exercise_name": "Cross Body Hammer Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 72, "muscle_group": "Biceps", "exercise_name": "Dumbbell Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 73, "muscle_group": "Biceps", "exercise_name": "ez-Bar Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "ez bar"
+    },
+    {"exercise_id": 74, "muscle_group": "Biceps", "exercise_name": "Hammer Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 75, "muscle_group": "Biceps", "exercise_name": "Incline Alternating Dumbbell Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 76, "muscle_group": "Biceps", "exercise_name": "Incline Alternating Hammer Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 77, "muscle_group": "Biceps", "exercise_name": "Incline Dumbbell Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 78, "muscle_group": "Biceps", "exercise_name": "Incline Hammer Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 79, "muscle_group": "Biceps", "exercise_name": "Kneeling Cable Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 80, "muscle_group": "Biceps", "exercise_name": "Lying Cable Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 81, "muscle_group": "Biceps", "exercise_name": "Lying Double Biceps Cable Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 82, "muscle_group": "Biceps", "exercise_name": "Lying High Cable Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 83, "muscle_group": "Biceps", "exercise_name": "Machine Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "M", "joint": "S", "equipment": "preacher curl machine"
+    },
+    {"exercise_id": 84, "muscle_group": "Biceps", "exercise_name": "Overhead Double Biceps Cable Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 85, "muscle_group": "Biceps", "exercise_name": "Overhead Rope Cable Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": ["cable machine", "rope"]
+    },
+    {"exercise_id": 86, "muscle_group": "Biceps", "exercise_name": "Preacher Barbell Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["bench", "barbell"]
+    },
+    {"exercise_id": 87, "muscle_group": "Biceps", "exercise_name": "Preacher Cable Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": ["bench", "cable machine"]
+    },
+    {"exercise_id": 88, "muscle_group": "Biceps", "exercise_name": "Preacher Dumbbell Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 89, "muscle_group": "Biceps", "exercise_name": "Preacher ez-Bar Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["ez bar", "bench"]
+    },
+    {"exercise_id": 90, "muscle_group": "Biceps", "exercise_name": "Preacher Hammer Dumbbell Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 91, "muscle_group": "Biceps", "exercise_name": "Preacher Single-Arm Dumbbell Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 92, "muscle_group": "Biceps", "exercise_name": "Reverse Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 93, "muscle_group": "Biceps", "exercise_name": "Rope Cable Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 94, "muscle_group": "Biceps", "exercise_name": "Seated Alternating Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 95, "muscle_group": "Biceps", "exercise_name": "Seated Alternating Hammer Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 96, "muscle_group": "Biceps", "exercise_name": "Seated Dumbbell Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 97, "muscle_group": "Biceps", "exercise_name": "Seated Hammer Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 98, "muscle_group": "Biceps", "exercise_name": "Single-Arm Barbell Curl", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "barbell"
+    },
+    {"exercise_id": 99, "muscle_group": "Biceps", "exercise_name": "Single-Arm Cable Curl", "level": "Intermediate", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 100, "muscle_group": "Biceps", "exercise_name": "Single-Arm Dumbbell Curl w/ Incline bench", "level": "Beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 101, "muscle_group": "Biceps", "exercise_name": "Spider Curl", "level": "Advanced", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": ["bench", "barbell"]
+    },
+    {"exercise_id": 102, "muscle_group": "Calves - Gastrocnemius", "exercise_name": "Barbell Calf Raise", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "barbell"
+    },
+    {"exercise_id": 103, "muscle_group": "Calves - Gastrocnemius", "exercise_name": "Calf Press", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "S", "equipment": "leg press machine"
+    },
+    {"exercise_id": 104, "muscle_group": "Calves - Gastrocnemius", "exercise_name": "Calf Raise - Seated", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 105, "muscle_group": "Calves - Gastrocnemius", "exercise_name": "Calf Raise - Standing", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 106, "muscle_group": "Calves - Gastrocnemius", "exercise_name": "Dumbbell Calf Raise", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 107, "muscle_group": "Calves - Gastrocnemius", "exercise_name": "Single-Leg Calf Press", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "S", "equipment": "leg press machine"
+    },
+    {"exercise_id": 108, "muscle_group": "Calves - Gastrocnemius", "exercise_name": "Single-Leg Dumbbell Calf Raise", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 109, "muscle_group": "Calves - Gastrocnemius", "exercise_name": "Smith Machine Calf Raise", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "S", "equipment": "smith machine"
+    },
+    {"exercise_id": 110, "muscle_group": "Calves - Soleus", "exercise_name": "Seated Calf Raise", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "S", "equipment": "calf raise machine"
+    },
+    {"exercise_id": 111, "muscle_group": "Calves - Soleus", "exercise_name": "Seated Single-Leg Calf Raise", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "S", "equipment": "calf raise machine"
+    },
+    {"exercise_id": 112, "muscle_group": "Chest - Pectoralis", "exercise_name": "Alternating Dumbbell bench Press", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 113, "muscle_group": "Chest - Pectoralis", "exercise_name": "Barbell bench Press", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "barbell"]
+    },
+    {"exercise_id": 114, "muscle_group": "Chest - Pectoralis", "exercise_name": "Chest Press", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": "chest press machine"
+    },
+    {"exercise_id": 115, "muscle_group": "Chest - Pectoralis", "exercise_name": "Decline Dumbbell bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 116, "muscle_group": "Chest - Pectoralis", "exercise_name": "Decline Smith Machine bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": ["smith machine", "bench"]
+    },
+    {"exercise_id": 117, "muscle_group": "Chest - Pectoralis", "exercise_name": "Dumbbell bench Press", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 118, "muscle_group": "Chest - Pectoralis", "exercise_name": "Dumbbell Push-Up", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 119, "muscle_group": "Chest - Pectoralis", "exercise_name": "Elevated Push-Up", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 120, "muscle_group": "Chest - Pectoralis", "exercise_name": "Flat bench Press", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "barbell"]
+    },
+    {"exercise_id": 121, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Alternating Dumbbell bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 122, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Barbell bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "barbell"]
+    },
+    {"exercise_id": 123, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "barbell"]
+    },
+    {"exercise_id": 124, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Dumbbell bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 125, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Hammer Dumbbell bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 126, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Single-Arm Dumbbell bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 127, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Smith Machine bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": ["smith machine", "bench"]
+    },
+    {"exercise_id": 128, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Twisting Dumbbell bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 129, "muscle_group": "Chest - Pectoralis", "exercise_name": "Kneeling Push-Up", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 130, "muscle_group": "Chest - Pectoralis", "exercise_name": "Machine bench Press", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": "bench press machine"
+    },
+    {"exercise_id": 131, "muscle_group": "Chest - Pectoralis", "exercise_name": "Machine Vertical bench Press", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": "bench press machine"
+    },
+    {"exercise_id": 132, "muscle_group": "Chest - Pectoralis", "exercise_name": "Medicine Ball Crossover Push-Up", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "Medicine ball"
+    },
+    {"exercise_id": 133, "muscle_group": "Chest - Pectoralis", "exercise_name": "Push-Up", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 134, "muscle_group": "Chest - Pectoralis", "exercise_name": "Single-Arm Dumbbell bench Press", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 135, "muscle_group": "Chest - Pectoralis", "exercise_name": "Smith Machine bench Press", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": ["smith machine", "bench"]
+    },
+    {"exercise_id": 136, "muscle_group": "Chest - Pectoralis", "exercise_name": "Twisting Dumbbell bench Press", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 137, "muscle_group": "Chest - Pectoralis", "exercise_name": "Wide-Grip Push-Up", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 138, "muscle_group": "Chest - Pectoralis", "exercise_name": "Cable Crossover", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 139, "muscle_group": "Chest - Pectoralis", "exercise_name": "Cable Fly", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 140, "muscle_group": "Chest - Pectoralis", "exercise_name": "Decline Dumbbell Fly", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 141, "muscle_group": "Chest - Pectoralis", "exercise_name": "Dumbbell Fly", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 142, "muscle_group": "Chest - Pectoralis", "exercise_name": "High Cable Crossover", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 143, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Cable Fly", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": ["cable machine", "bench"]
+    },
+    {"exercise_id": 144, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Dumbbell Fly", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 145, "muscle_group": "Chest - Pectoralis", "exercise_name": "Incline Twisting Dumbbell Fly", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 146, "muscle_group": "Chest - Pectoralis", "exercise_name": "Low Cable Crossover", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 147, "muscle_group": "Chest - Pectoralis", "exercise_name": "Pec Deck", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "S", "equipment": "pec deck machine"
+    },
+    {"exercise_id": 148, "muscle_group": "Chest - Pectoralis", "exercise_name": "Pec Deck Fly", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "S", "equipment": "pec deck machine"
+    },
+    {"exercise_id": 149, "muscle_group": "Legs - Hamstrings", "exercise_name": "Bent-Knee Single-Leg Hip Lift", "level": "Advanced", "ulc": "Lower", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 150, "muscle_group": "Legs - Hamstrings", "exercise_name": "Elevated Hip Lift", "level": "Intermediate", "ulc": "Lower", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 151, "muscle_group": "Legs - Hamstrings", "exercise_name": "Elevated Single-Leg Hip Lift", "level": "Advanced", "ulc": "Lower", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 152, "muscle_group": "Legs - Hamstrings", "exercise_name": "Hip Lift", "level": "Beginner", "ulc": "Lower", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 153, "muscle_group": "Legs - Hamstrings", "exercise_name": "Single-Leg Hip Lift", "level": "Intermediate", "ulc": "Lower", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 154, "muscle_group": "Legs - Hamstrings", "exercise_name": "Deadlift", "level": "Advanced", "ulc": "Lower", "pp": "Pull", "modality": "FW", "joint": "S", "equipment": "barbell"
+    },
+    {"exercise_id": 155, "muscle_group": "Legs - Hamstrings", "exercise_name": "Leg Curl", "level": "Beginner", "ulc": "Lower", "pp": "Pull", "modality": "M", "joint": "S", "equipment": "leg curl machine"
+    },
+    {"exercise_id": 156, "muscle_group": "Legs - Hamstrings", "exercise_name": "Lying Alternating Leg Curl", "level": "Intermediate", "ulc": "Lower", "pp": "Pull", "modality": "M", "joint": "S", "equipment": "leg curl machine"
+    },
+    {"exercise_id": 157, "muscle_group": "Legs - Hamstrings", "exercise_name": "Lying Leg Curl", "level": "Beginner", "ulc": "Lower", "pp": "Pull", "modality": "M", "joint": "S", "equipment": "leg curl machine"
+    },
+    {"exercise_id": 158, "muscle_group": "Legs - Hamstrings", "exercise_name": "Lying Single-Leg Curl", "level": "Intermediate", "ulc": "Lower", "pp": "Pull", "modality": "M", "joint": "S", "equipment": "leg curl machine"
+    },
+    {"exercise_id": 159, "muscle_group": "Legs - Hamstrings", "exercise_name": "Seated Leg Curl", "level": "Beginner", "ulc": "Lower", "pp": "Pull", "modality": "M", "joint": "S", "equipment": "leg curl machine"
+    },
+    {"exercise_id": 160, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Diagonal Lunge", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 161, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Hack Squat", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 162, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Lunge", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 163, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Reverse Lunge", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 164, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Side Lunge", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 165, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Split Squat", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 166, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Squat", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 167, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Step-Up", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 168, "muscle_group": "Legs - Quadriceps", "exercise_name": "Barbell Walking Lunge", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 169, "muscle_group": "Legs - Quadriceps", "exercise_name": "Diagonal Lunge", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 170, "muscle_group": "Legs - Quadriceps", "exercise_name": "Dumbbell Diagonal Lunge", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 171, "muscle_group": "Legs - Quadriceps", "exercise_name": "Dumbbell Lunge", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 172, "muscle_group": "Legs - Quadriceps", "exercise_name": "Dumbbell Reverse Lunge", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 173, "muscle_group": "Legs - Quadriceps", "exercise_name": "Dumbbell Side Lunge", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 174, "muscle_group": "Legs - Quadriceps", "exercise_name": "Dumbbell Split Squat", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 175, "muscle_group": "Legs - Quadriceps", "exercise_name": "Dumbbell Squat", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 176, "muscle_group": "Legs - Quadriceps", "exercise_name": "Dumbbell Step-Up", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 177, "muscle_group": "Legs - Quadriceps", "exercise_name": "Dumbbell Walking Lunge", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 178, "muscle_group": "Legs - Quadriceps", "exercise_name": "Forward Lunge", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 179, "muscle_group": "Legs - Quadriceps", "exercise_name": "Lateral Barbell Squat", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 180, "muscle_group": "Legs - Quadriceps", "exercise_name": "Lateral Barbell Step-Up", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 181, "muscle_group": "Legs - Quadriceps", "exercise_name": "Lateral Squat", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 182, "muscle_group": "Legs - Quadriceps", "exercise_name": "Lateral Step-Up", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 183, "muscle_group": "Legs - Quadriceps", "exercise_name": "Leg Press", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "M", "equipment": "leg press machine"
+    },
+    {"exercise_id": 184, "muscle_group": "Legs - Quadriceps", "exercise_name": "Lunge", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 185, "muscle_group": "Legs - Quadriceps", "exercise_name": "Lying Machine Squat", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "M", "equipment": "squat machine"
+    },
+    {"exercise_id": 186, "muscle_group": "Legs - Quadriceps", "exercise_name": "Machine Hack Squat", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "M", "equipment": "hack squat machine"
+    },
+    {"exercise_id": 187, "muscle_group": "Legs - Quadriceps", "exercise_name": "Reverse Lunge", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 188, "muscle_group": "Legs - Quadriceps", "exercise_name": "Single-Arm Barbell Side Squat", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 189, "muscle_group": "Legs - Quadriceps", "exercise_name": "Single-Arm Dumbbell Side Squat", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 190, "muscle_group": "Legs - Quadriceps", "exercise_name": "Single-Leg Barbell Squat", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 191, "muscle_group": "Legs - Quadriceps", "exercise_name": "Single-Leg Box Squat", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 192, "muscle_group": "Legs - Quadriceps", "exercise_name": "Single-Leg Dumbbell Box Squat", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 193, "muscle_group": "Legs - Quadriceps", "exercise_name": "Single-Leg Dumbbell Squat", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 194, "muscle_group": "Legs - Quadriceps", "exercise_name": "Single-Leg Squat", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 195, "muscle_group": "Legs - Quadriceps", "exercise_name": "Smith Machine Squat", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "M", "equipment": "smith machine"
+    },
+    {"exercise_id": 196, "muscle_group": "Legs - Quadriceps", "exercise_name": "Split Squat", "level": "Advanced", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 197, "muscle_group": "Legs - Quadriceps", "exercise_name": "Step-Up", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 198, "muscle_group": "Legs - Quadriceps", "exercise_name": "Walking Lunge", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 199, "muscle_group": "Legs - Quadriceps", "exercise_name": "Alternating Leg Extension", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "S", "equipment": "leg extention machine"
+    },
+    {"exercise_id": 200, "muscle_group": "Legs - Quadriceps", "exercise_name": "Leg Extension", "level": "Beginner", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "S", "equipment": "leg extention machine"
+    },
+    {"exercise_id": 201, "muscle_group": "Legs - Quadriceps", "exercise_name": "Single-Leg Extension", "level": "Intermediate", "ulc": "Lower", "pp": "Push", "modality": "M", "joint": "S", "equipment": "leg extention machine"
+    },
+    {"exercise_id": 202, "muscle_group": "Lower Back - Erector Spinae", "exercise_name": "Alternating Superman", "level": "Beginner", "ulc": "Core", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 203, "muscle_group": "Lower Back - Erector Spinae", "exercise_name": "Back Raise", "level": "Beginner", "ulc": "Core", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "back extention machine"
+    },
+    {"exercise_id": 204, "muscle_group": "Lower Back - Erector Spinae", "exercise_name": "Quadruped Alternating Superman", "level": "Beginner", "ulc": "Core", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 205, "muscle_group": "Lower Back - Erector Spinae", "exercise_name": "Superman", "level": "Beginner", "ulc": "Core", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 206, "muscle_group": "Lower Back - Erector Spinae", "exercise_name": "Superman Hold", "level": "Beginner", "ulc": "Core", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 207, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Arnold Dumbbell Press", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 208, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Barbell Shoulder Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "barbell"
+    },
+    {"exercise_id": 209, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Dumbbell Alternating Shoulder Press", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 210, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Dumbbell Front Raise", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 211, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Dumbbell Shoulder Press", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 212, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Dumbbell Twisting Shoulder Press", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 213, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Machine Shoulder Press", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": "shoulder press machine"
+    },
+    {"exercise_id": 214, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Seated Dumbbell Rear Delt Elbow Raise", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 215, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Single-Arm Dumbbell Shoulder Press", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dumbell"
+    },
+    {"exercise_id": 216, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Smith Machine Shoulder Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": "smith machine"
+    },
+    {"exercise_id": 217, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Barbell Front Raise", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "barbell"
+    },
+    {"exercise_id": 218, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Bent-Over Cable Rear Delt Raise", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 219, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Bent-Over Dumbbell Rear Delt Raise", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 220, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Cable Front Raise", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 221, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Cable Lateral Raise", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 222, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Dumbbell Lateral Raise", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 223, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Front Plate Raise", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "plate"
+    },
+    {"exercise_id": 224, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Kneeling Single-Arm Cable Rear Delt Raise", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 225, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Lying Dumbbell External Rotation", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 226, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Lying Dumbbell Rear Delt Raise", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 227, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Lying Single-Arm Dumbbell Rear Delt Raise", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 228, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Pec Deck Real Delt Extensions", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "S", "equipment": "pec deck machine"
+    },
+    {"exercise_id": 229, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Reverse Incline Dumbbell Rear Delt Raise", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["dumbell", "bench"]
+    },
+    {"exercise_id": 230, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Seated Dumbbell Rear Delt Raise", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 231, "muscle_group": "Shoulders - Delts/Traps", "exercise_name": "Single-Arm Cable Lateral Raise", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 232, "muscle_group": "Shoulders - Rotator Cuff", "exercise_name": "Cable External Rotation", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable"
+    },
+    {"exercise_id": 233, "muscle_group": "Triceps", "exercise_name": "Close-Grip bench Press", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": ["bench", "barbell"]
+    },
+    {"exercise_id": 234, "muscle_group": "Triceps", "exercise_name": "Forward Lean Dips", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 235, "muscle_group": "Triceps", "exercise_name": "Assisted Dips", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "dip assist machine"
+    },
+    {"exercise_id": 236, "muscle_group": "Triceps", "exercise_name": "bench Dips", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "bench"
+    },
+    {"exercise_id": 237, "muscle_group": "Triceps", "exercise_name": "Diamond Push-Up", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 238, "muscle_group": "Triceps", "exercise_name": "Dips", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "n/a"
+    },
+    {"exercise_id": 239, "muscle_group": "Triceps", "exercise_name": "Machine Dips", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "M", "joint": "M", "equipment": "dip machine"
+    },
+    {"exercise_id": 240, "muscle_group": "Triceps", "exercise_name": "Decline Dumbbell Triceps Extension", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 241, "muscle_group": "Triceps", "exercise_name": "Decline ez-Bar Tricep Extension", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["ez bar", "bench"]
+    },
+    {"exercise_id": 242, "muscle_group": "Triceps", "exercise_name": "Decline Single Dumbbell Triceps Extension", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 243, "muscle_group": "Triceps", "exercise_name": "Decline Single-Arm Dumbbell Triceps Extension", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["bench", "dumbell"]
+    },
+    {"exercise_id": 244, "muscle_group": "Triceps", "exercise_name": "Dumbbell Kickback", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 245, "muscle_group": "Triceps", "exercise_name": "Incline ez-Bar Tricep Extension", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": ["ez bar", "bench"]
+    },
+    {"exercise_id": 246, "muscle_group": "Triceps", "exercise_name": "Kneeling Cable Triceps Extension", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 247, "muscle_group": "Triceps", "exercise_name": "Leaning Overhead Tricep Extension", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 248, "muscle_group": "Triceps", "exercise_name": "Low Cable Triceps Extension", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 249, "muscle_group": "Triceps", "exercise_name": "Lying Cable Triceps Extension", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 250, "muscle_group": "Triceps", "exercise_name": "Lying ez-Bar Triceps Extension", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "ez bar"
+    },
+    {"exercise_id": 251, "muscle_group": "Triceps", "exercise_name": "Lying Overhead ez-Bar Tricep Extension", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "ez bar"
+    },
+    {"exercise_id": 252, "muscle_group": "Triceps", "exercise_name": "Lying Reverse ez-Bar Triceps Extension", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "ez bar"
+    },
+    {"exercise_id": 253, "muscle_group": "Triceps", "exercise_name": "Lying Single Dumbbell Triceps Extension", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 254, "muscle_group": "Triceps", "exercise_name": "Lying Single-Arm Dumbbell Triceps Extension", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 255, "muscle_group": "Triceps", "exercise_name": "Lying Tricep Extensions", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 256, "muscle_group": "Triceps", "exercise_name": "Overhead Dumbbell Triceps Extension", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 257, "muscle_group": "Triceps", "exercise_name": "Overhead ez-Bar Triceps Extension", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "ez bar"
+    },
+    {"exercise_id": 258, "muscle_group": "Triceps", "exercise_name": "Overhead Rope Cable Tricep Extension", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 259, "muscle_group": "Triceps", "exercise_name": "Overhead Single Dumbbell Tricep Extension", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 260, "muscle_group": "Triceps", "exercise_name": "Overhead Single-Arm Cable Tricep Extension", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 261, "muscle_group": "Triceps", "exercise_name": "Overhead Single-Arm Dumbbell Tricep Extension", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 262, "muscle_group": "Triceps", "exercise_name": "Reverse Tricep Pushdown", "level": "Advanced", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 263, "muscle_group": "Triceps", "exercise_name": "Rope Triceps Pushdown", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": ["cable machine", "rope"]
+    },
+    {"exercise_id": 264, "muscle_group": "Triceps", "exercise_name": "Single-Arm Towel Triceps Pushdown", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 265, "muscle_group": "Triceps", "exercise_name": "Single-Arm Triceps Pushdown", "level": "Intermediate", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 266, "muscle_group": "Triceps", "exercise_name": "Towel Triceps Pushdown", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 267, "muscle_group": "Triceps", "exercise_name": "Tricep Extensions", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
+    },
+    {"exercise_id": 268, "muscle_group": "Triceps", "exercise_name": "Tricep Pushdown", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 269, "muscle_group": "Triceps", "exercise_name": "Tricep Pushdown", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": "cable machine"
+    },
+    {"exercise_id": 270, "muscle_group": "Triceps", "exercise_name": "V-Bar Tricep Pushdown", "level": "Beginner", "ulc": "Upper", "pp": "Push", "modality": "C", "joint": "S", "equipment": ["vbar", "cable machine"]
+    }
+]
