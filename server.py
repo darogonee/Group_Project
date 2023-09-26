@@ -346,6 +346,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
+                nutrition_calculator(input())
+
             case "/myprofile":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
