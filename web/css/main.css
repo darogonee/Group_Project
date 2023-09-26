@@ -181,3 +181,8 @@ p {
 .tb {
     border: 2px solid black;
 }
+
+.nonlink {
+    text-decoration: none;
+    color: rgb(0, 0, 202);
+}
