@@ -348,7 +348,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         current['rest'] = value[item]
                         exercises[number] = current
                 python.Api.upload(user, value['title'], value['sport'], str(timestamp), 
-                    workout_time, value['distance'], value['elev-gain'], "hello?", 0, 0, 
+                    workout_time, value['distance'], value['elev-gain'], value['description'], 0, 0, 
                     int(value['percieved-exertion']), exercises)
 
 
