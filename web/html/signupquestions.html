@@ -27,13 +27,21 @@
     <br>
 
     <div class="fav-cardio">
-      <label for="sport">Cardio: </label>
-      <select name="sport" id="sport">
+      <label for="fav-cardio">Cardio: </label>
+      <select name="fav-cardio" id="fav-cardio" required>
         <option value="Running">Running</option>
         <option value="Cycling">Cycling</option>
         <option value="Swimming">Swimming</option>
       </select>
     </div>
+
+    <label for="level">Experience Level: </label>
+
+    <select name="level" id="level" required>
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
 
     <h4>What is your weight goal?</h4>
     <div id="weight_goals" class="weight_goals">
