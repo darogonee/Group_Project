@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="main.css">
     <script src="main.js" defer></script>
     <title>Fitness</title>
-    <script>
-      window.onload = function(){
-        
-      }
-    </script>
 </head>
 <body>
     <div class="container">
@@ -39,13 +34,13 @@
             </ul>
         </nav>
     </div>
-    <form method="post" action="retrieve-nutrition.py">
+    <form method="get" action="log_food_action">
       <input type="date" id="log_food_date" name="log_food_date">
       <br>
     
       <label for="food_name">Enter food name:</label>
       <input type="number" id="food_quantity">
-      <select name="food-units" id="food-units">
+      <select name="food_units" id="food-units">
         <option value="serve">serve/s</option>
         <option value="kg">kg</option>
         <option value="lb">lb</option>
@@ -54,7 +49,8 @@
       </select>
       
       <input type="text" id="food_name" name="food_name">
-      <input type="submit" value="+">
+      <button id="add_exercise" onclick="addRow()" type="button">++</button>
+      <input type="submit" id="submit" name="submit">
     
       <table class="tb" id="tb">
         <thead>
@@ -73,14 +69,4 @@
       </table>
     </form>
 </body>
-
-<script>
-  const newRow = document.createElement("tr");
-  const exerciseCell = document.createElement("td");
-  const repstimeCell = document.createElement("td");
-  const setsCell = document.createElement("td");
-  const restCell = document.createElement("td");
-  tableBody.appendChild(newRow);
-  
-</script>
 </html>

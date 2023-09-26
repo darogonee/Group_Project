@@ -1,7 +1,7 @@
 import requests
 import json
-def nutrition_calculator(food):
-    api_url = 'https://api.api-ninjas.com/v1/nutrition?query={}'.format(food)
+def nutrition_calculator(number, units, food):
+    api_url = f'https://api.api-ninjas.com/v1/nutrition?query={number} {units} {food}'
     response = requests.get(api_url, headers={'X-Api-Key': 'f+eHE4GyqdBw4+qAdCmEag==9wegAJ3ahmSJIHw4'})
     if response.status_code != requests.codes.ok:
         print("Error:", response.status_code, response.text)
@@ -15,4 +15,4 @@ def nutrition_calculator(food):
     
     return {"name":name, "calories":calories, "fat":fat, "protein":protein, "carbs":carb}
 
-nutrition_calculator(input())
+print(nutrition_calculator(input("Number: "), input("Units: "), input("Food: ")))

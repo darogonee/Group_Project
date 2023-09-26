@@ -351,6 +351,29 @@ class FittnessServer(BaseHTTPRequestHandler):
                     workout_time, value['distance'], value['elev-gain'], "hello?", 0, 0, 
                     int(value['percieved-exertion']), exercises)
 
+
+            case "/log_food_action":
+                query = self.query()
+                name = query["food_name"]
+                quantity = query["food_quantity"]
+                units = query["food_units"]
+                        
+                print(query)
+                # with open("web/html/logfood&water.html", "r") as nutritions_file:
+                #     with open("web/html/nutrition-template.html", "r") as nutrition_file:
+                #         query = self.query()
+                #         name = query["food_name"]
+                #         quantity = query["food_quantity"]
+                #         units = query["food_units"]
+
+
+                #         logfoodwater_page = file.read()
+                        
+
+
+                #         nutrition_final = nutritions_file.read().replace("template_nutrition", tbody)
+                #         self.wfile.write(logfoodwater_page.encode())
+
             case "/logfood&water":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -358,13 +381,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/logfood&water.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
-
-                # nutrition_calculator(input())
-
-
-                # value = self.query()  
-
-                # # value[]
 
             case "/myprofile":
                 self.send_response(200)
