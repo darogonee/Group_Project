@@ -2,7 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import python.Api, os, random
 from python.hash_function import password_hash 
 from datetime import datetime
-import time, json, datetime, uuid
+from Nutrition_Calculator import nutrition_calculator
+import time, json, datetime, uuid 
 
 
 # NOTE restart server aprox 30 days NOTE
