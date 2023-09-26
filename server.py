@@ -2,7 +2,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import python.Api, os, random
 from python.hash_function import password_hash 
 from datetime import datetime
-from Nutrition_Calculator import nutrition_calculator
+# from Nutrition_Calculator import nutrition_calculator
 import time, json, datetime, uuid 
 
 
@@ -359,12 +359,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
-                nutrition_calculator(input())
+                # nutrition_calculator(input())
 
 
-                value = self.query()  
+                # value = self.query()  
 
-                # value[]
+                # # value[]
 
             case "/myprofile":
                 self.send_response(200)
