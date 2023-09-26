@@ -22,6 +22,8 @@ class FittnessServer(BaseHTTPRequestHandler):
             self.wfile.write(file.read().replace("url", link).encode())
     
     def query(self):
+        if "?" not in self.path:
+            return {}
         query_string = self.path.split("?")[1].split("&")
         values = {}
         for query in query_string:
@@ -121,32 +123,43 @@ class FittnessServer(BaseHTTPRequestHandler):
                         tbody = ""
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
-                        # change the 5 to how ever many activities you want to load
-                        for i in range(min(200, len(activity_data))):      
-                            activity = activity_template 
-                            activity = activity.replace("template_type", str(activity_data[i]["type"])) 
+                        for i in range(min(200, len(activity_data))):
+                            
+                            activity_type = self.query().get("type", "")
+                            if activity_data[i]['type'] == activity_type or activity_type == "":
+                                print("Run found: " + activity_data[i]['name'])  
 
-                            input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
-                            formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
-                            activity = activity.replace("template_date", str(formatted_date))
+                                activity = activity_template 
+                                activity = activity.replace("template_type", str(activity_data[i]["type"])) 
 
-                            activity = activity.replace("template_name", str(activity_data[i]["name"]))
-            
-                            formatted_time = time.strftime('%H:%M:%S', time.gmtime(activity_data[i]["moving_time"]))
-                                                           
-                            activity = activity.replace("template_time", str(formatted_time))
-                            distancekm = round(activity_data[i]["distance"]/1000, 2)
-                            activity = activity.replace("template_distancekm", str(distancekm)+" km")
-                            activity = activity.replace("template_elevgain", str(activity_data[i]["total_elevation_gain"])+" m")
+                                input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+                                formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
+                                activity = activity.replace("template_date", str(formatted_date))
 
-                            tbody += activity
+                                activity = activity.replace("template_name", str(activity_data[i]["name"]))
 
-                            table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
+                
+                                formatted_time = time.strftime('%H:%M:%S', time.gmtime(activity_data[i]["moving_time"]))
+                                                            
+                                activity = activity.replace("template_time", str(formatted_time))
+                                distancekm = round(activity_data[i]["distance"]/1000, 2)
+                                activity = activity.replace("template_distancekm", str(distancekm)+" km")
+                                activity = activity.replace("template_elevgain", str(activity_data[i]["total_elevation_gain"])+" m")
+
+                                try:
+                                    activity = activity.replace("template_calories", str(round(activity_data[i]["kilojoules"]/4.184, 2)))
+                                except KeyError:
+                                    activity = activity.replace("template_calories", "0")
+
+                                tbody += activity
+
+                                table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
 
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
-                        # Api.upload(user, "9/11", "Run", "Run", "2001-9-11T19:20:30+01:00", 120, 100000, "The sencond plain is on its way", 1, 1)
+
+                        
             case "/logout":
                 uuid2user.pop(self.get_cookie()['user'])
 
@@ -454,7 +467,7 @@ if __name__ == "__main__":
 
 # 2 - individual activities view
 
-# 3 - activities sorter
+# 3 -
 
 # 4 - 
 
