@@ -5,10 +5,11 @@ def create_program(data):
     program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None}
     weight_programs = {1:"full-body", 2:"upper-lower", 3:"ppl", 4:"upper-lower-twice", 5:"ulppl", 6:"ppl-twice"}
     fitness_goals = []
-    equipment = []
+    equipment = [""]
     training_days = []
     weights = False
     cardio = False
+    level = data["level"]
 
     for key,value in data["fitness-goals"].items():
         if value:
@@ -41,28 +42,60 @@ def create_program(data):
 
     training_days_count = training_days.count()
     if training_days_count == 1:
-        ...
-    #full body: "Back - Latissimus Dorsi" OR "Back - Lat.Dorsi/Rhomboids", "Biceps", "Calves - Gastrocnemius", "Chest - Pectoralis", "Legs - Hamstrings", "Legs - Quadriceps", "Shoulders - Delts/Traps", "Triceps"
+        muscle_groups = ["Back", "Biceps", "Calves", "Chest", "Quadriceps", "Shoulders", "Triceps", "Hamstrings"]
+        training_day = program[training_days[0]]
+        muscle_groups.append(get_exercises(valid_exercises(level, equipment),"muscle_group", muscle_groups))
+        training_days[training_day] = muscle_groups
+
+    elif training_days_count == 2:
+        muscle_groups1 = ["Back", "Biceps", "Chest", "Shoulders", "Triceps", "Chest"]
+        muscle_groups2 = ["Calves", "Quadriceps", "Hamstrings", "Quadriceps", "Hamstrings"]
+
+        training_day1 = program[training_days[0]]
+        training_day2 = program[training_days[1]]
+
+
+
+
 
 def valid_exercises(user_level, user_equipment):
     with open("data/exercises.json", "r") as file:
         exercise_data = json.load(file)
 
-    level_filtered_data = [item for item in exercise_data if item.get("level") == user_level]
+    get_levels = {"Beginner":"Beginner", "Intermediate":["Beginner", "Intermediate"], "Advanced":["Beginner", "Intermediate", "Advanced"]}
+    level_filtered_data = []
+
+    for level in get_levels[user_level]:
+        level_filtered_data.extend([item for item in exercise_data if item.get("level") == level])
+
     equipment_filtered_data = []
 
     for item in exercise_data:
         equipment = item.get("equipment")
         
         if isinstance(equipment, list):
-            # If equipment is a list, check if any of the user's equipment is in the list
-            if any(e in user_equipment for e in equipment):
+            equipment_count = 0
+            for required_equipment in equipment:
+                if required_equipment in user_equipment:
+                    equipment_count = equipment_count + 1
+            
+            if equipment_count == len(equipment):
                 equipment_filtered_data.append(item)
+
         elif isinstance(equipment, str):
-            # If equipment is a string, check if it matches any of the user's equipment
             if equipment in user_equipment:
                 equipment_filtered_data.append(item)
 
     return equipment_filtered_data
 
-print(valid_exercises("Beginner", ["barbell", "n/a"]))
+def get_exercises(valid_exercises, filter_type, values):
+    exercises = []
+    for value in values:
+        filtered_data = [item for item in valid_exercises if item.get(filter_type) == value]
+        try:
+            exercises.append(random.choice(filtered_data))
+        except IndexError:
+            exercises.append(None)
+    return exercises
+
+print(get_exercises(valid_exercises("Advanced", ["bench", "", "dumbell"]),"muscle_group", ["Back", "Biceps", "Calves", "Chest", "Quadriceps", "Shoulders", "Triceps"]))
