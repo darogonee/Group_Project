@@ -63,9 +63,6 @@ class FittnessServer(BaseHTTPRequestHandler):
         with open(user_data_file, "r") as file:
             data = json.load(file)
 
-        print(data)
-
-
     def do_GET(self):
         match self.path.split("?")[0]:
             case  "/activities":
@@ -87,8 +84,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                             
                             activity_type = self.query().get("type", "")
                             if activity_data[i]['type'] == activity_type or activity_type == "":
-                                print("Run found: " + activity_data[i]['name'])  
-
                                 activity = activity_template 
                                 activity = activity.replace("template_type", str(activity_data[i]["type"])) 
 
@@ -96,7 +91,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
 
-                                activity = activity.replace("template_name", str(activity_data[i]["name"]))
+                                if len(activity_data[i]["name"]) < 12 or "-" not in activity_data[i]["name"]:
+                                    activity = activity.replace("template_name", str(activity_data[i]["name"]))
+                                else:
+                                    activity = activity.replace("template_name", str(activity_data[i]["name"]).split("-")[0])
 
                 
                                 formatted_time = time.strftime('%H:%M:%S', time.gmtime(activity_data[i]["moving_time"]))
@@ -125,7 +123,6 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/refresh":
                 user = self.get_username()
-                # print("Ballz (pay ID 0499076683, pay me)")
                 python.Api.get_user_activites.clear(user)
                 self.redirect("/activities")
               

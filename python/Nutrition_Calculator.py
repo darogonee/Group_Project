@@ -15,4 +15,4 @@ def nutrition_calculator(number, units, food):
     
     return {"name":name, "calories":calories, "fat":fat, "protein":protein, "carbs":carb}
 
-print(nutrition_calculator(input("Number: "), input("Units: "), input("Food: ")))
+print(nutrition_calculator("1", "kg", "apple"))
