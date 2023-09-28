@@ -3,7 +3,189 @@ import json
 
 def create_program(data):
     program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None}
-    weight_programs = {1:"full-body", 2:"upper-lower", 3:"ppl", 4:"upper-lower-twice", 5:"ulppl", 6:"ppl-twice"}
+    weight_programs = {
+    1: [
+        [
+            "Back",
+            "Biceps",
+            "Calves",
+            "Chest",
+            "Quadriceps",
+            "Shoulders",
+            "Triceps",
+            "Hamstrings"
+        ]
+    ],
+    2: [
+        [
+            "Back",
+            "Biceps",
+            "Chest",
+            "Shoulders",
+            "Triceps",
+            "Chest" 
+        ],
+        [
+            "Calves",
+            "Quadriceps",
+            "Hamstrings",
+            "Quadriceps",
+            "Hamstrings"
+        ]
+    ],
+    3: [
+        [
+            "Chest",
+            "Triceps",
+            "Shoulders",
+            "Chest",
+            "Triceps",
+            "Shoulders",
+
+        ],
+        [
+            "Back",
+            "Biceps",
+            "Back",
+            "Biceps",
+            "Back",
+            "Biceps"
+        ],
+        [
+            "Calves",
+            "Quadriceps",
+            "Hamstrings",
+            "Quadriceps",
+            "Hamstrings"
+        ]
+
+    ],
+    4: [
+        [
+            [
+            "Back",
+            "Biceps",
+            "Chest",
+            "Shoulders",
+            "Triceps",
+            "Chest" 
+        ],
+        [
+            "Calves",
+            "Quadriceps",
+            "Hamstrings",
+            "Quadriceps",
+            "Hamstrings"
+        ],
+        [
+            "Back",
+            "Biceps",
+            "Chest",
+            "Shoulders",
+            "Triceps",
+            "Chest" 
+        ],
+        [
+            "Calves",
+            "Quadriceps",
+            "Hamstrings",
+            "Quadriceps",
+            "Hamstrings"
+        ]
+        ]
+    ], 5: [
+        [
+            "Back",
+            "Biceps",
+            "Chest",
+            "Shoulders",
+            "Triceps",
+            "Chest" 
+        ],
+        [
+            "Calves",
+            "Quadriceps",
+            "Hamstrings",
+            "Quadriceps",
+            "Hamstrings"
+        ], 
+        [
+            "Chest",
+            "Triceps",
+            "Shoulders",
+            "Chest",
+            "Triceps",
+            "Shoulders",
+
+        ],
+        [
+            "Back",
+            "Biceps",
+            "Back",
+            "Biceps",
+            "Back",
+            "Biceps"
+        ],
+        [
+            "Calves",
+            "Quadriceps",
+            "Hamstrings",
+            "Quadriceps",
+            "Hamstrings"
+        ]
+    ], 6:[
+        [
+            "Chest",
+            "Triceps",
+            "Shoulders",
+            "Chest",
+            "Triceps",
+            "Shoulders",
+
+        ],
+        [
+            "Back",
+            "Biceps",
+            "Back",
+            "Biceps",
+            "Back",
+            "Biceps"
+        ],
+        [
+            "Calves",
+            "Quadriceps",
+            "Hamstrings",
+            "Quadriceps",
+            "Hamstrings"
+        ],
+        [
+            "Chest",
+            "Triceps",
+            "Chest",
+            "Triceps",
+            "Chest",
+            "Triceps",
+
+        ],
+        [
+            "Back",
+            "Biceps",
+            "Shoulders"
+            "Back",
+            "Biceps",
+            "Shoulders"
+        ],
+        [
+            "Calves",
+            "Quadriceps",
+            "Hamstrings",
+            "Quadriceps",
+            "Hamstrings"
+        ]
+
+    ]
+    }
+    #3:"ppl", 4:"upper-lower-twice", 5:"ulppl", 6:"ppl-twice"}
     fitness_goals = []
     equipment = [""]
     training_days = []
@@ -23,8 +205,10 @@ def create_program(data):
         if value:
             training_days.append(key)
 
+    print(training_days)
+
     # rest day if all days ticked
-    if training_days.count() > 6:
+    if len(training_days) > 6:
         rest_day = random.choice(training_days)
         training_days.remove(rest_day)
 
@@ -40,22 +224,18 @@ def create_program(data):
 
     #5-8 exercises each workout
 
-    training_days_count = training_days.count()
-    if training_days_count == 1:
-        muscle_groups = ["Back", "Biceps", "Calves", "Chest", "Quadriceps", "Shoulders", "Triceps", "Hamstrings"]
-        training_day = program[training_days[0]]
-        muscle_groups.append(get_exercises(valid_exercises(level, equipment),"muscle_group", muscle_groups))
-        training_days[training_day] = muscle_groups
+    training_days_count = 2
+    muscle_groups = weight_programs[training_days_count] # list or list of lists
+    exercises = []
+    for split in muscle_groups:
+        exercises.append(get_exercises(valid_exercises(level, equipment), "muscle_group", split))
 
-    elif training_days_count == 2:
-        muscle_groups1 = ["Back", "Biceps", "Chest", "Shoulders", "Triceps", "Chest"]
-        muscle_groups2 = ["Calves", "Quadriceps", "Hamstrings", "Quadriceps", "Hamstrings"]
+    for i in range(training_days_count):
+        program[training_days[i]] = exercises[i]
 
-        training_day1 = program[training_days[0]]
-        training_day2 = program[training_days[1]]
+    print(program)
 
-
-
+    
 
 
 def valid_exercises(user_level, user_equipment):
@@ -98,4 +278,57 @@ def get_exercises(valid_exercises, filter_type, values):
             exercises.append(None)
     return exercises
 
-print(get_exercises(valid_exercises("Advanced", ["bench", "", "dumbell"]),"muscle_group", ["Back", "Biceps", "Calves", "Chest", "Quadriceps", "Shoulders", "Triceps"]))
+# print(get_exercises(valid_exercises("Advanced", [""]),"muscle_group", ["Chest", "Quadriceps"]))
+
+create_program({
+    "fitness-goals": {
+        "cardio": True,
+        "strength": True,
+        "hypertrophy": False,
+        "endurance": False
+    },
+    "fav-cardio": "Running",
+    "level": "Beginner",
+    "weight-goal": "gain",
+    "weight-units": "kg",
+    "weight": "78",
+    "height-units": "cm",
+    "height": "186",
+    "dob": "2007-12-13",
+    "sex": "male",
+    "equipment": {
+        "bench": True,
+        "medicine-ball": False,
+        "cable-machine": True,
+        "torso-rotation-machine": False,
+        "ab-roller": False,
+        "dumbbell": True,
+        "barbell": True,
+        "assisted-pullup-machine": False,
+        "lat-pulldown-machine": True,
+        "pullup-bar": True,
+        "v-bar": False,
+        "machine-row": True,
+        "ez-bar": True,
+        "preacher-curl-machine": False,
+        "rope": True,
+        "leg-press-machine": False,
+        "smith-machine": False,
+        "calf-raise-machine": False,
+        "chest-press-machine": True,
+        "bench-press-machine": True,
+        "plates": True,
+        "dip-assist-machine": False,
+        "dip-machine": False
+    },
+    "training_days": {
+        "monday": True,
+        "tuesday": True,
+        "wednesday": False,
+        "thursday": False,
+        "friday": False,
+        "saturday": False,
+        "sunday": True
+    },
+    "rhr": "53"
+})

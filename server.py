@@ -4,6 +4,7 @@ from python.hash_function import password_hash
 from datetime import datetime
 # from Nutrition_Calculator import nutrition_calculator
 from python.Create_Program import create_program
+from python.Exercise_Calories import get_calories
 import time, json, datetime, uuid 
 
 MIME_TYPES = {
@@ -67,6 +68,9 @@ class FittnessServer(BaseHTTPRequestHandler):
         user_data_file = f"/user_data/{user}.json"
         with open(user_data_file, "r") as file:
             data = json.load(file)
+
+        return data
+
 
     def do_GET(self):
         match self.path.split("?")[0]:
@@ -286,7 +290,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                 times = value['workout-time'].split("%3A")
                 workout_time = (int(value['workout-hrs'])*3600) + (int(value['workout-mins'])*60) + int(value['workout-secs']) 
                 timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(times[0]), int(times[1]))
-
+                weight = self.get_user_data()["weight"]
+                calories = get_calories(value['sport'], workout_time/3600, weight)
+                
                 exercises = {}
                 for item in value:
                     if item.startswith("exercise_input"):
