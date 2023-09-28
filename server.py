@@ -6,6 +6,11 @@ from datetime import datetime
 from python.Create_Program import create_program
 import time, json, datetime, uuid 
 
+MIME_TYPES = {
+    "svg": "image/svg+xml",
+    "png": "image/png",
+    "jpg": "image/jpg"
+}
 
 # NOTE restart server aprox 30 days NOTE
 
@@ -420,7 +425,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             case _:
                 self.send_response(200)
                 file_type = self.path.split(".")[-1]
-                self.send_header("Content-type", f"image/{file_type}")
+                self.send_header("Content-type", MIME_TYPES.get(file_type, f"image/{file_type}"))
                 self.end_headers()
                 with open("web"+self.path, "rb") as file:
                     file_data = file.read()                        
