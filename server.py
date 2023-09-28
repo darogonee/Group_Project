@@ -57,10 +57,11 @@ class FittnessServer(BaseHTTPRequestHandler):
         self.send_header("Set-Cookie", f"user={user_uuid}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
         self.end_headers()
         datetime.datetime.isoformat
+
     def get_username(self):
         cookie = self.get_cookie()
         if cookie["user"] in uuid2user:
-            return uuid2user[cookie["user"]]
+            return [cookie["user"]]
         self.redirect("/signin")
 
     def get_user_data(self):
@@ -90,7 +91,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
                         for i in range(min(200, len(activity_data))):
-                            
                             activity_type = self.query().get("type", "")
                             if activity_data[i]['type'] == activity_type or activity_type == "":
                                 activity = activity_template 
@@ -99,6 +99,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
+
+                                activity = activity.replace("template_id", activity_data[i]['upload_id_str'])
 
                                 if len(activity_data[i]["name"]) < 12 or "-" not in activity_data[i]["name"]:
                                     activity = activity.replace("template_name", str(activity_data[i]["name"]))
@@ -121,7 +123,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 tbody += activity
 
                                 table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
-
+                                # print(len(table_activity_data))
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
@@ -248,7 +250,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if not os.path.exists(f"user_data/{user}.json"):
                     self.redirect("/signupquestions")
                     return
-
+                
+            # FIXME check point
             case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -357,6 +360,40 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/myprofile.html", "r") as file:
                     myprofile_page = file.read()
                     self.wfile.write(myprofile_page.encode())
+
+            case "/activity":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                user = self.get_username()
+                with open("web/html/individual_activitie.html", "r") as file:
+                    id = int(self.query()["id"])
+                    for activity in python.Api.get_user_activites(user):
+                        if id == activity["upload_id"]:
+
+                            activity_page = file.read()
+                            activity_page = (activity_page.replace("template_name", str(activity["name"]))
+                                .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
+                                .replace("template_moving_time", str(round(int(activity["moving_time"])/60, 2)))
+                                .replace("template_elapsed_time", str(round(int(activity["elapsed_time"])/60, 2))+"mins elapsed")
+                                .replace("template_total_elevation_gain", str(activity["total_elevation_gain"]))
+                                .replace("template_type", str(activity["type"]))
+                                .replace("template_sport_type", str(activity["sport_type"]))
+                                .replace("template_start_date", str(activity["start_date"]))
+                                .replace("template_kudos_count", str(activity["kudos_count"]))
+                                .replace("template_achievement_count", str(activity["achievement_count"]))
+                                .replace("template_comment_count", str(activity["comment_count"]))
+                                .replace("template_achievement_count", str(activity["achievement_count"]))
+                                .replace("template_athlete_count", str(activity["athlete_count"]))
+                                .replace("template_trainer", str(activity["trainer"]))
+                                .replace("template_commute", str(activity["commute"]))
+                                .replace("template_private", str(activity["private"]))
+                                .replace("template_visibility", str(activity["visibility"]))
+                                .replace("template_average_speed", str(activity["average_speed"]))
+                                .replace("template_max_speed", str(activity["max_speed"]))
+                                .replace("template_elev_high", str(activity["elev_high"]))
+                                .replace("template_elev_low", str(activity["elev_low"])))
+                            self.wfile.write(activity_page.encode())
 
             case "/signupquestions":
                 self.send_response(200)
