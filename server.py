@@ -56,7 +56,6 @@ class FittnessServer(BaseHTTPRequestHandler):
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
         self.send_header("Set-Cookie", f"user={user_uuid}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
         self.end_headers()
-        datetime.datetime.isoformat
 
     def get_username(self):
         cookie = self.get_cookie()
