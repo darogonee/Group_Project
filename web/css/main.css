@@ -186,3 +186,17 @@ p {
     text-decoration: none;
     color: rgb(0, 0, 202);
 }
+
+table, th, td {
+    border: 2px solid black;
+  }
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+th {
+    text-align: center;
+}
