@@ -60,7 +60,7 @@ class FittnessServer(BaseHTTPRequestHandler):
     def get_username(self):
         cookie = self.get_cookie()
         if cookie["user"] in uuid2user:
-            return [cookie["user"]]
+            return uuid2user[cookie["user"]]
         self.redirect("/signin")
 
     def get_user_data(self):
