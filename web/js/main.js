@@ -19,8 +19,7 @@ function addToTable() {
     const setsInput = document.createElement("input");
     const restInput = document.createElement("input");
     
-    // make names not the same between rows
-    // so that they don't overwrite each other
+
     exerciseInput.type = "text"
     exerciseInput.name = "exercise_input" + numberOfRows
 
@@ -36,6 +35,7 @@ function addToTable() {
     restInput.name = "rest_input" + numberOfRows
     restInput.min = "0"
     numberOfRows++
+
     const deleteRow = document.createElement("button")
     deleteRow.textContent = "Delete"
     deleteRow.addEventListener("click", function(){
@@ -57,3 +57,25 @@ function addToTable() {
     tableBody.appendChild(newRow);
 };
 numberOfRows = 0
+
+
+
+function addRow() {
+    console.log("yes");
+    const tableBody = document.querySelector("#tb tbody");
+    const newRow = document.createElement("tr");
+    const cell1 = document.createElement("td");
+    const cell2 = document.createElement("td");
+    const cell3 = document.createElement("td");
+    const cell4 = document.createElement("td");
+    const cell5 = document.createElement("td");
+    const cell6 = document.createElement("td");
+
+    newRow.appendChild(cell1)
+    newRow.appendChild(cell2)
+    newRow.appendChild(cell3)
+    newRow.appendChild(cell4)
+    newRow.appendChild(cell5)
+    newRow.appendChild(cell6)
+    tableBody.appendChild(newRow);
+}

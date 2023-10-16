@@ -2,9 +2,16 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import python.Api, os, random
 from python.hash_function import password_hash 
 from datetime import datetime
-from Nutrition_Calculator import nutrition_calculator
+# from Nutrition_Calculator import nutrition_calculator
+from python.Create_Program import create_program
+from python.Exercise_Calories import get_calories
 import time, json, datetime, uuid 
 
+MIME_TYPES = {
+    "svg": "image/svg+xml",
+    "png": "image/png",
+    "jpg": "image/jpg"
+}
 
 # NOTE restart server aprox 30 days NOTE
 
@@ -22,6 +29,8 @@ class FittnessServer(BaseHTTPRequestHandler):
             self.wfile.write(file.read().replace("url", link).encode())
     
     def query(self):
+        if "?" not in self.path:
+            return {}
         query_string = self.path.split("?")[1].split("&")
         values = {}
         for query in query_string:
@@ -47,7 +56,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
         self.send_header("Set-Cookie", f"user={user_uuid}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
         self.end_headers()
-        datetime.datetime.isoformat
+
     def get_username(self):
         cookie = self.get_cookie()
         if cookie["user"] in uuid2user:
@@ -60,48 +69,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         with open(user_data_file, "r") as file:
             data = json.load(file)
 
-        print(data)
-
-    def create_program(self, data):
-        program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None}
-        weight_programs = {1:"full-body", 2:"upper-lower", 3:"ppl", 4:"upper-lower-twice", 5:"ulppl", 6:"ppl-twice"}
-        fitness_goals = []
-        equipment = []
-        training_days = []
-        
-        for key,value in data["fitness-goals"].items():
-            if value:
-                fitness_goals.append(key)
-        
-        for key,value in data["equipment"].items():
-            if value:
-                equipment.append(key)
-
-        for key,value in data["training_days"].items():
-            if value:
-                training_days.append(key)
-
-        # rest day if all days ticked
-        if training_days.count() > 6:
-            rest_day = random.choice(training_days)
-            training_days.remove(rest_day)
-
-        #available days True and unavailable days False
-        for day in program.keys():
-            program[day] = day in training_days
-
-        if "endurance" in fitness_goals or "strength" in fitness_goals or "hypertrophy" in fitness_goals:
-           ...
-            
-
-        
-
-
-        
-
-        
-        
-        
+        return data
 
 
     def do_GET(self):
@@ -121,38 +89,50 @@ class FittnessServer(BaseHTTPRequestHandler):
                         tbody = ""
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
-                        # change the 5 to how ever many activities you want to load
-                        for i in range(min(200, len(activity_data))):      
-                            activity = activity_template 
-                            activity = activity.replace("template_type", str(activity_data[i]["type"])) 
+                        for i in range(min(200, len(activity_data))):
+                            activity_type = self.query().get("type", "")
+                            if activity_data[i]['type'] == activity_type or activity_type == "":
+                                activity = activity_template 
+                                activity = activity.replace("template_type", str(activity_data[i]["type"])) 
 
-                            input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
-                            formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
-                            activity = activity.replace("template_date", str(formatted_date))
+                                input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+                                formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
+                                activity = activity.replace("template_date", str(formatted_date))
 
-                            activity = activity.replace("template_name", str(activity_data[i]["name"]))
-            
-                            formatted_time = time.strftime('%H:%M:%S', time.gmtime(activity_data[i]["moving_time"]))
-                                                           
-                            activity = activity.replace("template_time", str(formatted_time))
-                            distancekm = round(activity_data[i]["distance"]/1000, 2)
-                            activity = activity.replace("template_distancekm", str(distancekm)+" km")
-                            activity = activity.replace("template_elevgain", str(activity_data[i]["total_elevation_gain"])+" m")
+                                activity = activity.replace("template_id", activity_data[i]['upload_id_str'])
 
-                            tbody += activity
+                                if len(activity_data[i]["name"]) < 12 or "-" not in activity_data[i]["name"]:
+                                    activity = activity.replace("template_name", str(activity_data[i]["name"]))
+                                else:
+                                    activity = activity.replace("template_name", str(activity_data[i]["name"]).split("-")[0])
 
-                            table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
+                
+                                formatted_time = time.strftime('%H:%M:%S', time.gmtime(activity_data[i]["moving_time"]))
+                                                            
+                                activity = activity.replace("template_time", str(formatted_time))
+                                distancekm = round(activity_data[i]["distance"]/1000, 2)
+                                activity = activity.replace("template_distancekm", str(distancekm)+" km")
+                                activity = activity.replace("template_elevgain", str(activity_data[i]["total_elevation_gain"])+" m")
 
+                                try:
+                                    activity = activity.replace("template_calories", str(round(activity_data[i]["kilojoules"]/4.184, 2)))
+                                except KeyError:
+                                    activity = activity.replace("template_calories", "0")
+
+                                tbody += activity
+
+                                table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
+                                # print(len(table_activity_data))
 
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
-                        # Api.upload(user, "9/11", "Run", "Run", "2001-9-11T19:20:30+01:00", 120, 100000, "The sencond plain is on its way", 1, 1)
+
+                        
             case "/logout":
                 uuid2user.pop(self.get_cookie()['user'])
 
             case "/refresh":
                 user = self.get_username()
-                # print("Ballz (pay ID 0499076683, pay me)")
                 python.Api.get_user_activites.clear(user)
                 self.redirect("/activities")
               
@@ -269,7 +249,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if not os.path.exists(f"user_data/{user}.json"):
                     self.redirect("/signupquestions")
                     return
-
+                
+            # FIXME check point
             case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -311,7 +292,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                 times = value['workout-time'].split("%3A")
                 workout_time = (int(value['workout-hrs'])*3600) + (int(value['workout-mins'])*60) + int(value['workout-secs']) 
                 timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(times[0]), int(times[1]))
-
+                weight = self.get_user_data()["weight"]
+                calories = get_calories(value['sport'], workout_time/3600, weight)
+                
                 exercises = {}
                 for item in value:
                     if item.startswith("exercise_input"):
@@ -335,8 +318,31 @@ class FittnessServer(BaseHTTPRequestHandler):
                         current['rest'] = value[item]
                         exercises[number] = current
                 python.Api.upload(user, value['title'], value['sport'], str(timestamp), 
-                    workout_time, value['distance'], value['elev-gain'], "hello?", 0, 0, 
+                    workout_time, value['distance'], value['elev-gain'], value['description'], 0, 0, 
                     int(value['percieved-exertion']), exercises)
+
+
+            case "/log_food_action":
+                query = self.query()
+                name = query["food_name"]
+                quantity = query["food_quantity"]
+                units = query["food_units"]
+                        
+                print(query)
+                # with open("web/html/logfood&water.html", "r") as nutritions_file:
+                #     with open("web/html/nutrition-template.html", "r") as nutrition_file:
+                #         query = self.query()
+                #         name = query["food_name"]
+                #         quantity = query["food_quantity"]
+                #         units = query["food_units"]
+
+
+                #         logfoodwater_page = file.read()
+                        
+
+
+                #         nutrition_final = nutritions_file.read().replace("template_nutrition", tbody)
+                #         self.wfile.write(logfoodwater_page.encode())
 
             case "/logfood&water":
                 self.send_response(200)
@@ -346,8 +352,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
-                nutrition_calculator(input())
-
             case "/myprofile":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -355,6 +359,40 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/myprofile.html", "r") as file:
                     myprofile_page = file.read()
                     self.wfile.write(myprofile_page.encode())
+
+            case "/activity":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                user = self.get_username()
+                with open("web/html/individual_activitie.html", "r") as file:
+                    id = int(self.query()["id"])
+                    for activity in python.Api.get_user_activites(user):
+                        if id == activity["upload_id"]:
+
+                            activity_page = file.read()
+                            activity_page = (activity_page.replace("template_name", str(activity["name"]))
+                                .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
+                                .replace("template_moving_time", str(round(int(activity["moving_time"])/60, 2)))
+                                .replace("template_elapsed_time", str(round(int(activity["elapsed_time"])/60, 2))+"mins elapsed")
+                                .replace("template_total_elevation_gain", str(activity["total_elevation_gain"]))
+                                .replace("template_type", str(activity["type"]))
+                                .replace("template_sport_type", str(activity["sport_type"]))
+                                .replace("template_start_date", str(activity["start_date"]))
+                                .replace("template_kudos_count", str(activity["kudos_count"]))
+                                .replace("template_achievement_count", str(activity["achievement_count"]))
+                                .replace("template_comment_count", str(activity["comment_count"]))
+                                .replace("template_achievement_count", str(activity["achievement_count"]))
+                                .replace("template_athlete_count", str(activity["athlete_count"]))
+                                .replace("template_trainer", str(activity["trainer"]))
+                                .replace("template_commute", str(activity["commute"]))
+                                .replace("template_private", str(activity["private"]))
+                                .replace("template_visibility", str(activity["visibility"]))
+                                .replace("template_average_speed", str(activity["average_speed"]))
+                                .replace("template_max_speed", str(activity["max_speed"]))
+                                .replace("template_elev_high", str(activity["elev_high"]))
+                                .replace("template_elev_low", str(activity["elev_low"])))
+                            self.wfile.write(activity_page.encode())
 
             case "/signupquestions":
                 self.send_response(200)
@@ -377,7 +415,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "hypertrophy": "fitness_goals_hypertrophy" in value,
                             "endurance": "fitness_goals_endurance" in value,
                         },
-                        "fav-"
+                        "fav-cardio":value["fav-cardio"],
+                        "level":value["level"],
                         "weight-goal": value['weight-goal'],
                         "weight-units": value['weight-units'],
                         "weight": value['weight'],
@@ -428,7 +467,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             case _:
                 self.send_response(200)
                 file_type = self.path.split(".")[-1]
-                self.send_header("Content-type", f"image/{file_type}")
+                self.send_header("Content-type", MIME_TYPES.get(file_type, f"image/{file_type}"))
                 self.end_headers()
                 with open("web"+self.path, "rb") as file:
                     file_data = file.read()                        
@@ -449,7 +488,7 @@ if __name__ == "__main__":
 
 # 2 - individual activities view
 
-# 3 - activities sorter
+# 3 -
 
 # 4 - 
 

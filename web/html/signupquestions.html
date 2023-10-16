@@ -9,46 +9,58 @@
 </head>
 <body>
   <form action="/signupquestions_action" method="get">
-    <h4>What are your fitness goals?</h4>
-    <input type="checkbox" id="cardio" name="fitness_goals_cardio" value="">
-    <label for="cardio">Cardiovascular Fitness</label><br>
+    <div id="fitness_goals" class="fitness_goals">
+      <h4>What are your fitness goals?</h4>
+      <input type="checkbox" id="cardio" name="fitness_goals_cardio" value="">
+      <label for="cardio">Cardiovascular Fitness</label><br>
 
-    <input type="checkbox" id="strength" name="fitness_goals_strength" value="">
-    <label for="strength">Muscular Strength</label><br>
+      <input type="checkbox" id="strength" name="fitness_goals_strength" value="">
+      <label for="strength">Muscular Strength</label><br>
 
-    <input type="checkbox" id="hypertrophy" name="fitness_goals_hypertrophy" value="">
-    <label for="hypertrophy">Hypertrophy</label><br>
+      <input type="checkbox" id="hypertrophy" name="fitness_goals_hypertrophy" value="">
+      <label for="hypertrophy">Hypertrophy</label><br>
 
-    <input type="checkbox" id="endurance" name="fitness_goals_endurance" value="">
-    <label for="endurance">Muscular Endurance</label><br>
+      <input type="checkbox" id="endurance" name="fitness_goals_endurance" value="">
+      <label for="endurance">Muscular Endurance</label><br>
+    </div>
 
     <br>
 
     <div class="fav-cardio">
-      <label for="sport">Cardio: </label>
-      <select name="sport" id="sport">
+      <label for="fav-cardio">Cardio: </label>
+      <select name="fav-cardio" id="fav-cardio" required>
         <option value="Running">Running</option>
         <option value="Cycling">Cycling</option>
         <option value="Swimming">Swimming</option>
       </select>
     </div>
 
+    <label for="level">Experience Level: </label>
+
+    <select name="level" id="level" required>
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
+
     <h4>What is your weight goal?</h4>
-    <input type="radio" id="weightgain" name="weight-goal" value="gain">
-    <label for="weightgain">Weight gain</label><br>
+    <div id="weight_goals" class="weight_goals">
+      <input type="radio" id="weightgain" name="weight-goal" value="gain">
+      <label for="weightgain">Weight gain</label><br>
 
-    <input type="radio" id="weightloss" name="weight-goal" value="loss">
-    <label for="weightloss">Weight loss</label><br>
+      <input type="radio" id="weightloss" name="weight-goal" value="loss">
+      <label for="weightloss">Weight loss</label><br>
 
-    <input type="radio" id="weightmaintenance" name="weight-goal" value="maintenance">
-    <label for="weightmaintenance">Weight maintenance</label><br>
+      <input type="radio" id="weightmaintenance" name="weight-goal" value="maintenance">
+      <label for="weightmaintenance">Weight maintenance</label>
+    </div>
 
-    <br>
+    <br><br>
 
     <label for="weight">Weight: </label>
-    <input type="number" id="weight" name="weight">
+    <input type="number" id="weight" name="weight" required>
 
-    <select name="weight-units" id="weight-units">
+    <select name="weight-units" id="weight-units" required>
       <option value="kg">kg</option>
       <option value="lb">lb</option>
       <option value="st">st</option>
@@ -57,155 +69,178 @@
     <br>
 
     <label for="height">Height: </label>
-    <input type="number" id="height" name="height">
+    <input type="number" id="height" name="height" required>
 
-    <select name="height-units" id="height-units">
-      <option value="in">in</option>
+    <select name="height-units" id="height-units" required>
       <option value="cm">cm</option>
+      <option value="in">in</option>
     </select>
 
     <br>
 
     <label for="dob">D.O.B: </label>
-    <input type="date" id="dob" name="date_of_birth">
+    <input type="date" id="dob" name="date_of_birth" required>
 
     <br>
 
     <h4>Sex: </h4>
-    <input type="radio" id="male" name="sex" value="male">
-    <label for="male">Male</label><br>
+    <div class="sex" id="sex">
+      <input type="radio" id="male" name="sex" value="male">
+      <label for="male">Male</label><br>
 
-    <input type="radio" id="female" name="sex" value="female">
-    <label for="male">Female</label><br>
+      <input type="radio" id="female" name="sex" value="female">
+      <label for="male">Female</label><br>
+    </div>
 
     <h4>Equipment: </h4>
-    <input type="checkbox" id="Bench" name="equipment_bench" value="">
-    <label for="Bench">Bench</label><br>
+    <div id="equipment" class="equipment">
+      <input type="checkbox" id="Bench" name="equipment_bench" value="">
+      <label for="Bench">Bench</label><br>
 
-    <input type="checkbox" id="Medicine ball" name="equipment_medicine-ball" value="">
-    <label for="Medicine ball">Medicine ball</label><br>
+      <input type="checkbox" id="Medicine ball" name="equipment_medicine-ball" value="">
+      <label for="Medicine ball">Medicine ball</label><br>
 
-    <input type="checkbox" id="Cable machine" name="equipment_cable-machine" value="">
-    <label for="Cable machine">Cable machine</label><br>
+      <input type="checkbox" id="Cable machine" name="equipment_cable-machine" value="">
+      <label for="Cable machine">Cable machine</label><br>
 
-    <input type="checkbox" id="Torso rotation machine" name="equipment_torso-rotation-machine" value="">
-    <label for="Torso rotation machine">Torso rotation machine</label><br>
+      <input type="checkbox" id="Torso rotation machine" name="equipment_torso-rotation-machine" value="">
+      <label for="Torso rotation machine">Torso rotation machine</label><br>
 
-    <input type="checkbox" id="Ab roller" name="equipment_ab-roller" value="">
-    <label for="Ab roller">Ab roller</label><br>
+      <input type="checkbox" id="Ab roller" name="equipment_ab-roller" value="">
+      <label for="Ab roller">Ab roller</label><br>
 
-    <input type="checkbox" id="Dumbbell" name="equipment_dumbbell" value="">
-    <label for="Dumbbell">Dumbbell</label><br>
+      <input type="checkbox" id="Dumbbell" name="equipment_dumbbell" value="">
+      <label for="Dumbbell">Dumbbell</label><br>
 
-    <input type="checkbox" id="Barbell" name="equipment_barbell" value="">
-    <label for="Barbell">Barbell</label><br>
+      <input type="checkbox" id="Barbell" name="equipment_barbell" value="">
+      <label for="Barbell">Barbell</label><br>
 
-    <input type="checkbox" id="Assisted pullup machine" name="equipment_assisted-pullup-machine" value="">
-    <label for="Assisted pullup machine">Assisted pullup machine</label><br>
+      <input type="checkbox" id="Assisted pullup machine" name="equipment_assisted-pullup-machine" value="">
+      <label for="Assisted pullup machine">Assisted pullup machine</label><br>
 
-    <input type="checkbox" id="Lat pulldown machine" name="equipment_lat-pulldown-machine" value="">
-    <label for="Lat pulldown machine">Lat pulldown machine</label><br>
+      <input type="checkbox" id="Lat pulldown machine" name="equipment_lat-pulldown-machine" value="">
+      <label for="Lat pulldown machine">Lat pulldown machine</label><br>
 
-    <input type="checkbox" id="Pullup bar" name="equipment_pullup-bar" value="">
-    <label for="Pullup bar">Pullup bar</label><br>
+      <input type="checkbox" id="Pullup bar" name="equipment_pullup-bar" value="">
+      <label for="Pullup bar">Pullup bar</label><br>
 
-    <input type="checkbox" id="V-bar" name="equipment_v-bar" value="">
-    <label for="V-bar">V-bar</label><br>
+      <input type="checkbox" id="V-bar" name="equipment_v-bar" value="">
+      <label for="V-bar">V-bar</label><br>
 
-    <input type="checkbox" id="Machine row" name="equipment_machine-row" value="">
-    <label for="Machine row">Machine row</label><br>
+      <input type="checkbox" id="Machine row" name="equipment_machine-row" value="">
+      <label for="Machine row">Machine row</label><br>
 
-    <input type="checkbox" id="EZ bar" name="equipment_ez-bar" value="">
-    <label for="EZ bar">EZ bar</label><br>
+      <input type="checkbox" id="EZ bar" name="equipment_ez-bar" value="">
+      <label for="EZ bar">EZ bar</label><br>
 
-    <input type="checkbox" id="Preacher curl machine" name="equipment_preacher-curl-machine" value="">
-    <label for="Preacher curl machine">Preacher curl machine</label><br>
+      <input type="checkbox" id="Preacher curl machine" name="equipment_preacher-curl-machine" value="">
+      <label for="Preacher curl machine">Preacher curl machine</label><br>
 
-    <input type="checkbox" id="Rope" name="equipment_rope" value="">
-    <label for="Rope">Rope</label><br>
+      <input type="checkbox" id="Rope" name="equipment_rope" value="">
+      <label for="Rope">Rope</label><br>
 
-    <input type="checkbox" id="Leg press machine" name="equipment_leg-press-machine" value="">
-    <label for="Leg press machine">Leg press machine</label><br>
+      <input type="checkbox" id="Leg press machine" name="equipment_leg-press-machine" value="">
+      <label for="Leg press machine">Leg press machine</label><br>
 
-    <input type="checkbox" id="Smith machine" name="equipment_smith-machine" value="">
-    <label for="Smith machine">Smith machine</label><br>
+      <input type="checkbox" id="Smith machine" name="equipment_smith-machine" value="">
+      <label for="Smith machine">Smith machine</label><br>
 
-    <input type="checkbox" id="Calf raise machine" name="equipment_calf-raise-machine" value="">
-    <label for="Calf raise machine">Calf raise machine</label><br>
+      <input type="checkbox" id="Calf raise machine" name="equipment_calf-raise-machine" value="">
+      <label for="Calf raise machine">Calf raise machine</label><br>
 
-    <input type="checkbox" id="Chest press machine" name="equipment_chest-press-machine" value="">
-    <label for="Chest press machine">Chest press machine</label><br>
+      <input type="checkbox" id="Chest press machine" name="equipment_chest-press-machine" value="">
+      <label for="Chest press machine">Chest press machine</label><br>
 
-    <input type="checkbox" id="Bench press machine" name="equipment_bench-press-machine" value="">
-    <label for="Bench press machine">Bench press machine</label><br>
+      <input type="checkbox" id="Bench press machine" name="equipment_bench-press-machine" value="">
+      <label for="Bench press machine">Bench press machine</label><br>
 
-    <input type="checkbox" id="Plate" name="equipment_plate" value="Plate">
-    <label for="Plate">Plate</label><br>
+      <input type="checkbox" id="Plate" name="equipment_plate" value="Plate">
+      <label for="Plate">Plate</label><br>
 
-    <input type="checkbox" id="Dip assist machine" name="equipment_dip-assist-machine" value="">
-    <label for="Dip assist machine">Dip assist machine</label><br>
+      <input type="checkbox" id="Dip assist machine" name="equipment_dip-assist-machine" value="">
+      <label for="Dip assist machine">Dip assist machine</label><br>
 
-    <input type="checkbox" id="Dip machine" name="equipment_dip-machine" value="">
-    <label for="Dip machine">Dip machine</label><br>
+      <input type="checkbox" id="Dip machine" name="equipment_dip-machine" value="">
+      <label for="Dip machine">Dip machine</label><br>
+    </div>
     
     <h4>What days are you able to workout?</h4>
 
-    <input type="checkbox" id="monday" name="monday" value="">
-    <label for="monday">Monday</label>
+    <div id="workout_days" class="workout_days">
+      <input type="checkbox" id="monday" name="monday" value="">
+      <label for="monday">Monday</label>
 
-    <input type="checkbox" id="tuesday" name="tuesday" value="">
-    <label for="tuesday">Tuesday</label>
+      <input type="checkbox" id="tuesday" name="tuesday" value="">
+      <label for="tuesday">Tuesday</label>
 
-    <input type="checkbox" id="wednesday" name="wednesday" value="">
-    <label for="wednesday">Wednesday</label>
+      <input type="checkbox" id="wednesday" name="wednesday" value="">
+      <label for="wednesday">Wednesday</label>
 
-    <input type="checkbox" id="thursday" name="thursday" value="">
-    <label for="thursday">Thursday</label>
+      <input type="checkbox" id="thursday" name="thursday" value="">
+      <label for="thursday">Thursday</label>
 
-    <input type="checkbox" id="friday" name="friday" value="">
-    <label for="friday">Friday</label>
+      <input type="checkbox" id="friday" name="friday" value="">
+      <label for="friday">Friday</label>
 
-    <input type="checkbox" id="saturday" name="saturday" value="">
-    <label for="saturday">Saturday</label>
+      <input type="checkbox" id="saturday" name="saturday" value="">
+      <label for="saturday">Saturday</label>
 
-    <input type="checkbox" id="sunday" name="sunday" value="">
-    <label for="sunday">Sunday</label>
+      <input type="checkbox" id="sunday" name="sunday" value="">
+      <label for="sunday">Sunday</label>
+    </div>
     
     <br><br>
 
     <label for="rhr">Resting Heart Rate (RHR): </label>
-    <input type="number" id="rhr" name="rhr" value="" min="0" max="220">
+    <input type="number" id="rhr" name="rhr" value="" min="0" max="220" required>
 
     <br><br><br>
 
-    <input type="submit" id="submit" value="submit">
+    <input type="submit" id="submit" value="submit" onclick="validateForm()">
 
 
   </form>
 </body>
 <script>
   function validateForm() {
-      // Get all day checkboxes
-      var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-      var atLeastOneChecked = false;
+      const day_checkboxes = document.querySelectorAll('.workout_days input[type="checkbox"]');
+      const fitness_goal_checkboxes = document.querySelectorAll('.fitness_goals input[type="checkbox"]');
+      const weight_goal_radio = document.querySelectorAll('.weight_goals input[type="radio"]');
+      const sex_radio = document.querySelectorAll('.sex input[type="radio"]')
+      var checkArray = [checkIfChecked(day_checkboxes), checkIfChecked(fitness_goal_checkboxes), checkIfChecked(weight_goal_radio), checkIfChecked(sex_radio)]
+      var allChecked = false
 
-      // Check if at least one checkbox is checked
-      for (var i = 0; i < checkboxes.length; i++) {
-        if (checkboxes[i].checked) {
-          atLeastOneChecked = true;
-          break; // Exit the loop if one checkbox is checked
+      count = 0
+      for (var i = 0; i<=4; i++) {
+        if (checkArray[i] == true) {
+          count++;
+        } else {
+          break
         }
       }
 
-      // If at least one checkbox is checked, allow form submission
-      if (atLeastOneChecked) {
-        return true;
+      if (count == 4) {
+        allChecked == true
       } else {
-        // Display an error message (you can customize this part)
-        alert("Please select at least one day to work out.");
-        return false; // Prevent form submission
+        alert("Please enter a value into all fields (excluding equipment).")
       }
     }
+
+  function checkIfChecked(input_to_check){
+    atLeastOneChecked = false
+
+    for (var i = 0; i < input_to_check.length; i++) {
+      if (input_to_check[i].checked) {
+        atLeastOneChecked = true;
+        break;
+      }
+    }
+    if (atLeastOneChecked) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 </script>
 </html>

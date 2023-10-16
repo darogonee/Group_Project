@@ -39,12 +39,13 @@
     <table>
       <thead>
         <tr>
-          <th>Workout type</th>
+          <th><a class="nonlink" href="/activities">Workout type</a></th>
           <th>Date</th>
           <th>Title</th>
           <th>Time</th>
           <th>Distance</th>
           <th>Elevation Gain</th>
+          <th>Calories</th>
         </tr>
       </thead>
         
@@ -56,13 +57,7 @@
     <a href="test">Test</a>
 
     <script>
-      document.getElementById("title_button").addEventListener("click", function() {
-        fetch("/dosomething", {
-            method: "GET"
-        }).then(response => response.text()).then(text => {
-            this.innerText = text;
-        });
-      });
+
     </script>
 </body>
 </html>

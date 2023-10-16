@@ -41,6 +41,7 @@
       <br>
       <label for="sport">Sport: </label>
       <select name="sport" id="sport">
+        <option value="Workout">Weight Training</option>
         <option value="Virtual Ride">Virtual Ride</option>
         <option value="Run">Run</option>
         <option value="Swim">Swim</option>
@@ -87,7 +88,6 @@
         <option value="Velomoblie">Velomoblie</option>
         <option value="Virtual Run">Virtual Run</option>
         <option value="Virtual Rowing">Virtual Rowing</option>
-        <option value="Workout">Weight Training</option>
         <option value="Windsurf">Windsurf</option>
         <option value="Wheelchair">Wheelchair</option>
         <option value="Workout">Yoga</option>
@@ -129,9 +129,9 @@
           <thead>
             <tr>
               <th>Exercise</th>
-              <th>Reps/time</th>
+              <th>Reps/time (secs)</th>
               <th>Sets</th>
-              <th>Rest per set</th>
+              <th>Rest per set (secs)</th>
             </tr>
           </thead>
           <tbody>
@@ -141,12 +141,12 @@
       </div>
 
       <div class="elev-gain" id="elev-gain" style="display:none">
-        <label for="elev-gain">Elevation gain: </label>
+        <label for="elev-gain">Elevation gain (m): </label>
         <input type="number" id="elev-gain" name="elev-gain" min="0">
       </div>
 
       <div class="distance" id="distance" style="display:none">
-        <label for="distance">Distance: </label>
+        <label for="distance">Distance (km): </label>
         <input type="number" id="distance" name="distance" min="0">
       </div>
 
@@ -156,7 +156,6 @@
 
       <br>
       <input type="submit" value="Submit">
-      <a href="upload_exercise">Submit</a>
 
     </form>
 
@@ -175,7 +174,7 @@
 
 
       activitySelect.addEventListener('change', function () {
-          if (activitySelect.value == 'Workout') {
+          if (activitySelect.value == 'Workout' ||  activitySelect.value == 'HIIT' || activitySelect.value == 'Weight Training'){
               repsSetsInput.style.display = 'block';
               elevGainInput.style.display = 'none';
               distanceInput.style.display = 'none';
