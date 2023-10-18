@@ -98,18 +98,26 @@ body, ul {
     padding: 40px;
     border-radius: 10px;
     padding-bottom: 100%;
+    background-color: white;
 }
 
 .signin-container {
     margin-left: auto;
     margin-right: 55%;
     width: 8em;
-    padding-top: 100px
+    padding-top: 100px;
 }
 
-#username, #password, #password-reentry, #signup-bt, #login-bt{
+#username, #password-reentry, #password-signup{
     width: 100%;
-    height: 30px
+    height: 30px;
+}
+#password {
+    width: 100%;
+    padding-top: 1.5%;
+    padding-bottom: 1.5%;
+    height: 30px;
+    align-items: left;
 }
 
 #signup-bt, #login-bt {
@@ -117,32 +125,15 @@ body, ul {
     color: white;
     border: none;
     border-radius: 10px;
-    height: 13%
+    height: 13%;
+    width: 100%
 }
 
 p {
     font-size: 10pt
 }
 
-#hide-password {
-    position: relative;
-    display:none; 
-    vertical-align: middle;
-    right: -75px; 
-    transform: translate(1000%,-150%);
-    top: 50%;
-    cursor: pointer;
-    width:20px
-}
-
-#show-password {
-    display:inline; 
-    position: relative;
-    vertical-align: middle; 
-    right: -75px; 
-    transform: translate(1000%,-150%);
-    top: 50%;
-    cursor: pointer;
+#toggle-password {
     width:20px
 }
 
@@ -170,7 +161,6 @@ p {
 }
 .nutrition-water-box-container, .training-box-container {
     flex: 1;
-    display: flex;
     flex-direction: column;
 }
 
@@ -195,4 +185,36 @@ p {
 .nonlink {
     text-decoration: none;
     color: rgb(0, 0, 202);
+}
+
+table, th, td {
+    border: 2px solid black;
+  }
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+th {
+    text-align: center;
+}
+
+input#password {
+    appearance: none;
+    border:none;
+}
+
+.input-box{
+    display: flex; 
+    align-items: center;
+    border: 1px solid black;
+}
+
+#signup-bt, #login-bt{
+    transition-duration: 100ms;
+}
+#signup-bt:hover, #login-bt:hover{
+    background-color: rgb(171, 0, 0);
 }

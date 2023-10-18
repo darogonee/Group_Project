@@ -71,7 +71,7 @@
     },
     {"exercise_id": 36, "muscle_group": "Abdominals", "exercise_name": "Weighted Crunch", "level": "intermediate", "ulc": "Core", "pp": "Push", "modality": "FW", "joint": "M", "equipment": "medicine-ball"
     },
-    {"exercise_id": 37, "muscle_group": "Back", "exercise_name": "Assisted Pull-Up", "level": "beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "assisted-pullup-machine"
+    {"xercise_id": 37, "muscle_group": "Back", "exercise_name": "Assisted Pull-Up", "level": "beginner", "ulc": "Upper", "pp": "Pull", "modality": "FW", "joint": "M", "equipment": "assisted-pullup-machine"
     },
     {"exercise_id": 38, "muscle_group": "Back", "exercise_name": "Close-Grip Lat Pulldown", "level": "beginner", "ulc": "Upper", "pp": "Pull", "modality": "M", "joint": "M", "equipment": "lat-pulldown-machine"
     },
@@ -502,7 +502,7 @@
     {"exercise_id": 251, "muscle_group": "Triceps", "exercise_name": "Lying Overhead ez-Bar Tricep Extension", "level": "intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "ez-bar"
     },
     {"exercise_id": 252, "muscle_group": "Triceps", "exercise_name": "Lying Reverse ez-Bar Triceps Extension", "level": "advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "ez-bar"
-    },
+    }
     {"exercise_id": 253, "muscle_group": "Triceps", "exercise_name": "Lying Single Dumbbell Triceps Extension", "level": "beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
     },
     {"exercise_id": 254, "muscle_group": "Triceps", "exercise_name": "Lying Single-Arm Dumbbell Triceps Extension", "level": "beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"

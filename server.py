@@ -74,6 +74,34 @@ class FittnessServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         match self.path.split("?")[0]:
+            case "/myprogram":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+
+                user = self.get_username()
+                user_data_file = f"user_data/{user}.json"
+                with open(user_data_file, "r") as file:
+                    data = json.load(file)
+
+                
+                # with open("web/html/myprogram.html", "r") as myprogram_file:
+                #     with open("web/html/workout_days_template.html", "r") as workout_days_file:
+                #         workout_days_template = workout_days_file.read()
+                #         tbody = ""
+                #         table_workout_days = []
+                        
+                #         for i in range(7):
+                #             workout_day = workout_days_template
+                #             workout_day = workout_day.replace()
+
+                #         tbody += workout_day
+                #         workout_days_final = workout_days_file.read().replace("template_activities", tbody)                         
+                #         self.wfile.write(workout_days_final.encode())
+
+                    
+
+                print(create_program(data))
             case  "/activities":
                 user = self.get_username()
                 self.send_response(200)
@@ -251,22 +279,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     return
                 
             # FIXME check point
-            case "/myprogram":
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                with open("web/html/myprogram.html", "r") as file:
-                    myprogram_page = file.read()                        
-                    self.wfile.write(myprogram_page.encode())
 
-                user = self.get_username()
-                print(user)
-                user_data_file = f"user_data/{user}.json"
-                with open(user_data_file, "r") as file:
-                    data = json.load(file)
-
-                print(data)
-                self.create_program(data)
 
 
             case "/food&water":
@@ -295,6 +308,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 weight = self.get_user_data()["weight"]
                 calories = get_calories(value['sport'], workout_time/3600, weight)
                 
+                #do calories
                 exercises = {}
                 for item in value:
                     if item.startswith("exercise_input"):
