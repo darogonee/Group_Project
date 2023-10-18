@@ -109,7 +109,7 @@ body, ul {
 
 #username, #password, #password-reentry, #signup-bt, #login-bt{
     width: 100%;
-    height: 10%
+    height: 30px
 }
 
 #signup-bt, #login-bt {
