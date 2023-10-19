@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import python.Api, os, random
 from python.hash_function import password_hash 
+from python.Nutrition_Calculator import nutrition_calculator as nc
 from datetime import datetime
 # from Nutrition_Calculator import nutrition_calculator
 from python.Create_Program import create_program
@@ -339,9 +340,10 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/log_food_action":
                 query = self.query()
                 name = query["food_name"]
-                quantity = query["food_quantity"]
+                quantity = query["amount"]
                 units = query["food_units"]
-                        
+                print(nc(quantity, units, name))
+
                 print(query)
                 # with open("web/html/logfood&water.html", "r") as nutritions_file:
                 #     with open("web/html/nutrition-template.html", "r") as nutrition_file:
@@ -500,11 +502,11 @@ if __name__ == "__main__":
 # NOTE
 # 1 - food thing
 
-# 2 - individual activities view
+# 2 -
 
 # 3 -
 
-# 4 - 
+# 4 -
 
 # 5 - put stuff in the home page
 
