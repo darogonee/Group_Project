@@ -218,3 +218,7 @@ input#password {
 #signup-bt:hover, #login-bt:hover{
     background-color: rgb(171, 0, 0);
 }
+
+.input-box:has(input:active){
+    border: 1px solid blue;
+}
