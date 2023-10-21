@@ -3,9 +3,8 @@ import python.Api, os, random
 from python.hash_function import password_hash 
 from python.Nutrition_Calculator import nutrition_calculator as nc
 from datetime import datetime
-# from Nutrition_Calculator import nutrition_calculator
 from python.Create_Program import create_program
-from python.Exercise_Calories import get_calories
+from python.requirements import *
 import time, json, datetime, uuid 
 
 MIME_TYPES = {
@@ -66,9 +65,10 @@ class FittnessServer(BaseHTTPRequestHandler):
 
     def get_user_data(self):
         user = self.get_username()
-        user_data_file = f"/user_data/{user}.json"
-        with open(user_data_file, "r") as file:
-            data = json.load(file)
+        print(user)
+        user_data_file = f"/Users/oliver_magill25/Desktop/Programming/Group_Project/user_data/{user}.json"
+        with open(user_data_file, "r") as data_file:
+            data = json.load(data_file)
 
         return data
 
@@ -79,30 +79,66 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
+                with open("web/html/myprogram.html", "r") as myprogram_file:
+                    with open("web/html/myprogram-template.html", "r") as myprogram_template_file:
+                        myprogram_template = myprogram_template_file.read()
+                        data = self.get_user_data()
+                        if data.get("program") == None:
+                            program = create_program(data)
+                            username = self.get_username()
+                            data["program"] = program
+                            with open(f"/Users/oliver_magill25/Desktop/Programming/Group_Project/user_data/{username}.json", "w") as file:
+                                json.dump(data, file)
+                        else:
+                            program = data["program"]
 
-                user = self.get_username()
-                user_data_file = f"user_data/{user}.json"
-                with open(user_data_file, "r") as file:
-                    data = json.load(file)
+                        tbody = ""
+                        myprogram = myprogram_template
+          
+                        for day, exercises in program.items():
+                            if isinstance(exercises, list):
+                                body = ""
+                                for exercise in program[day]:
+                                    body = body + exercise["exercise_name"] + "<br>"
+                                myprogram = myprogram.replace(f"template_{day}", body)
+                            else:
+                                myprogram = myprogram.replace(f"template_{day}", str(program[day]))
 
-                
-                # with open("web/html/myprogram.html", "r") as myprogram_file:
-                #     with open("web/html/workout_days_template.html", "r") as workout_days_file:
-                #         workout_days_template = workout_days_file.read()
-                #         tbody = ""
-                #         table_workout_days = []
-                        
-                #         for i in range(7):
-                #             workout_day = workout_days_template
-                #             workout_day = workout_day.replace()
 
-                #         tbody += workout_day
-                #         workout_days_final = workout_days_file.read().replace("template_activities", tbody)                         
-                #         self.wfile.write(workout_days_final.encode())
+                        tbody += myprogram
+                        myprogram_final = myprogram_file.read().replace("template_myprogram", tbody)                         
+                        self.wfile.write(myprogram_final.encode())
 
+
+            case "/logfood&water": #not working
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open("web/html/logfood&water.html", "r") as food_water_file:
+                    with open("web/html/nutrition-template.html", "r") as food_water_template_file:
+                        food_water_template = food_water_template_file.read()
+                        tbody = ""
+                        query = self.query()
+                        name = query["food_name"]
+                        quantity = query["amount"]
+                        units = query["food_units"]
+                        nutrition = nc(quantity, units, name)
+
+                        food_water = food_water_template
+                        food_water = food_water.replace("template_quantity", quantity)
+                        food_water = food_water.replace("template_units", units)
+                        food_water = food_water.replace("template_food_name", name)
+                        food_water = food_water.replace("template_food_calories", nutrition["calories"])
+                        food_water = food_water.replace("template_carbs", nutrition["carbs"])
+                        food_water = food_water.replace("template_protein", nutrition["protein"])
+                        food_water = food_water.replace("template_fat", nutrition["fat"])
+
+                        tbody += food_water
+                        food_water_final = food_water_file.read().replace("template_nutrition", tbody)                         
+                        self.wfile.write(food_water_final.encode())
                     
 
-                print(create_program(data))
+
             case  "/activities":
                 user = self.get_username()
                 self.send_response(200)
@@ -218,7 +254,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 values = self.query()
                 # replace the .replace funtion with something to remove special charicters
                 username = values["username"].lower()
-                password = password_hash(values["password"])
+                password = password_hash(values["password-signup"])
                 passwordrentry = password_hash(values["password-rentry"])
                 if len(username) < 3 or len(username) > 13 or password != passwordrentry or not username.isalnum():
                     self.redirect("/signup")
@@ -292,6 +328,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(foodwater_page.encode())
 
 
+
+
             case "/logexercise":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -306,8 +344,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 times = value['workout-time'].split("%3A")
                 workout_time = (int(value['workout-hrs'])*3600) + (int(value['workout-mins'])*60) + int(value['workout-secs']) 
                 timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(times[0]), int(times[1]))
-                weight = self.get_user_data()["weight"]
-                calories = get_calories(value['sport'], workout_time/3600, weight)
                 
                 #do calories
                 exercises = {}
@@ -336,37 +372,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     workout_time, value['distance'], value['elev-gain'], value['description'], 0, 0, 
                     int(value['percieved-exertion']), exercises)
 
-
-            case "/log_food_action":
-                query = self.query()
-                name = query["food_name"]
-                quantity = query["amount"]
-                units = query["food_units"]
-                print(nc(quantity, units, name))
-
-                print(query)
-                # with open("web/html/logfood&water.html", "r") as nutritions_file:
-                #     with open("web/html/nutrition-template.html", "r") as nutrition_file:
-                #         query = self.query()
-                #         name = query["food_name"]
-                #         quantity = query["food_quantity"]
-                #         units = query["food_units"]
-
-
-                #         logfoodwater_page = file.read()
-                        
-
-
-                #         nutrition_final = nutritions_file.read().replace("template_nutrition", tbody)
-                #         self.wfile.write(logfoodwater_page.encode())
-
-            case "/logfood&water":
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                with open("web/html/logfood&water.html", "r") as file:
-                    logfoodwater_page = file.read()
-                    self.wfile.write(logfoodwater_page.encode())
 
             case "/myprofile":
                 self.send_response(200)
@@ -425,21 +430,18 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     json.dump(
                     {
-                        "fitness-goals": {
-                            "cardio": "fitness_goals_cardio" in value,
-                            "strength": "fitness_goals_strength" in value,
-                            "hypertrophy": "fitness_goals_hypertrophy" in value,
-                            "endurance": "fitness_goals_endurance" in value,
-                        },
+                        "pal":str(get_pal(value["pal"])),
+                        "muscle_goals":value["muscle_goals"],
+                        "cardio":value["cardio"],
                         "fav-cardio":value["fav-cardio"],
                         "level":value["level"],
-                        "weight-goal": value['weight-goal'],
-                        "weight-units": value['weight-units'],
-                        "weight": value['weight'],
-                        "height-units": value['height-units'],
-                        "height": value['height'],
-                        "dob": value['date_of_birth'],
-                      "sex": value['sex'],
+                        "weight_goal": value["weight_goal"],
+                        "weight-units": value["weight-units"],
+                        "weight": value["weight"],
+                        "height-units": value["height-units"],
+                        "height": value["height"],
+                        "dob": value["date_of_birth"],
+                        "sex": value["sex"],
                         "equipment": {
                             "bench": "equipment_bench" in value,
                             "medicine-ball": "equipment_medicine-ball" in value,
@@ -463,7 +465,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "bench-press-machine": "equipment_bench-press-machine" in value,          
                             "plates": "equipment_plate" in value,          
                             "dip-assist-machine": "equipment_dip-assist-machine" in value,          
-                            "dip-machine": "equipment_dip-machine" in value,                           
+                            "dip-machine": "equipment_dip-machine" in value                           
                         },
                         "training_days": {
                             "monday": "monday" in value,
@@ -474,7 +476,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "saturday": "saturday" in value,
                             "sunday": "sunday" in value,
                         },
-                        "rhr": value['rhr']
+                        "rhr": value['rhr'],
+                        "goal_cals":str(calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"]))
+
                     }, file, indent = 4
                 )
                 

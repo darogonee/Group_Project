@@ -35,11 +35,10 @@
         </nav>
     </div>
     <form method="get" action="log_food_action">
-      <input type="date" id="log_food_date" name="log_food_date">
+      <input type="date" id="log_food_date" name="log_food_date" required>
       <br>
     
-      <label for="food_name">Enter food name:</label>
-      <input type="number" id="food_quantity" name="amount">
+      <input type="number" id="food_quantity" name="amount" placeholder="1">
       <select name="food_units" id="food-units">
         <option value="serve">serve/s</option>
         <option value="kg">kg</option>
@@ -48,14 +47,15 @@
         <option value="mL">mL</option>
       </select>
       
-      <input type="text" id="food_name" name="food_name">
-      <button id="add_exercise" onclick="addRow()" type="button">++</button>
+      <input type="text" id="food_name" name="food_name" placeholder="apple">
+  
       <input type="submit" id="submit" name="submit">
     
       <table class="tb" id="tb">
         <thead>
           <tr>
-            <th>Quantity/Weight (g)</th>
+            <th>Quantity</th>
+            <td>Units</td>
             <th>Food name</th>
             <th>Calories (kcal)</th>
             <th>Carbs (g)</th>
@@ -64,7 +64,7 @@
           </tr>
         </thead>
         <tbody>
-        
+          template_nutrition
         </tbody>
       </table>
     </form>

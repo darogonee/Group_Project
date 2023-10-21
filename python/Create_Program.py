@@ -2,25 +2,7 @@
 import json
 import random
 
-def create_program(data):
-    program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None, "sunday":None}
-    cardio = False
-    weights = False
-    cardio_weights_split = False
-
-    fitness_goals = []
-    equipment = [""]
-    weights_training_days = []
-    cardio_training_days = []
-    training_days = []
-
-    weights_days_count = 0
-    cardio_days_count = 0
-    training_days_count = 0 
-
-    level = data["level"]
-
-    weight_programs = {
+weight_programs = {
     1: [
         [
             "Back",
@@ -199,21 +181,41 @@ def create_program(data):
             "Quadriceps",
             "Hamstrings"
         ]
-
     ]
-    }
+}
+
+reps_sets = {"strength":["3-5", "2-6"], "hypertrophy":["3-4", "6-12"], "endurance":["2-3", "12-20"]}
+
+get_levels = {"beginner":"beginner", "intermediate":["beginner", "intermediate"], "advanced":["beginner", "intermediate", "advanced"]}
+
+def create_program(data):
+    program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None, "sunday":None}
+    cardio = False
+    weights = False
+    cardio_weights_split = False
+
+    fitness_goals = []
+    equipment = [""]
+    weights_training_days = []
+    training_days = []
+
+    weights_days_count = 0
+    cardio_days_count = 0
+    training_days_count = 0 
+
+    level = data["level"]
 
     # add fitness goals to fitness_goals
-    for key,value in data["fitness-goals"].items():
-        if value:
-            fitness_goals.append(key)
+    muscle_goal = data["muscle_goals"]
+
+    cardio = data["cardio"]
 
     # weights?
-    if "endurance" in fitness_goals or "strength" in fitness_goals or "hypertrophy" in fitness_goals:
+    if muscle_goal:
         weights = True
 
     # cardio?
-    if "cardio" in fitness_goals:
+    if cardio == "cardio_true":
         cardio = True
 
     # both?
@@ -268,6 +270,15 @@ def create_program(data):
     for i in range(weights_days_count):
         program[weights_training_days[i]] = exercises[i]
 
+    # if endurance, strength, and hypertrophy: 
+
+    reps = reps_sets[muscle_goal][0]
+    sets = reps_sets[muscle_goal][1]
+    for day, exercises in program.items():
+        if exercises != False and exercises != "cardio":
+            for exercise in exercises:
+                exercise['reps'] = reps
+                exercise['sets'] = sets
     return program
 
     
@@ -277,7 +288,6 @@ def valid_exercises(user_level, user_equipment):
     with open("data/exercises.json", "r") as file:
         exercise_data = json.load(file)
 
-    get_levels = {"beginner":"beginner", "intermediate":["beginner", "intermediate"], "advanced":["beginner", "intermediate", "advanced"]}
     level_filtered_data = []
 
     for level in get_levels[user_level]:
@@ -312,57 +322,4 @@ def get_exercises(valid_exercises, filter_type, values):
         except IndexError:
             exercises.append(None)
     return exercises
-
-create_program({
-    "fitness-goals": {
-        "cardio": True,
-        "strength": True,
-        "hypertrophy": False,
-        "endurance": False
-    },
-    "fav-cardio": "Running",
-    "level": "beginner",
-    "weight-goal": "gain",
-    "weight-units": "kg",
-    "weight": "78",
-    "height-units": "cm",
-    "height": "186",
-    "dob": "2007-12-13",
-    "sex": "male",
-    "equipment": {
-        "bench": True,
-        "medicine-ball": False,
-        "cable-machine": True,
-        "torso-rotation-machine": False,
-        "ab-roller": False,
-        "dumbbell": True,
-        "barbell": True,
-        "assisted-pullup-machine": False,
-        "lat-pulldown-machine": True,
-        "pullup-bar": True,
-        "v-bar": False,
-        "machine-row": True,
-        "ez-bar": True,
-        "preacher-curl-machine": False,
-        "rope": True,
-        "leg-press-machine": False,
-        "smith-machine": False,
-        "calf-raise-machine": False,
-        "chest-press-machine": True,
-        "bench-press-machine": True,
-        "plates": True,
-        "dip-assist-machine": False,
-        "dip-machine": False
-    },
-    "training_days": {
-        "monday": True,
-        "tuesday": True,
-        "wednesday": False,
-        "thursday": False,
-        "friday": False,
-        "saturday": False,
-        "sunday": True
-    },
-    "rhr": "53"
-})
 
