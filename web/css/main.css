@@ -209,7 +209,7 @@ input#password {
 .input-box{
     display: flex; 
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid #333;
 }
 
 #signup-bt, #login-bt{
