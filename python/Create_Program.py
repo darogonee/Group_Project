@@ -2,24 +2,7 @@
 import json
 import random
 
-def create_program(data):
-    program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None, "sunday":None}
-    cardio = False
-    weights = False
-    cardio_weights_split = True
-    fitness_goals = []
-    equipment = [""]
-
-    weights_training_days = []
-    cardio_training_days = []
-    training_days = []
-    weights_days_count = 0
-    cardio_days_count = 0
-    training_days_count = 0 
-
-    level = data["level"]
-
-    weight_programs = {
+weight_programs = {
     1: [
         [
             "Back",
@@ -198,35 +181,56 @@ def create_program(data):
             "Quadriceps",
             "Hamstrings"
         ]
-
     ]
-    }
+}
 
+reps_sets = {"strength":["3-5", "2-6"], "hypertrophy":["3-4", "6-12"], "endurance":["2-3", "12-20"]}
 
+get_levels = {"beginner":"beginner", "intermediate":["beginner", "intermediate"], "advanced":["beginner", "intermediate", "advanced"]}
 
-    for key,value in data["fitness-goals"].items():
-        if value:
-            fitness_goals.append(key)
+def create_program(data):
+    program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None, "sunday":None}
+    cardio = False
+    weights = False
+    cardio_weights_split = False
 
-    if "endurance" in fitness_goals or "strength" in fitness_goals or "hypertrophy" in fitness_goals:
+    fitness_goals = []
+    equipment = [""]
+    weights_training_days = []
+    training_days = []
+
+    weights_days_count = 0
+    cardio_days_count = 0
+    training_days_count = 0 
+
+    level = data["level"]
+
+    # add fitness goals to fitness_goals
+    muscle_goal = data["muscle_goals"]
+
+    cardio = data["cardio"]
+
+    # weights?
+    if muscle_goal:
         weights = True
 
-    if "cardio" in fitness_goals:
+    # cardio?
+    if cardio == "cardio_true":
         cardio = True
 
-
-    for goal in fitness_goals:
-        if goal == "cardio":
-            cardio = True
-        else:
-            weights = True
-
+    # both?
     if cardio and weights:
         cardio_weights_split = True
 
+    # add user equiopment to equipment list
     for key,value in data["equipment"].items():
         if value:
             equipment.append(key)
+
+    # add traininng days
+    for key, value in data["training_days"].items():
+        if value:
+            training_days.append(key)
 
     # rest day if all days ticked
     if len(training_days) > 6:
@@ -239,40 +243,42 @@ def create_program(data):
     for day in program.keys():
         program[day] = day in training_days
 
-    for day, workout in program.items():
-        if workout:
-            # If we haven't assigned an equal number of "True" days to both cardio and weights yet
-            if cardio_days_count < training_days_count // 2:
-                program[day] = "cardio"
-                cardio_count += 1
-            else:
-                program[day] = "weights"
-                weights_days_count += 1
+    if cardio_weights_split:
+        cardio_days_count = training_days_count // 2
+        weights_days_count = training_days_count - cardio_days_count
 
+    random.shuffle(training_days)
 
+    assigned_workouts = {}
+    for day in training_days[:cardio_days_count]:
+        assigned_workouts[day] = "cardio"
 
-    # get number of training day
-    # if cardio_weights_split == True 
-    # then weights_training_days_count = upper(training_days_count/2)
-    # and cardio_training_days_count = lower(training_days_count/2)
+    for day in training_days[cardio_days_count:]:
+        assigned_workouts[day] = "weights"
+        weights_training_days.append(day)
 
-    # assign days to cardio or weights or None
+    for key,value in program.items():
+        if key in training_days:
+            program[key] = assigned_workouts[key]
 
-   
-
-
-    
-
-    #5-8 exercises each workout
 
     muscle_groups = weight_programs[weights_days_count] # list or list of lists
     exercises = []
-    for split in muscle_groups:
-        exercises.append(get_exercises(valid_exercises(level, equipment), "muscle_group", split))
+    for muscle_group in muscle_groups:
+        exercises.append(get_exercises(valid_exercises(level, equipment), "muscle_group", muscle_group))
 
     for i in range(weights_days_count):
-        program[training_days[i]] = exercises[i]
+        program[weights_training_days[i]] = exercises[i]
 
+    # if endurance, strength, and hypertrophy: 
+
+    reps = reps_sets[muscle_goal][0]
+    sets = reps_sets[muscle_goal][1]
+    for day, exercises in program.items():
+        if exercises != False and exercises != "cardio":
+            for exercise in exercises:
+                exercise['reps'] = reps
+                exercise['sets'] = sets
     return program
 
     
@@ -282,7 +288,6 @@ def valid_exercises(user_level, user_equipment):
     with open("data/exercises.json", "r") as file:
         exercise_data = json.load(file)
 
-    get_levels = {"beginner":"beginner", "intermediate":["beginner", "intermediate"], "advanced":["beginner", "intermediate", "advanced"]}
     level_filtered_data = []
 
     for level in get_levels[user_level]:

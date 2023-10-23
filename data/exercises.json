@@ -502,7 +502,7 @@
     {"exercise_id": 251, "muscle_group": "Triceps", "exercise_name": "Lying Overhead ez-Bar Tricep Extension", "level": "intermediate", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "ez-bar"
     },
     {"exercise_id": 252, "muscle_group": "Triceps", "exercise_name": "Lying Reverse ez-Bar Triceps Extension", "level": "advanced", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "ez-bar"
-    }
+    },
     {"exercise_id": 253, "muscle_group": "Triceps", "exercise_name": "Lying Single Dumbbell Triceps Extension", "level": "beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"
     },
     {"exercise_id": 254, "muscle_group": "Triceps", "exercise_name": "Lying Single-Arm Dumbbell Triceps Extension", "level": "beginner", "ulc": "Upper", "pp": "Push", "modality": "FW", "joint": "S", "equipment": "dumbell"

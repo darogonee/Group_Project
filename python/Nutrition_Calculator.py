@@ -15,9 +15,3 @@ def nutrition_calculator(number, units, food):
     
     return {"name":name, "calories":calories, "fat":fat, "protein":protein, "carbs":carb}
 
-
-number = input("input number: ")
-units = input("Input Units: ")
-food = input ("Input Foods: ")
-request = nutrition_calculator(number, units, food)
-print(request["calories"])

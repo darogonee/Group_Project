@@ -15,11 +15,11 @@ def cache(max_age=60):
             @staticmethod
             def clear(*args, **kwargs):
                 # clear the cache for the given arguments
-                AgeCacheWrapper.cache.pop((args, tuple(kwargs.items())))
+                AgeCacheWrapper.cache.pop(repr((args, tuple(kwargs.items()))))
             @staticmethod
             def __call__(*args, **kwargs):
                 # find the cache key
-                cache_key = (args, tuple(kwargs.items()))
+                cache_key = repr((args, tuple(kwargs.items())))
                 # check if the cache key is in the cache
                 if cache_key in AgeCacheWrapper.cache:
                     result, timestamp = AgeCacheWrapper.cache[cache_key]

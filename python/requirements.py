@@ -1,35 +1,53 @@
 
-from datetime import date
+from datetime import datetime
 
-def calculateAge(born):
-    today = date.today()
-    
-    try:
+def get_pal(pal_reported: str):
+    if pal_reported == "sedentary":
+        pal = 1.45
+    elif pal_reported == "minimally_active":
+        pal = 1.65
+    elif pal_reported == "moderately_active":
+        pal = 1.85
+    elif pal_reported == "very_active":
+        pal = 2.25
 
-        birthday = born.replace(year = today.year)
- 
-    except ValueError:
-        birthday = born.replace(year = today.year,
-                  month = born.month + 1, day = 1)
- 
-    if birthday > today:
-        return today.year - born.year - 1
+    return pal
+
+def imperial_to_metric_weight(weight, weight_units):
+    if weight_units == "lb":
+        metric_weight = weight/2.205
+    elif weight_units == "st":
+        metric_weight = weight*6.35
     else:
-        return today.year - born.year
-         
-# Driver code
-listtt = []
-listt = input().split("-")
-for val in listt:
-    listtt.append(int(val))
-print(calculateAge(input(tuple(listtt))))
+        metric_weight = weight
 
+    metric_weight = round(metric_weight)
+    return metric_weight
 
-print(date(1997, 2, 3))
+def imperial_to_metric_height(height, height_units):
+    if height_units == "in":
+        metric_height = (height*2.54)/100
+    elif height_units == "ft":
+        metric_height = (height*30.48)/100
+    else:
+        metric_height = height/100
+
+    metric_height = round(metric_height)
+    return metric_height
+
+def calculateAge(dob):
+    current_date = datetime.now()
+
+    dob = datetime.strptime(dob, '%Y-%m-%d')
+    
+    age = int(current_date.year - dob.year - ((current_date.month, current_date.day) < (dob.month, dob.day)))
+
+    return age 
+
 
 def calculate_eer(age, weight, height, sex, pal):
-    bmi = weight/(height^2)
-    if bmi < 25:
+    bmi = weight/(height**2)
+    if bmi <= 25:
         if age < 18:
             if sex == "male":
                 eer = 113.5 - 61.9*age + pal*(26.7 * weight + 903 * height)
@@ -41,7 +59,7 @@ def calculate_eer(age, weight, height, sex, pal):
             elif sex == "female":
                 eer = 354.1 - 6.91*age + pal*(9.36* weight + 726* height)
     elif bmi > 25:
-        if age < 18:
+        if age <= 18:
             if sex == "male":
                 eer = -114.1-50.9*age + pal * (19.5*weight + 1161.4*height)
             elif sex == "female":
@@ -53,7 +71,7 @@ def calculate_eer(age, weight, height, sex, pal):
                 eer = 447.6 - 7.95*age  + pal*(11.4* weight + 619* height)
 
     return eer
-# there nothing checking if the value is exaclty the coresponding number
+
 def calculate_goal_cals(eer, weight_goal):
     if weight_goal == "gain":
         goal_cals = eer + 500
@@ -61,4 +79,8 @@ def calculate_goal_cals(eer, weight_goal):
         goal_cals = eer
     elif weight_goal == "lose":
         goal_cals = eer - 500
+
+    goal_cals = round(goal_cals)
     return goal_cals
+
+

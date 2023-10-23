@@ -9,22 +9,37 @@
 </head>
 <body>
   <form action="/signupquestions_action" method="get">
-    <div id="fitness_goals" class="fitness_goals">
-      <h4>What are your fitness goals?</h4>
-      <input type="checkbox" id="cardio" name="fitness_goals_cardio" value="">
-      <label for="cardio">Cardiovascular Fitness</label><br>
-
-      <input type="checkbox" id="strength" name="fitness_goals_strength" value="">
-      <label for="strength">Muscular Strength</label><br>
-
-      <input type="checkbox" id="hypertrophy" name="fitness_goals_hypertrophy" value="">
-      <label for="hypertrophy">Hypertrophy</label><br>
-
-      <input type="checkbox" id="endurance" name="fitness_goals_endurance" value="">
-      <label for="endurance">Muscular Endurance</label><br>
+    <div id="pal" class="pal">
+      <h4>What is you current physical activity level?</h4>
+      <input type="radio" id="sedentary" name="pal" value="sedentary">
+      <label for="sedentary">Exclusively sedentary activity/seated work with little or no strenuous leisure activity</label><br>
+      <input type="radio" id="minimally_active" name="pal" value="minimally_active">
+      <label for="minimally_active">Low active: Sedentary activity/seated work with some requirement for occasional walking and standing but little or no strenuous leisure activity</label><br>
+      <input type="radio" id="moderately_active" name="pal" value="moderately_active">
+      <label for="moderately_active">Moderately active: Predominantly standing or walking work</label><br>
+      <input type="radio" id="very_active" name="pal" value="very_active">
+      <label for="very_active">Very active: Heavy occupational work or highly active leisure</label><br>
     </div>
 
-    <br>
+    <div id="cardio" class="cardio">
+      <h4>Do you aim to improve your cardiovascular fitness?</h4>
+      <input type="radio" id="cardio_true" name="cardio" value="cardio_true">
+      <label for="cardio_true">Yes</label><br>
+      <input type="radio" id="cardio_false" name="cardio" value="cardio_false">
+      <label for="cardio_false">No</label><br>
+    </div>
+
+    <div id="muscle_goals" class="muscle_goals">
+      <h4>What is your primary muscle goal? (Optional)</h4>
+      <input type="radio" id="strength" name="muscle_goals" value="strength">
+      <label for="strength">Muscular Strength</label><br>
+
+      <input type="radio" id="hypertrophy" name="muscle_goals" value="hypertrophy">
+      <label for="hypertrophy">Hypertrophy</label><br>
+
+      <input type="radio" id="endurance" name="muscle_goals" value="endurance">
+      <label for="endurance">Muscular Endurance</label><br>
+    </div>
 
     <div class="fav-cardio">
       <label for="fav-cardio">Cardio: </label>
@@ -44,14 +59,14 @@
     </select>
 
     <h4>What is your weight goal?</h4>
-    <div id="weight_goals" class="weight_goals">
-      <input type="radio" id="weightgain" name="weight-goal" value="gain">
+    <div id="weight_goal" class="weight_goal">
+      <input type="radio" id="weightgain" name="weight_goal" value="gain">
       <label for="weightgain">Weight gain</label><br>
 
-      <input type="radio" id="weightloss" name="weight-goal" value="loss">
+      <input type="radio" id="weightloss" name="weight_goal" value="loss">
       <label for="weightloss">Weight loss</label><br>
 
-      <input type="radio" id="weightmaintenance" name="weight-goal" value="maintenance">
+      <input type="radio" id="weightmaintenance" name="weight_goal" value="maintenance">
       <label for="weightmaintenance">Weight maintenance</label>
     </div>
 
@@ -204,10 +219,10 @@
 <script>
   function validateForm() {
       const day_checkboxes = document.querySelectorAll('.workout_days input[type="checkbox"]');
-      const fitness_goal_checkboxes = document.querySelectorAll('.fitness_goals input[type="checkbox"]');
-      const weight_goal_radio = document.querySelectorAll('.weight_goals input[type="radio"]');
+      const pal_radio = document.querySelectorAll('.pal input[type="radio"]')
+      const weight_goal_radio = document.querySelectorAll('.weight_goal input[type="radio"]');
       const sex_radio = document.querySelectorAll('.sex input[type="radio"]')
-      var checkArray = [checkIfChecked(day_checkboxes), checkIfChecked(fitness_goal_checkboxes), checkIfChecked(weight_goal_radio), checkIfChecked(sex_radio)]
+      var checkArray = [checkIfChecked(day_checkboxes), checkIfChecked(pal_radio), checkIfChecked(weight_goal_radio), checkIfChecked(sex_radio)]
       var allChecked = false
 
       count = 0
