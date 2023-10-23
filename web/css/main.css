@@ -206,10 +206,15 @@ input#password {
     border:none;
 }
 
+input#username {
+    color: grey;
+}
+
 .input-box{
     display: flex; 
     align-items: center;
-    border: 1px solid #333;
+    border: 1px solid grey;
+    border-radius: 1.5px;
 }
 
 #signup-bt, #login-bt{
@@ -222,3 +227,4 @@ input#password {
 .input-box:has(input:active){
     border: 1px solid blue;
 }
+

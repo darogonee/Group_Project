@@ -263,18 +263,20 @@ def create_program(data):
 
 
     muscle_groups = weight_programs[weights_days_count] # list or list of lists
-    exercises = []
+    exercise_list = []
     for muscle_group in muscle_groups:
-        exercises.append(get_exercises(valid_exercises(level, equipment), "muscle_group", muscle_group))
+        exercise_list.append(get_exercises(valid_exercises(level, equipment), "muscle_group", muscle_group))
+
 
     for i in range(weights_days_count):
-        program[weights_training_days[i]] = exercises[i]
+        program[weights_training_days[i]] = exercise_list[i]
 
     # if endurance, strength, and hypertrophy: 
 
     reps = reps_sets[muscle_goal][0]
     sets = reps_sets[muscle_goal][1]
     for day, exercises in program.items():
+        print("day " + str(day) + " exercises " + str(exercises))
         if exercises != False and exercises != "cardio":
             for exercise in exercises:
                 exercise['reps'] = reps
@@ -320,6 +322,6 @@ def get_exercises(valid_exercises, filter_type, values):
         try:
             exercises.append(random.choice(filtered_data))
         except IndexError:
-            exercises.append(None)
+            exercises.append({'exercise_id': 129, 'muscle_group': 'Chest', 'exercise_name': 'Kneeling Push-Up', 'level': 'beginner', 'ulc': 'Upper', 'pp': 'Push', 'modality': 'FW', 'joint': 'M', 'equipment': ''})
     return exercises
 

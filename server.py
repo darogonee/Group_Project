@@ -114,16 +114,20 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
+                with open("web/html/logfood&water.html", "r") as file:
+                    logfoodwater_page = file.read()
+                    self.wfile.write(logfoodwater_page.encode())
+                
+                query = self.query()
+                name = query["food_name"]
+                quantity = query["amount"]
+                units = query["food_units"]
+                nutrition = nc(quantity, units, name)
+                
                 with open("web/html/logfood&water.html", "r") as food_water_file:
                     with open("web/html/nutrition-template.html", "r") as food_water_template_file:
                         food_water_template = food_water_template_file.read()
                         tbody = ""
-                        query = self.query()
-                        name = query["food_name"]
-                        quantity = query["amount"]
-                        units = query["food_units"]
-                        nutrition = nc(quantity, units, name)
-
                         food_water = food_water_template
                         food_water = food_water.replace("template_quantity", quantity)
                         food_water = food_water.replace("template_units", units)
