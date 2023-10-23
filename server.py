@@ -118,28 +118,28 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
                 
-                query = self.query()
-                name = query["food_name"]
-                quantity = query["amount"]
-                units = query["food_units"]
-                nutrition = nc(quantity, units, name)
+                # query = self.query()
+                # name = query["food_name"]
+                # quantity = query["amount"]
+                # units = query["food_units"]
+                # nutrition = nc(quantity, units, name)
                 
-                with open("web/html/logfood&water.html", "r") as food_water_file:
-                    with open("web/html/nutrition-template.html", "r") as food_water_template_file:
-                        food_water_template = food_water_template_file.read()
-                        tbody = ""
-                        food_water = food_water_template
-                        food_water = food_water.replace("template_quantity", quantity)
-                        food_water = food_water.replace("template_units", units)
-                        food_water = food_water.replace("template_food_name", name)
-                        food_water = food_water.replace("template_food_calories", nutrition["calories"])
-                        food_water = food_water.replace("template_carbs", nutrition["carbs"])
-                        food_water = food_water.replace("template_protein", nutrition["protein"])
-                        food_water = food_water.replace("template_fat", nutrition["fat"])
+                # with open("web/html/logfood&water.html", "r") as food_water_file:
+                #     with open("web/html/nutrition-template.html", "r") as food_water_template_file:
+                #         food_water_template = food_water_template_file.read()
+                #         tbody = ""
+                #         food_water = food_water_template
+                #         food_water = food_water.replace("template_quantity", quantity)
+                #         food_water = food_water.replace("template_units", units)
+                #         food_water = food_water.replace("template_food_name", name)
+                #         food_water = food_water.replace("template_food_calories", nutrition["calories"])
+                #         food_water = food_water.replace("template_carbs", nutrition["carbs"])
+                #         food_water = food_water.replace("template_protein", nutrition["protein"])
+                #         food_water = food_water.replace("template_fat", nutrition["fat"])
 
-                        tbody += food_water
-                        food_water_final = food_water_file.read().replace("template_nutrition", tbody)                         
-                        self.wfile.write(food_water_final.encode())
+                #         tbody += food_water
+                #         food_water_final = food_water_file.read().replace("template_nutrition", tbody)                         
+                #         self.wfile.write(food_water_final.encode())
                     
 
             case  "/activities":
