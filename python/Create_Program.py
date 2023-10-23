@@ -260,9 +260,11 @@ def create_program(data):
     for key,value in program.items():
         if key in training_days:
             program[key] = assigned_workouts[key]
+        else:
+            program[key] = "Rest"
 
 
-    muscle_groups = weight_programs[weights_days_count] # list or list of lists
+    muscle_groups = weight_programs[weights_days_count]
     exercise_list = []
     for muscle_group in muscle_groups:
         exercise_list.append(get_exercises(valid_exercises(level, equipment), "muscle_group", muscle_group))
@@ -276,8 +278,7 @@ def create_program(data):
     reps = reps_sets[muscle_goal][0]
     sets = reps_sets[muscle_goal][1]
     for day, exercises in program.items():
-        print("day " + str(day) + " exercises " + str(exercises))
-        if exercises != False and exercises != "cardio":
+        if exercises != "Rest" and exercises != "cardio":
             for exercise in exercises:
                 exercise['reps'] = reps
                 exercise['sets'] = sets

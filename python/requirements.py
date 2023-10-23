@@ -84,3 +84,6 @@ def calculate_goal_cals(eer, weight_goal):
     return goal_cals
 
 
+def water_requirement(weight):
+    water = 0.033 * weight
+    return water

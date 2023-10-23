@@ -66,7 +66,7 @@ class FittnessServer(BaseHTTPRequestHandler):
     def get_user_data(self):
         user = self.get_username()
         print(user)
-        user_data_file = f"/Users/oliver_magill25/Desktop/Programming/Group_Project/user_data/{user}.json"
+        user_data_file = f"/user_data/{user}.json"
         with open(user_data_file, "r") as data_file:
             data = json.load(data_file)
 
@@ -87,7 +87,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                             program = create_program(data)
                             username = self.get_username()
                             data["program"] = program
-                            with open(f"/Users/oliver_magill25/Desktop/Programming/Group_Project/user_data/{username}.json", "w") as file:
+                            with open(f"/user_data/{username}.json", "w") as file:
                                 json.dump(data, file)
                         else:
                             program = data["program"]
@@ -141,7 +141,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                         food_water_final = food_water_file.read().replace("template_nutrition", tbody)                         
                         self.wfile.write(food_water_final.encode())
                     
-
 
             case  "/activities":
                 user = self.get_username()
@@ -481,7 +480,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "sunday": "sunday" in value,
                         },
                         "rhr": value['rhr'],
-                        "goal_cals":str(calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"]))
+                        "goal_cals":str(calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"])),
+                        "goal_water":str(water_requirement(imperial_to_metric_weight(int(value["weight"]), value["weight-units"])))
 
                     }, file, indent = 4
                 )
