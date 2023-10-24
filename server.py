@@ -294,7 +294,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 values = self.query()
                 # replace the .replace funtion with something to remove special charicters
                 username = values["username"].lower()
-                password = password_hash(values["password-signup"])
+                password = password_hash(values["password"])
                 passwordrentry = password_hash(values["password-rentry"])
                 if len(username) < 3 or len(username) > 13 or password != passwordrentry or not username.isalnum():
                     self.redirect("/signup")
@@ -466,7 +466,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open(f"user_data/{user}.json", "w") as file:
                     value = self.query()
 
-                    goal_cals = str(calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"]))
+                    goal_cals = calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"])
                     json.dump(
                     {
                         "pal":str(get_pal(value["pal"])),

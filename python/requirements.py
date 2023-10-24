@@ -81,10 +81,10 @@ def calculate_goal_cals(eer, weight_goal):
     global goal_cals
     if weight_goal == "gain":
         goal_cals = eer + 500
-    elif weight_goal == "maintain":
-        goal_cals = eer
     elif weight_goal == "lose":
         goal_cals = eer - 500
+    else:
+        goal_cals = eer
 
     goal_cals = round(goal_cals)
     return goal_cals
