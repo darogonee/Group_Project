@@ -122,7 +122,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 name = query["food_name"]
                 quantity = query["amount"]
                 units = query["food_units"]
-                
                 nutrition = nc(quantity, units, name)
                 
                 with open("web/html/logfood&water.html", "r") as food_water_file:
@@ -133,10 +132,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                         food_water = food_water.replace("template_quantity", quantity)
                         food_water = food_water.replace("template_units", units)
                         food_water = food_water.replace("template_food_name", name)
-                        food_water = food_water.replace("template_food_calories", nutrition["calories"])
-                        food_water = food_water.replace("template_carbs", nutrition["carbs"])
-                        food_water = food_water.replace("template_protein", nutrition["protein"])
-                        food_water = food_water.replace("template_fat", nutrition["fat"])
+                        food_water = food_water.replace("template_food_calories", str(nutrition["calories"]))
+                        food_water = food_water.replace("template_carbs", str(nutrition["carbs"]))
+                        food_water = food_water.replace("template_protein", str(nutrition["protein"]))
+                        food_water = food_water.replace("template_fat", str(nutrition["fat"]))
 
                         tbody += food_water
                         food_water_final = food_water_file.read().replace("template_nutrition", tbody)                         
