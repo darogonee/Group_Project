@@ -117,6 +117,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/logfood&water.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
+
+                with open("data/nutritionlog.json", "w") as file:
+                    json.dump([], file)
                     
             case "/action_logfood&water":  #not working
                 self.send_response(200)
@@ -127,22 +130,51 @@ class FittnessServer(BaseHTTPRequestHandler):
                 name = query["food_name"]
                 quantity = query["amount"]
                 units = query["food_units"]
-                nutrition = nc(quantity, units, name)
+
+                try:
+                    nutrition = nc(quantity, units, name)
+                except:
+                    self.redirect("/logfood&water")
                 
+                try:
+                    with open("data/nutritionlog.json", "r") as file:
+                        data = json.load(file)
+                except:
+                    data = []
+
+                data.append({"name":" ".join(name.split("+")), "quantity":str(quantity), "units":str(units), "calories":str(nutrition["calories"]), "carbs":str(nutrition["carbs"]), "fat":str(nutrition["fat"]), "protein":str(nutrition["protein"])})
+
+                with open("data/nutritionlog.json", "w") as file:
+                    json.dump(data, file)
+
+
                 with open("web/html/logfood&water.html", "r") as food_water_file:
                     with open("web/html/nutrition-template.html", "r") as food_water_template_file:
                         food_water_template = food_water_template_file.read()
                         tbody = ""
+                        for i in range(len(data)):
+                            food_water = food_water_template
+                            food_water = food_water.replace("template_quantity", data[i]["quantity"])
+                            food_water = food_water.replace("template_units", data[i]["units"])
+                            food_water = food_water.replace("template_food_name", data[i]["name"])
+                            food_water = food_water.replace("template_food_calories", data[i]["calories"])
+                            food_water = food_water.replace("template_carbs", data[i]["carbs"])
+                            food_water = food_water.replace("template_protein", data[i]["protein"])
+                            food_water = food_water.replace("template_fat", data[i]["fat"])
+
+                            tbody += food_water
+
                         food_water = food_water_template
-                        food_water = food_water.replace("template_quantity", quantity)
-                        food_water = food_water.replace("template_units", units)
-                        food_water = food_water.replace("template_food_name", name)
-                        food_water = food_water.replace("template_food_calories", str(nutrition["calories"]))
-                        food_water = food_water.replace("template_carbs", str(nutrition["carbs"]))
-                        food_water = food_water.replace("template_protein", str(nutrition["protein"]))
-                        food_water = food_water.replace("template_fat", str(nutrition["fat"]))
+                        food_water = food_water.replace("template_quantity", "")
+                        food_water = food_water.replace("template_units", "")
+                        food_water = food_water.replace("template_food_name", "")
+                        food_water = food_water.replace("template_food_calories", str(round(sum(float(item["calories"]) for item in data), 1)))
+                        food_water = food_water.replace("template_carbs", str(round(sum(float(item["carbs"]) for item in data), 1)))
+                        food_water = food_water.replace("template_protein", str(round(sum(float(item["protein"]) for item in data), 1)))
+                        food_water = food_water.replace("template_fat", str(round(sum(float(item["fat"]) for item in data), 1)))
 
                         tbody += food_water
+
                         food_water_final = food_water_file.read().replace("template_nutrition", tbody)                         
                         self.wfile.write(food_water_final.encode())
                     
@@ -336,8 +368,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(foodwater_page.encode())
 
 
-
-
             case "/logexercise":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -436,6 +466,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open(f"user_data/{user}.json", "w") as file:
                     value = self.query()
 
+                    goal_cals = str(calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"]))
                     json.dump(
                     {
                         "pal":str(get_pal(value["pal"])),
@@ -485,8 +516,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "sunday": "sunday" in value,
                         },
                         "rhr": value['rhr'],
-                        "goal_cals":str(calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"])),
-                        "goal_water":str(water_requirement(imperial_to_metric_weight(int(value["weight"]), value["weight-units"])))
+                        "goal_cals":goal_cals,
+                        "goal_water":str(water_requirement(imperial_to_metric_weight(int(value["weight"]), value["weight-units"]))),
+                        "goal_carbs":goal_cals/8,
+                        "goal_fat": goal_cals/32,
+                        "goal_protein": goal_cals/16
 
                     }, file, indent = 4
                 )
