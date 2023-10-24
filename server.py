@@ -66,7 +66,7 @@ class FittnessServer(BaseHTTPRequestHandler):
     def get_user_data(self):
         user = self.get_username()
         print(user)
-        user_data_file = f"/user_data/{user}.json"
+        user_data_file = f"user_data/{user}.json"
         with open(user_data_file, "r") as data_file:
             data = json.load(data_file)
 
@@ -87,7 +87,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                             program = create_program(data)
                             username = self.get_username()
                             data["program"] = program
-                            with open(f"/user_data/{username}.json", "w") as file:
+                            with open(f"user_data/{username}.json", "w") as file:
                                 json.dump(data, file)
                         else:
                             program = data["program"]
