@@ -29,8 +29,10 @@ def imperial_to_metric_height(height, height_units):
         metric_height = (height*2.54)/100
     elif height_units == "ft":
         metric_height = (height*30.48)/100
-    else:
+    elif height_units == "m":
         metric_height = height/100
+    else:
+        metric_height = height
 
     metric_height = round(metric_height)
     return metric_height
@@ -46,7 +48,10 @@ def calculateAge(dob):
 
 
 def calculate_eer(age, weight, height, sex, pal):
+    print("calculate_eer", age, weight, height, sex, pal)
     bmi = weight/(height**2)
+
+
     if bmi <= 25:
         if age < 18:
             if sex == "male":
@@ -73,6 +78,7 @@ def calculate_eer(age, weight, height, sex, pal):
     return eer
 
 def calculate_goal_cals(eer, weight_goal):
+    global goal_cals
     if weight_goal == "gain":
         goal_cals = eer + 500
     elif weight_goal == "maintain":

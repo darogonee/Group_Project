@@ -110,14 +110,19 @@ class FittnessServer(BaseHTTPRequestHandler):
                         self.wfile.write(myprogram_final.encode())
 
 
-            case "/logfood&water": #not working
+            case "/logfood&water":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 with open("web/html/logfood&water.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
-                
+                    
+            case "/action_logfood&water":  #not working
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+
                 query = self.query()
                 name = query["food_name"]
                 quantity = query["amount"]
