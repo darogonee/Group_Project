@@ -61,7 +61,6 @@ numberOfRows = 0
 
 
 function addRow() {
-    console.log("yes");
     const tableBody = document.querySelector("#tb tbody");
     const newRow = document.createElement("tr");
     const cell1 = document.createElement("td");

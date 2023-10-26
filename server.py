@@ -13,6 +13,14 @@ MIME_TYPES = {
     "jpg": "image/jpg"
 }
 
+food_not_found_alert_script = """
+                <script>
+                    window.onload = function() {
+                        alert("Food not found. Please enter a valid food");
+                    };
+                </script>
+                """
+
 # NOTE restart server aprox 30 days NOTE
 
 hostName = "localhost"
@@ -72,7 +80,6 @@ class FittnessServer(BaseHTTPRequestHandler):
 
         return data
 
-
     def do_GET(self):
         match self.path.split("?")[0]:
             case "/myprogram":
@@ -117,11 +124,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/logfood&water.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
+                
 
-                with open("data/nutritionlog.json", "w") as file:
-                    json.dump([], file)
-                    
-            case "/action_logfood&water":  #not working
+            case "/action_logfood&water": # delete data from json file if delete button pressed
+                user = self.get_username()
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
@@ -130,55 +136,106 @@ class FittnessServer(BaseHTTPRequestHandler):
                 name = query["food_name"]
                 quantity = query["amount"]
                 units = query["food_units"]
+                date = query["log_food_date"]
+                food_not_found = True
 
-                try:
-                    nutrition = nc(quantity, units, name)
-                except:
-                    self.redirect("/logfood&water")
-                
                 try:
                     with open("data/nutritionlog.json", "r") as file:
                         data = json.load(file)
                 except:
-                    data = []
+                    data = {"date":date, "food_log":[]}
 
-                data.append({"name":" ".join(name.split("+")), "quantity":str(quantity), "units":str(units), "calories":str(nutrition["calories"]), "carbs":str(nutrition["carbs"]), "fat":str(nutrition["fat"]), "protein":str(nutrition["protein"])})
+                with open(f"user_data/{user}.json", "r") as user_data_file:
+                    user_data = json.load(user_data_file)
 
-                with open("data/nutritionlog.json", "w") as file:
-                    json.dump(data, file)
+                if date in user_data["nutrition_log"].keys():
+                    existing_food_log = True
+                else:
+                    existing_food_log = False
+                
+                if date != data["date"]:
+                    data = {"date":date, "food_log":[]}
 
+                 # if food log with date given in query exists in user_data, add this data to nutrititionlog.json
+                if existing_food_log:
+                    data["food_log"].append(user_data["nutrition_log"][date]["food"])
+                    user_data["nutrition_log"][date]["data_transferred"] = "True"
+                    with open(f"user_data/{user}", "w") as write_user_data:
+                        json.dump(user_data, write_user_data)
+
+                try:
+                    nutrition = nc(quantity, units, name)
+                    data["food_log"].append({"name":" ".join(name.split("+")), "quantity":str(quantity), "units":str(units), "calories":str(nutrition["calories"]), "carbs":str(nutrition["carbs"]), "fat":str(nutrition["fat"]), "protein":str(nutrition["protein"])})
+                    data["date"] = date
+                    with open("data/nutritionlog.json", "w") as file:
+                        json.dump(data, file)
+                    food_not_found = False
+
+                except IndexError:
+                    food_not_found = True
 
                 with open("web/html/logfood&water.html", "r") as food_water_file:
                     with open("web/html/nutrition-template.html", "r") as food_water_template_file:
                         food_water_template = food_water_template_file.read()
                         tbody = ""
-                        for i in range(len(data)):
+                        for i in range(len(data["food_log"])):
                             food_water = food_water_template
-                            food_water = food_water.replace("template_quantity", data[i]["quantity"])
-                            food_water = food_water.replace("template_units", data[i]["units"])
-                            food_water = food_water.replace("template_food_name", data[i]["name"])
-                            food_water = food_water.replace("template_food_calories", data[i]["calories"])
-                            food_water = food_water.replace("template_carbs", data[i]["carbs"])
-                            food_water = food_water.replace("template_protein", data[i]["protein"])
-                            food_water = food_water.replace("template_fat", data[i]["fat"])
+                            food_water = food_water.replace("template_quantity", data["food_log"][i]["quantity"])
+                            food_water = food_water.replace("template_units", data["food_log"][i]["units"])
+                            food_water = food_water.replace("template_food_name", data["food_log"][i]["name"])
+                            food_water = food_water.replace("template_food_calories", data["food_log"][i]["calories"])
+                            food_water = food_water.replace("template_carbs", data["food_log"][i]["carbs"])
+                            food_water = food_water.replace("template_protein", data["food_log"][i]["protein"])
+                            food_water = food_water.replace("template_fat", data["food_log"][i]["fat"])
 
                             tbody += food_water
 
                         food_water = food_water_template
+                        food_water = food_water.replace('<button onclick="deleteRow(this)">Delete</button>', "")
                         food_water = food_water.replace("template_quantity", "")
                         food_water = food_water.replace("template_units", "")
                         food_water = food_water.replace("template_food_name", "")
-                        food_water = food_water.replace("template_food_calories", str(round(sum(float(item["calories"]) for item in data), 1)))
-                        food_water = food_water.replace("template_carbs", str(round(sum(float(item["carbs"]) for item in data), 1)))
-                        food_water = food_water.replace("template_protein", str(round(sum(float(item["protein"]) for item in data), 1)))
-                        food_water = food_water.replace("template_fat", str(round(sum(float(item["fat"]) for item in data), 1)))
+                        food_water = food_water.replace("template_food_calories", str(round(sum(float(item["calories"]) for item in data["food_log"]), 1)))
+                        food_water = food_water.replace("template_carbs", str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1)))
+                        food_water = food_water.replace("template_protein", str(round(sum(float(item["protein"]) for item in data["food_log"]), 1)))
+                        food_water = food_water.replace("template_fat", str(round(sum(float(item["fat"]) for item in data["food_log"]), 1)))
 
                         tbody += food_water
 
-                        food_water_final = food_water_file.read().replace("template_nutrition", tbody)                         
+                        food_water_final = ""
+
+                        food_water_final = food_water_file.read().replace("template_nutrition", tbody)  
+
+                        if food_not_found:
+                            food_water_final = food_water_final.replace("</body>", food_not_found_alert_script + "</body>")  
+
                         self.wfile.write(food_water_final.encode())
                     
+            case "/action_confirm_food_log":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                user = self.get_username()
+                with open("data/nutritionlog.json", "r") as nutrition_log:
+                    logged_data = json.load(nutrition_log)
 
+                with open(f"user_data/{user}.json", "r") as user_data_file:
+                    user_data = json.load(user_data_file)
+
+                total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
+                total_carbs = str(round(sum(float(item["carbs"]) for item in logged_data["food_log"]), 1))
+                total_fat = str(round(sum(float(item["fat"]) for item in logged_data["food_log"]), 1))
+                total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
+                date = logged_data["date"]
+                
+                user_data["nutrition_log"] = {date:{"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}}
+
+                with open(f"user_data/{user}.json", "w") as user_data_file:
+                    json.dump(user_data, user_data_file)
+
+                
+
+                    
             case  "/activities":
                 user = self.get_username()
                 self.send_response(200)
@@ -204,7 +261,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
 
-                                activity = activity.replace("template_id", activity_data[i]['upload_id_str'])
+                                # activity = activity.replace("template_id", activity_data[i]['upload_id_str']) #not working
 
                                 if len(activity_data[i]["name"]) < 12 or "-" not in activity_data[i]["name"]:
                                     activity = activity.replace("template_name", str(activity_data[i]["name"]))

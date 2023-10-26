@@ -10,8 +10,7 @@ def nutrition_calculator(number, units, food):
     name =content["name"]
     calories = content["calories"]
     fat= content["fat_total_g"]
-    protein = content["protein_g"]
+    protein = content["protein_g"] 
     carb = content["carbohydrates_total_g"]
     
     return {"name":name, "calories":calories, "fat":fat, "protein":protein, "carbs":carb}
-

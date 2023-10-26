@@ -251,7 +251,7 @@ def create_program(data):
 
     assigned_workouts = {}
     for day in training_days[:cardio_days_count]:
-        assigned_workouts[day] = "cardio"
+        assigned_workouts[day] = "Cardio"
 
     for day in training_days[cardio_days_count:]:
         assigned_workouts[day] = "weights"
@@ -278,7 +278,7 @@ def create_program(data):
     reps = reps_sets[muscle_goal][0]
     sets = reps_sets[muscle_goal][1]
     for day, exercises in program.items():
-        if exercises != "Rest" and exercises != "cardio":
+        if exercises != "Rest" and exercises != "Cardio":
             for exercise in exercises:
                 exercise['reps'] = reps
                 exercise['sets'] = sets
