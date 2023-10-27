@@ -2,6 +2,7 @@
 import json
 import random
 
+disallowed_exercises = []
 weight_programs = {
     1: [
         [
@@ -169,7 +170,7 @@ weight_programs = {
         [
             "Back",
             "Biceps",
-            "Shoulders"
+            "Shoulders",
             "Back",
             "Biceps",
             "Shoulders"
@@ -189,6 +190,7 @@ reps_sets = {"strength":["3-5", "2-6"], "hypertrophy":["3-4", "6-12"], "enduranc
 get_levels = {"beginner":"beginner", "intermediate":["beginner", "intermediate"], "advanced":["beginner", "intermediate", "advanced"]}
 
 def create_program(data):
+    global disallowed_exercises
     program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None, "sunday":None}
     cardio = False
     weights = False
@@ -215,8 +217,10 @@ def create_program(data):
         weights = True
 
     # cardio?
-    if cardio == "cardio_true":
+    if cardio == "cardio_True":
         cardio = True
+    elif cardio == "cardio_false":
+        cardio = False
 
     # both?
     if cardio and weights:
@@ -246,28 +250,35 @@ def create_program(data):
     if cardio_weights_split:
         cardio_days_count = training_days_count // 2
         weights_days_count = training_days_count - cardio_days_count
+    else:
+        if weights:
+            weights_days_count = training_days_count
+        elif cardio:
+            cardio_days_count = training_days_count
 
     random.shuffle(training_days)
 
     assigned_workouts = {}
-    for day in training_days[:cardio_days_count]:
-        assigned_workouts[day] = "Cardio"
+    if cardio:
+        for day in training_days[:cardio_days_count]:
+            assigned_workouts[day] = "Cardio"
 
     for day in training_days[cardio_days_count:]:
         assigned_workouts[day] = "weights"
         weights_training_days.append(day)
 
     for key,value in program.items():
+        print(str(key), str(value))
         if key in training_days:
             program[key] = assigned_workouts[key]
         else:
             program[key] = "Rest"
 
 
-    muscle_groups = weight_programs[weights_days_count]
+    program_template = weight_programs[weights_days_count]
     exercise_list = []
-    for muscle_group in muscle_groups:
-        exercise_list.append(get_exercises(valid_exercises(level, equipment), "muscle_group", muscle_group))
+    for daily_program in program_template:
+        exercise_list.append(get_exercises(valid_exercises(level, equipment), daily_program))
 
 
     for i in range(weights_days_count):
@@ -316,13 +327,76 @@ def valid_exercises(user_level, user_equipment):
 
     return equipment_filtered_data
 
-def get_exercises(valid_exercises, filter_type, values):
+def get_exercises(valid_exercises, daily_program):
     exercises = []
-    for value in values:
-        filtered_data = [item for item in valid_exercises if item.get(filter_type) == value]
-        try:
-            exercises.append(random.choice(filtered_data))
-        except IndexError:
-            exercises.append({'exercise_id': 129, 'muscle_group': 'Chest', 'exercise_name': 'Kneeling Push-Up', 'level': 'beginner', 'ulc': 'Upper', 'pp': 'Push', 'modality': 'FW', 'joint': 'M', 'equipment': ''})
+    for muscle_group in daily_program:
+        filtered_data = [item for item in valid_exercises if item.get("muscle_group") == muscle_group]
+
+        if filtered_data:
+            while True:
+                exercise = random.choice(filtered_data)
+                if exercise not in exercises:
+                    exercises.append(exercise)
+                    break
+
+    if exercises == []:
+        exercises == ""
+        
     return exercises
 
+# print(create_program(
+
+# {
+#     "pal": "1.85",
+#     "muscle_goals": "hypertrophy",
+#     "cardio": "cardio_false",
+#     "fav-cardio": "Running",
+#     "level": "beginner",
+#     "weight_goal": "gain",
+#     "weight-units": "kg",
+#     "weight": "70",
+#     "height-units": "cm",
+#     "height": "178",
+#     "dob": "2023-10-12",
+#     "sex": "male",
+#     "equipment": {
+#         "bench": False,
+#         "medicine-ball": False,
+#         "cable-machine": False,
+#         "torso-rotation-machine": False,
+#         "ab-roller": False,
+#         "dumbbell": False,
+#         "barbell": False,
+#         "assisted-pullup-machine": False,
+#         "lat-pulldown-machine": False,
+#         "pullup-bar": False,
+#         "v-bar": False,
+#         "machine-row": False,
+#         "ez-bar": False,
+#         "preacher-curl-machine": False,
+#         "rope": False,
+#         "leg-press-machine": False,
+#         "smith-machine": False,
+#         "calf-raise-machine":False,
+#         "chest-press-machine": False,
+#         "bench-press-machine": False,
+#         "plates": False,
+#         "dip-assist-machine": False,
+#         "dip-machine": False
+#     },
+#     "training_days": {
+#         "monday": True,
+#         "tuesday": True,
+#         "wednesday": True,
+#         "thursday": True,
+#         "friday": True,
+#         "saturday": True,
+#         "sunday": True
+#     },
+#     "rhr": "70",
+#     "goal_cals": "7412",
+#     "goal_water": "2.31"
+
+# }
+
+# ))

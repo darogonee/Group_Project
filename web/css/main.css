@@ -228,3 +228,6 @@ input#username {
     border: 1px solid blue;
 }
 
+#inline_label { 
+    font-weight: bold;
+}

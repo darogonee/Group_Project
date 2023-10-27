@@ -34,14 +34,23 @@
             </ul>
         </nav>
     </div>
+    <h1>My Program</h1>
     <table class="center" style="width:50%">
       <thead>
         <tr>
           <th>Day</th>
+          <th>Exercise</th>
+          <th>Reps</th>
+          <th>Sets</th>
+          <th>Muscle Group</th>
         </tr>
       </thead>
       <tbody>
         template_myprogram
       </tbody>
     </table>
+    <form action="regenerate_my_program" method="get">
+      <input id="submit" type="submit" name="submit" value="↻">
+      <label for="submit">Regenerate workout plan</label>
+    </form>
 </body>

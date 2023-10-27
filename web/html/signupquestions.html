@@ -41,16 +41,25 @@
       <label for="endurance">Muscular Endurance</label><br>
     </div>
 
-    <div class="fav-cardio">
-      <label for="fav-cardio">Cardio: </label>
-      <select name="fav-cardio" id="fav-cardio" required>
-        <option value="Running">Running</option>
-        <option value="Cycling">Cycling</option>
-        <option value="Swimming">Swimming</option>
-      </select>
-    </div>
+    <div class="fav_cardio" id="fav_cardio">
+      <h4>Cardio (Optional): </h4>
 
-    <label for="level">Experience Level: </label>
+      <input type="checkbox" id="running" name="fav_cardio_running" value="">
+      <label for="running">Running</label><br>
+
+      <input type="checkbox" id="cycling" name="fav_cardio_cycling" value="">
+      <label for="cycling">Cycling</label><br>
+
+      <input type="checkbox" id="swimming" name="fav_cardio_swimming" value="">
+      <label for="swimming">Swimming</label><br>
+
+      <input type="checkbox" id="other_box" name="fav_cardio_other_box" value="">
+      <label for="other_box">Other (please specify): </label>
+      <input type="text" id="other" name="other" value="">
+
+    </div><br>
+
+    <label for="level" id="inline_label">Experience Level: </label>
 
     <select name="level" id="level" required>
       <option value="beginner">Beginner</option>
@@ -72,7 +81,7 @@
 
     <br><br>
 
-    <label for="weight">Weight: </label>
+    <label for="weight" id="inline_label">Weight: </label>
     <input type="number" id="weight" name="weight" required>
 
     <select name="weight-units" id="weight-units" required>
@@ -83,7 +92,7 @@
 
     <br>
 
-    <label for="height">Height: </label>
+    <label for="height" id="inline_label">Height: </label>
     <input type="number" id="height" name="height" required>
 
     <select name="height-units" id="height-units" required>
@@ -93,7 +102,7 @@
 
     <br>
 
-    <label for="dob">D.O.B: </label>
+    <label for="dob" id="inline_label">D.O.B: </label>
     <input type="date" id="dob" name="date_of_birth" required>
 
     <br>
@@ -206,8 +215,8 @@
     
     <br><br>
 
-    <label for="rhr">Resting Heart Rate (RHR): </label>
-    <input type="number" id="rhr" name="rhr" value="" min="0" max="220" required>
+    <label for="rhr" id="inline_label">Resting Heart Rate (RHR): </label>
+    <input type="number" id="rhr" name="rhr" value="" min="0" max="220" required >
 
     <br><br><br>
 

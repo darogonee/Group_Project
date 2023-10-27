@@ -29,7 +29,7 @@ def imperial_to_metric_height(height, height_units):
         metric_height = (height*2.54)/100
     elif height_units == "ft":
         metric_height = (height*30.48)/100
-    elif height_units == "m":
+    elif height_units == "cm":
         metric_height = height/100
     else:
         metric_height = height
@@ -55,9 +55,9 @@ def calculate_eer(age, weight, height, sex, pal):
     if bmi <= 25:
         if age < 18:
             if sex == "male":
-                eer = 113.5 - 61.9*age + pal*(26.7 * weight + 903 * height)
+                eer = 113.5 - (61.9*age) + pal*(26.7 * weight + 903 * height)
             elif sex == "female":
-                eer = 160.3 - 30.8*age  + pal*(10 * weight + 934 * height)
+                eer = 160.3 - (30.8*age)  + pal*(10 * weight + 934 * height)
         elif age > 18:
             if sex == "male":
                 eer = 661.8 - 9.53*age + pal*(15.91* weight + 539.6* height)
@@ -93,3 +93,4 @@ def calculate_goal_cals(eer, weight_goal):
 def water_requirement(weight):
     water = 0.033 * weight
     return water
+

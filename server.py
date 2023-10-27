@@ -79,9 +79,29 @@ class FittnessServer(BaseHTTPRequestHandler):
             data = json.load(data_file)
 
         return data
+    
+    def get_current_date(self):
+        current_date = str(datetime.date.today())
+
+        return current_date
 
     def do_GET(self):
         match self.path.split("?")[0]:
+            case "/regenerate_my_program": #avoid losing nutrition log
+                user = self.get_username
+                print(user)
+                with open(f"user_data/{user}.json", "r") as read_user_data:
+                    user_data = json.load(read_user_data)
+                try:
+                    user_data["program"] = {}
+                except:
+                    None
+
+                with open(f"user_data/{user}.json", "w") as write_user_data:
+                    json.dump(user_data, write_user_data)
+
+                self.redirect("/myprogram")
+
             case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -104,12 +124,30 @@ class FittnessServer(BaseHTTPRequestHandler):
           
                         for day, exercises in program.items():
                             if isinstance(exercises, list):
-                                body = ""
+                                name_body = ""
+                                reps_body = ""
+                                sets_body = ""
+                                muscle_group_body = ""
                                 for exercise in program[day]:
-                                    body = body + exercise["exercise_name"] + "<br>"
-                                myprogram = myprogram.replace(f"template_{day}", body)
+                                    name_body = name_body + f"<a href='https://www.muscleandstrength.com/exercises/{exercise['exercise_name'].lower().replace(' ', '-')}.html'>{exercise['exercise_name']}</a>" + "<br>"
+                                    reps_body = reps_body + exercise["reps"] + "<br>"
+                                    sets_body = sets_body + exercise["sets"] + "<br>"
+                                    muscle_group_body = muscle_group_body + exercise["muscle_group"] + "<br>"
+                                
+                                myprogram = myprogram.replace(f"template_{day}_name", name_body)
+                                myprogram = myprogram.replace(f"template_{day}_reps", reps_body)
+                                myprogram = myprogram.replace(f"template_{day}_sets", sets_body)
+                                myprogram = myprogram.replace(f"template_{day}_muscle_group", muscle_group_body)
+                                
                             else:
-                                myprogram = myprogram.replace(f"template_{day}", str(program[day]))
+                                if exercises == "Rest":
+                                    myprogram = myprogram.replace(f"template_{day}_name", "")
+                                else:
+                                    myprogram = myprogram.replace(f"template_{day}_name", str(program[day]))
+                                myprogram = myprogram.replace(f"template_{day}_reps", "")
+                                myprogram = myprogram.replace(f"template_{day}_sets", "")
+                                myprogram = myprogram.replace(f"template_{day}_muscle_group", "")
+                                myprogram = myprogram.replace(f"template_{day}_reps", "")
 
 
                         tbody += myprogram
@@ -124,7 +162,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/logfood&water.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
-                
+
+                with open("data/nutritionlog.json", "w") as file:
+                    json.dump({}, file)
+
 
             case "/action_logfood&water": # delete data from json file if delete button pressed
                 user = self.get_username()
@@ -138,6 +179,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 units = query["food_units"]
                 date = query["log_food_date"]
                 food_not_found = True
+                existing_food_log = False
 
                 try:
                     with open("data/nutritionlog.json", "r") as file:
@@ -148,19 +190,23 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open(f"user_data/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
-                if date in user_data["nutrition_log"].keys():
-                    existing_food_log = True
-                else:
-                    existing_food_log = False
-                
-                if date != data["date"]:
+                if "nutrition_log" in user_data.keys():
+                    if date in user_data["nutrition_log"].keys():
+                        existing_food_log = True
+                    else:
+                        existing_food_log = False
+                    
+                try:
+                    if date != data["date"]:
+                        data = {"date":date, "food_log":[]}
+                except KeyError:
                     data = {"date":date, "food_log":[]}
 
                  # if food log with date given in query exists in user_data, add this data to nutrititionlog.json
                 if existing_food_log:
                     data["food_log"].append(user_data["nutrition_log"][date]["food"])
                     user_data["nutrition_log"][date]["data_transferred"] = "True"
-                    with open(f"user_data/{user}", "w") as write_user_data:
+                    with open(f"user_data/{user}.json", "w") as write_user_data:
                         json.dump(user_data, write_user_data)
 
                 try:
@@ -180,6 +226,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         tbody = ""
                         for i in range(len(data["food_log"])):
                             food_water = food_water_template
+                            print(i)
                             food_water = food_water.replace("template_quantity", data["food_log"][i]["quantity"])
                             food_water = food_water.replace("template_units", data["food_log"][i]["units"])
                             food_water = food_water.replace("template_food_name", data["food_log"][i]["name"])
@@ -227,11 +274,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                 total_fat = str(round(sum(float(item["fat"]) for item in logged_data["food_log"]), 1))
                 total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
                 date = logged_data["date"]
+
+                user_data["nutrition_log"] = {}
                 
-                user_data["nutrition_log"] = {date:{"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}}
+                user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
                 with open(f"user_data/{user}.json", "w") as user_data_file:
                     json.dump(user_data, user_data_file)
+
+                
+                self.redirect("/logfood&water")
 
                 
 
@@ -396,15 +448,44 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web/html/home.html", "r") as file:
-                    home_page = file.read()                        
+                user = self.get_username()
+                date = self.get_current_date()
+
+                with open("web/html/home.html", "r") as home_file:
+                    with open(f"user_data/{user}.json", "r") as user_data_file:
+                        user_data = json.load(user_data_file)
+                    
+                    
+                    # try:
+                    total_calories = user_data["nutrition_log"][date]["totals"]["total_calories"]
+                    goal_cals = user_data["goal_cals"]
+                    calories_remaining = int(float(goal_cals)) - int(float(total_calories))
+                    try:
+                        calories_percent_eaten = int(round(int(total_calories) / int(goal_cals) * 100))
+                    except:
+                        calories_percent_eaten = "0"
+                    # except:
+                    #     total_calories = "-"
+                    #     goal_cals = "-"
+                    #     calories_percent_eaten = "-"
+                    #     calories_remaining = "-"
+
+                    calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
+
+                    home_page = home_file.read().replace("calories_content", calories_content_body) 
+                
+
                     self.wfile.write(home_page.encode())
+                
+
+
+
+
 
                 cookie = self.get_cookie()
                 if "user" not in cookie:
                     self.redirect("/signin")
                     return
-                user = self.get_username()
                 if not python.Api.check(user):
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
                     return
@@ -529,7 +610,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                         "pal":str(get_pal(value["pal"])),
                         "muscle_goals":value["muscle_goals"],
                         "cardio":value["cardio"],
-                        "fav-cardio":value["fav-cardio"],
+                        "fav_cardio": {
+                            "running": "fav_cardio_running" in value,
+                            "cycling": "fav_cardio_cycling" in value,
+                            "swimming": "fav_cardio_swimming" in value,
+                            "other": value["other"].replace("+", " ")
+                        },
                         "level":value["level"],
                         "weight_goal": value["weight_goal"],
                         "weight-units": value["weight-units"],
