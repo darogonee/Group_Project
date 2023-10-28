@@ -456,19 +456,19 @@ class FittnessServer(BaseHTTPRequestHandler):
                         user_data = json.load(user_data_file)
                     
                     
-                    # try:
-                    total_calories = user_data["nutrition_log"][date]["totals"]["total_calories"]
-                    goal_cals = user_data["goal_cals"]
-                    calories_remaining = int(float(goal_cals)) - int(float(total_calories))
                     try:
-                        calories_percent_eaten = int(round(int(total_calories) / int(goal_cals) * 100))
+                        total_calories = user_data["nutrition_log"][date]["totals"]["total_calories"]
+                        goal_cals = user_data["goal_cals"]
+                        calories_remaining = int(float(goal_cals)) - int(float(total_calories))
+                        try:
+                            calories_percent_eaten = int(round(int(total_calories) / int(goal_cals) * 100))
+                        except:
+                            calories_percent_eaten = "0"
                     except:
-                        calories_percent_eaten = "0"
-                    # except:
-                    #     total_calories = "-"
-                    #     goal_cals = "-"
-                    #     calories_percent_eaten = "-"
-                    #     calories_remaining = "-"
+                        total_calories = "-"
+                        goal_cals = "-"
+                        calories_percent_eaten = "-"
+                        calories_remaining = "-"
 
                     calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
 
