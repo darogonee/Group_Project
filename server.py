@@ -159,12 +159,25 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
+                user = self.get_username()
                 with open("web/html/logfood&water.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
                 with open("data/nutritionlog.json", "w") as file:
                     json.dump({}, file)
+
+                with open(f"user_data/{user}.json", "r") as user_data_file:
+                    user_data = json.load(user_data_file)
+
+                try:
+                    for date_data in user_data["nutrition_log"].values():
+                        date_data["data_transferred"] = "False"
+                except KeyError:
+                    pass
+            
+                with open(f"user_data/{user}.json", "w") as write_user_data_file:
+                    json.dump(user_data, write_user_data_file)
 
 
             case "/action_logfood&water": # delete data from json file if delete button pressed
@@ -178,12 +191,34 @@ class FittnessServer(BaseHTTPRequestHandler):
                 quantity = query["amount"]
                 units = query["food_units"]
                 date = query["log_food_date"]
+
+                
                 food_not_found = True
                 existing_food_log = False
 
                 try:
                     with open("data/nutritionlog.json", "r") as file:
                         data = json.load(file)
+
+                    # FIXME
+                    # if date != to nutritionlog.json date then "data_transferred" = False 
+
+                    # try:
+                    #     if date != data["date"]:
+                    #         with open(f"user_data/{user}.json", "r") as user_data_file:
+                    #             user_data = json.load(user_data_file)
+
+                    #         try:
+                    #             for date_data in user_data["nutrition_log"].values():
+                    #                 date_data["data_transferred"] = "False"
+                    #         except KeyError:
+                    #             pass
+
+                    #     with open(f"user_data/{user}.json", "w") as write_user_data_file:
+                    #         json.dump(user_data, write_user_data_file)
+
+                    # except KeyError:
+                    #     pass
                 except:
                     data = {"date":date, "food_log":[]}
 
@@ -204,10 +239,14 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                  # if food log with date given in query exists in user_data, add this data to nutrititionlog.json
                 if existing_food_log:
-                    data["food_log"].append(user_data["nutrition_log"][date]["food"])
-                    user_data["nutrition_log"][date]["data_transferred"] = "True"
-                    with open(f"user_data/{user}.json", "w") as write_user_data:
-                        json.dump(user_data, write_user_data)
+                    if user_data["nutrition_log"][date]["data_transferred"] == "False":
+                        for i in range(len(user_data["nutrition_log"][date]["food"])):
+                            data["food_log"].append(user_data["nutrition_log"][date]["food"][i])
+                            
+                        user_data["nutrition_log"][date]["data_transferred"] = "True"
+
+                        with open(f"user_data/{user}.json", "w") as write_user_data:
+                            json.dump(user_data, write_user_data)
 
                 try:
                     nutrition = nc(quantity, units, name)
@@ -226,7 +265,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         tbody = ""
                         for i in range(len(data["food_log"])):
                             food_water = food_water_template
-                            print(i)
+                            print(data)
                             food_water = food_water.replace("template_quantity", data["food_log"][i]["quantity"])
                             food_water = food_water.replace("template_units", data["food_log"][i]["units"])
                             food_water = food_water.replace("template_food_name", data["food_log"][i]["name"])
@@ -275,7 +314,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
                 date = logged_data["date"]
 
-                user_data["nutrition_log"] = {}
+                if user_data["nutrition_log"] == None:
+                    user_data["nutrition_log"] = {}
                 
                 user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
@@ -464,7 +504,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                             calories_percent_eaten = int(round(int(total_calories) / int(goal_cals) * 100))
                         except:
                             calories_percent_eaten = "0"
-                    except:
+                            
+                    except KeyError:
                         total_calories = "-"
                         goal_cals = "-"
                         calories_percent_eaten = "-"
