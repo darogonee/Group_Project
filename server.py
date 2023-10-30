@@ -86,7 +86,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         current_date = str(datetime.date.today())
 
         return current_date
-
+    
     def do_GET(self):
         match self.path.split("?")[0]:
             case "/regenerate_my_program": #avoid losing nutrition log
@@ -156,6 +156,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                         myprogram_final = myprogram_file.read().replace("template_myprogram", tbody)                         
                         self.wfile.write(myprogram_final.encode())
 
+            case "/remove_sqn":
+                user = self.get_username()
+                os.remove(f"user_data/{user}.json")
+                self.redirect("/signupqs")
 
             case "/logfood&water":
                 self.send_response(200)
