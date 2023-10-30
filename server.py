@@ -67,10 +67,9 @@ class FittnessServer(BaseHTTPRequestHandler):
 
     def get_username(self):
         cookie = self.get_cookie()
-        # try:
-        if cookie["user"] in uuid2user:
-            return uuid2user[cookie["user"]]
-        # except:
+        if "user" in cookie:
+            if cookie["user"] in uuid2user:
+                return uuid2user[cookie["user"]]       
         self.redirect("/signin")
 
     def get_user_data(self):
@@ -358,8 +357,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
-
-                                # activity = activity.replace("template_id", activity_data[i]['upload_id_str']) #not working
+                                # print(activity_data[i])
+                                activity = activity.replace("template_id", str(activity_data[i]['upload_id'])) #not working
 
                                 if len(activity_data[i]["name"]) < 12 or "-" not in activity_data[i]["name"]:
                                     activity = activity.replace("template_name", str(activity_data[i]["name"]))
