@@ -89,14 +89,15 @@ class FittnessServer(BaseHTTPRequestHandler):
     def do_GET(self):
         match self.path.split("?")[0]:
             case "/regenerate_my_program": #avoid losing nutrition log
-                user = self.get_username
+                user = self.get_username()
                 print(user)
                 with open(f"user_data/{user}.json", "r") as read_user_data:
                     user_data = json.load(read_user_data)
-                try:
-                    user_data["program"] = {}
-                except:
-                    None
+                
+                program = create_program(user_data)
+                print(program)
+                user_data["program"] = program
+                
 
                 with open(f"user_data/{user}.json", "w") as write_user_data:
                     json.dump(user_data, write_user_data)
@@ -111,7 +112,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("web/html/html-template/myprogram-template.html", "r") as myprogram_template_file:
                         myprogram_template = myprogram_template_file.read()
                         data = self.get_user_data()
-                        if data.get("program") == None:
+                        if "program" not in data.keys():
                             program = create_program(data)
                             username = self.get_username()
                             data["program"] = program
@@ -319,7 +320,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
                 date = logged_data["date"]
 
-                if user_data["nutrition_log"] == None:
+                if not "nutrition_log" in user_data:
+                    print("in")
                     user_data["nutrition_log"] = {}
                 
                 user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
@@ -360,8 +362,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 # print(activity_data[i])
                                 activity = activity.replace("template_id", str(activity_data[i]['upload_id'])) #not working
 
-                                if len(activity_data[i]["name"]) < 12 or "-" not in activity_data[i]["name"]:
-                                    activity = activity.replace("template_name", str(activity_data[i]["name"]))
+                                
+                                if "-" not in activity_data[i]["name"]:
+                                    activity_string = str(activity_data[i]["name"])[:25]
+                                    if len(str(activity_data[i]["name"])) >= 25:
+                                        activity_string = activity_string + "..."
+                                    activity = activity.replace("template_name", activity_string)
+                                    
                                 else:
                                     activity = activity.replace("template_name", str(activity_data[i]["name"]).split("-")[0])
 
