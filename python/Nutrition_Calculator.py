@@ -14,3 +14,9 @@ def nutrition_calculator(number, units, food):
     carb = content["carbohydrates_total_g"]
     
     return {"name":name, "calories":calories, "fat":fat, "protein":protein, "carbs":carb}
+
+if __name__ == "__main__":
+    number = 1
+    units = "kg"
+    food = "apple"
+    print(nutrition_calculator(number, units, food))

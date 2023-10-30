@@ -67,8 +67,10 @@ class FittnessServer(BaseHTTPRequestHandler):
 
     def get_username(self):
         cookie = self.get_cookie()
+        # try:
         if cookie["user"] in uuid2user:
             return uuid2user[cookie["user"]]
+        # except:
         self.redirect("/signin")
 
     def get_user_data(self):
@@ -107,7 +109,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 with open("web/html/myprogram.html", "r") as myprogram_file:
-                    with open("web/html/myprogram-template.html", "r") as myprogram_template_file:
+                    with open("web/html/html-template/myprogram-template.html", "r") as myprogram_template_file:
                         myprogram_template = myprogram_template_file.read()
                         data = self.get_user_data()
                         if data.get("program") == None:
@@ -260,7 +262,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     food_not_found = True
 
                 with open("web/html/logfood&water.html", "r") as food_water_file:
-                    with open("web/html/nutrition-template.html", "r") as food_water_template_file:
+                    with open("web/html/html-template/nutrition-template.html", "r") as food_water_template_file:
                         food_water_template = food_water_template_file.read()
                         tbody = ""
                         for i in range(len(data["food_log"])):
@@ -335,7 +337,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 self.end_headers()
                 with open("web/html/activities.html", "r") as activities_file:
-                    with open("web/html/activity-template.html", "r") as activity_file:
+                    with open("web/html/html-template/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
                         # later check
                         python.Api.refresh(user)
@@ -603,7 +605,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 user = self.get_username()
-                with open("web/html/individual_activitie.html", "r") as file:
+                with open("web/html/html-template/individual_activitie.html", "r") as file:
                     id = int(self.query()["id"])
                     for activity in python.Api.get_user_activites(user):
                         if id == activity["upload_id"]:
