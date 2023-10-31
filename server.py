@@ -6,6 +6,7 @@ from datetime import datetime
 from python.Create_Program import create_program
 from python.requirements import *
 import time, json, datetime, uuid 
+from datetime import date
 
 MIME_TYPES = {
     "svg": "image/svg+xml",
@@ -606,9 +607,48 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
+                user = self.get_username()
+
                 with open("web/html/myprofile.html", "r") as file:
                     myprofile_page = file.read()
+                    myprofile_page = myprofile_page.replace("name-temp", user)
+                    user_data_pro = open(f"user_data/{user}.json")
+                    user_data_pro = json.load(user_data_pro)
+
+
+                    birth_day = str(user_data_pro['dob']).split('-')
+                    today = str(datetime.datetime.today()).split(' ')[0].split("-")
+                    age = int(today[0])-int(birth_day[0])
+                    myprofile_page = myprofile_page.replace("age-temp", str(age))
+
+
+                    myprofile_page = myprofile_page.replace("gender-temp", user_data_pro['sex'])
+                    myprofile_page = myprofile_page.replace("muscle-goals-temp", user_data_pro['muscle_goals'])
+                    myprofile_page = myprofile_page.replace("cardio-temp", user_data_pro['cardio'])
+                    for type in user_data_pro['fav_cardio']:
+                        if user_data_pro['fav_cardio']['other'] != '':
+                            type = user_data_pro['fav_cardio']['other']
+                            myprofile_page = myprofile_page.replace("fav-sport-temp", type)
+                        elif user_data_pro['fav_cardio'][type] == True:
+                            myprofile_page = myprofile_page.replace("fav-sport-temp", type)
+                    myprofile_page = myprofile_page.replace("lvl-temp", user_data_pro['level'])
+                    myprofile_page = myprofile_page.replace("weight-goal-temp", user_data_pro['weight_goal'])
+                    myprofile_page = myprofile_page.replace("weight-units-temp", user_data_pro['weight-units'])
+                    myprofile_page = myprofile_page.replace("weight-temp", user_data_pro['weight'])
+                    myprofile_page = myprofile_page.replace("height-units-temp", user_data_pro['height-units'])
+                    myprofile_page = myprofile_page.replace("height-temp", user_data_pro['height'])
+                    myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
+                    days = []
+                    for day in user_data_pro['training_days']:
+                        if user_data_pro['training_days'][day] == True:
+                            days.append(day)
+                    myprofile_page = myprofile_page.replace("training-days-temp", str(days))
+                    myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
+                    myprofile_page = myprofile_page.replace("rhr-temp", user_data_pro['rhr'])
                     self.wfile.write(myprofile_page.encode())
+
+            case "/myprofile_action":
+                ...
 
             case "/activity":
                 self.send_response(200)
@@ -743,13 +783,13 @@ if __name__ == "__main__":
     print("Server stopped.")
 
 # NOTE
-# 1 - food thing
+# 1 - indavile activity view
 
 # 2 -
 
 # 3 -
 
-# 4 -
+# 4 - 
 
 # 5 - put stuff in the home page
 
@@ -759,6 +799,6 @@ if __name__ == "__main__":
 
 ### Think done needs bug testing BUG 
 
-# 1 - upload info from sign up questions into users json file
+# 1 - 
 
-# 2 - add activaites when user trys too
+# 2 - 

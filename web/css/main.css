@@ -252,3 +252,10 @@ input#username {
 #inline_label { 
     font-weight: bold;
 }
+
+.NA {
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 0px;
+}
