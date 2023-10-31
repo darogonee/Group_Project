@@ -286,11 +286,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                         food_water = food_water.replace('<button onclick="deleteRow(this)">Delete</button>', "")
                         food_water = food_water.replace("template_quantity", "")
                         food_water = food_water.replace("template_units", "")
-                        food_water = food_water.replace("template_food_name", "")
-                        food_water = food_water.replace("template_food_calories", str(round(sum(float(item["calories"]) for item in data["food_log"]), 1)))
-                        food_water = food_water.replace("template_carbs", str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1)))
-                        food_water = food_water.replace("template_protein", str(round(sum(float(item["protein"]) for item in data["food_log"]), 1)))
-                        food_water = food_water.replace("template_fat", str(round(sum(float(item["fat"]) for item in data["food_log"]), 1)))
+                        food_water = food_water.replace("template_food_name", "<b>Total</b>")
+                        food_water = food_water.replace("template_food_calories", "<b>" + str(round(sum(float(item["calories"]) for item in data["food_log"]), 1))+"</b>")
+                        food_water = food_water.replace("template_carbs", "<b>"+str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1))+"</b>")
+                        food_water = food_water.replace("template_protein", "<b>"+str(round(sum(float(item["protein"]) for item in data["food_log"]), 1))+"</b>")
+                        food_water = food_water.replace("template_fat", "<b>"+str(round(sum(float(item["fat"]) for item in data["food_log"]), 1))+"</b>")
 
                         tbody += food_water
 
