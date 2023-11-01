@@ -6,6 +6,7 @@ from datetime import datetime
 from python.Create_Program import create_program
 from python.requirements import *
 import time, json, datetime, uuid 
+from datetime import date
 
 MIME_TYPES = {
     "svg": "image/svg+xml",
@@ -67,10 +68,9 @@ class FittnessServer(BaseHTTPRequestHandler):
 
     def get_username(self):
         cookie = self.get_cookie()
-        # try:
-        if cookie["user"] in uuid2user:
-            return uuid2user[cookie["user"]]
-        # except:
+        if "user" in cookie:
+            if cookie["user"] in uuid2user:
+                return uuid2user[cookie["user"]]       
         self.redirect("/signin")
 
     def get_user_data(self):
@@ -90,14 +90,15 @@ class FittnessServer(BaseHTTPRequestHandler):
     def do_GET(self):
         match self.path.split("?")[0]:
             case "/regenerate_my_program": #avoid losing nutrition log
-                user = self.get_username
+                user = self.get_username()
                 print(user)
                 with open(f"user_data/{user}.json", "r") as read_user_data:
                     user_data = json.load(read_user_data)
-                try:
-                    user_data["program"] = {}
-                except:
-                    None
+                
+                program = create_program(user_data)
+                print(program)
+                user_data["program"] = program
+                
 
                 with open(f"user_data/{user}.json", "w") as write_user_data:
                     json.dump(user_data, write_user_data)
@@ -112,7 +113,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("web/html/html-template/myprogram-template.html", "r") as myprogram_template_file:
                         myprogram_template = myprogram_template_file.read()
                         data = self.get_user_data()
-                        if data.get("program") == None:
+                        if "program" not in data.keys():
                             program = create_program(data)
                             username = self.get_username()
                             data["program"] = program
@@ -320,7 +321,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
                 date = logged_data["date"]
 
-                if user_data["nutrition_log"] == None:
+                if not "nutrition_log" in user_data:
+                    print("in")
                     user_data["nutrition_log"] = {}
                 
                 user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
@@ -358,11 +360,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
+                                # print(activity_data[i])
+                                activity = activity.replace("template_id", str(activity_data[i]['upload_id'])) #not working
 
-                                # activity = activity.replace("template_id", activity_data[i]['upload_id_str']) #not working
-
-                                if len(activity_data[i]["name"]) < 12 or "-" not in activity_data[i]["name"]:
-                                    activity = activity.replace("template_name", str(activity_data[i]["name"]))
+                                
+                                if "-" not in activity_data[i]["name"]:
+                                    activity_string = str(activity_data[i]["name"])[:25]
+                                    if len(str(activity_data[i]["name"])) >= 25:
+                                        activity_string = activity_string + "..."
+                                    activity = activity.replace("template_name", activity_string)
+                                    
                                 else:
                                     activity = activity.replace("template_name", str(activity_data[i]["name"]).split("-")[0])
 
@@ -600,9 +607,48 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
+                user = self.get_username()
+
                 with open("web/html/myprofile.html", "r") as file:
                     myprofile_page = file.read()
+                    myprofile_page = myprofile_page.replace("name-temp", user)
+                    user_data_pro = open(f"user_data/{user}.json")
+                    user_data_pro = json.load(user_data_pro)
+
+
+                    birth_day = str(user_data_pro['dob']).split('-')
+                    today = str(datetime.datetime.today()).split(' ')[0].split("-")
+                    age = int(today[0])-int(birth_day[0])
+                    myprofile_page = myprofile_page.replace("age-temp", str(age))
+
+
+                    myprofile_page = myprofile_page.replace("gender-temp", user_data_pro['sex'])
+                    myprofile_page = myprofile_page.replace("muscle-goals-temp", user_data_pro['muscle_goals'])
+                    myprofile_page = myprofile_page.replace("cardio-temp", user_data_pro['cardio'])
+                    for type in user_data_pro['fav_cardio']:
+                        if user_data_pro['fav_cardio']['other'] != '':
+                            type = user_data_pro['fav_cardio']['other']
+                            myprofile_page = myprofile_page.replace("fav-sport-temp", type)
+                        elif user_data_pro['fav_cardio'][type] == True:
+                            myprofile_page = myprofile_page.replace("fav-sport-temp", type)
+                    myprofile_page = myprofile_page.replace("lvl-temp", user_data_pro['level'])
+                    myprofile_page = myprofile_page.replace("weight-goal-temp", user_data_pro['weight_goal'])
+                    myprofile_page = myprofile_page.replace("weight-units-temp", user_data_pro['weight-units'])
+                    myprofile_page = myprofile_page.replace("weight-temp", user_data_pro['weight'])
+                    myprofile_page = myprofile_page.replace("height-units-temp", user_data_pro['height-units'])
+                    myprofile_page = myprofile_page.replace("height-temp", user_data_pro['height'])
+                    myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
+                    days = []
+                    for day in user_data_pro['training_days']:
+                        if user_data_pro['training_days'][day] == True:
+                            days.append(day)
+                    myprofile_page = myprofile_page.replace("training-days-temp", str(days))
+                    myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
+                    myprofile_page = myprofile_page.replace("rhr-temp", user_data_pro['rhr'])
                     self.wfile.write(myprofile_page.encode())
+
+            case "/myprofile_action":
+                ...
 
             case "/activity":
                 self.send_response(200)
@@ -737,13 +783,13 @@ if __name__ == "__main__":
     print("Server stopped.")
 
 # NOTE
-# 1 - food thing
+# 1 - indavile activity view
 
 # 2 -
 
 # 3 -
 
-# 4 -
+# 4 - 
 
 # 5 - put stuff in the home page
 
@@ -753,6 +799,6 @@ if __name__ == "__main__":
 
 ### Think done needs bug testing BUG 
 
-# 1 - upload info from sign up questions into users json file
+# 1 - 
 
-# 2 - add activaites when user trys too
+# 2 - 
