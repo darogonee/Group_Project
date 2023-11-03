@@ -30,6 +30,31 @@ serverPort = 8080
 uuid2user = {}
 
 class FittnessServer(BaseHTTPRequestHandler):
+    # def _set_response(self):
+    #     self.send_response(200)
+    #     self.send_header('Content-type', 'text/html')
+    #     self.end_headers()
+
+    # def do_POST(self):
+    #     content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+    #     post_data = self.rfile.read(content_length) # <--- Gets the data itself
+    #     content = json.loads(post_data.decode('utf-8'))
+    #     match content["title"]:
+    #         case "edit-json":
+    #             data = json.load("data/"+content["body"][0])
+    #             del data["food_log"][content["body"][1]]
+
+    #             response = "deletion-successful"
+    #         case _:
+    #             response = "err:invalid-title"
+
+
+    #     self._set_response()
+    #     if type(response) != type(""):
+    #         response = json.dumps(response)
+    #     self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
+    #     print("request fulfilled")
+
     def redirect(self, link):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
@@ -47,6 +72,9 @@ class FittnessServer(BaseHTTPRequestHandler):
             value = query.split("=")[1]
             values[name] = value
         return values
+    
+        for key, value in dictionary.items():
+            print(key, value)
 
     def get_cookie(self):
         if self.headers.get("Cookie") is None:
@@ -207,25 +235,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     with open("data/nutritionlog.json", "r") as file:
                         data = json.load(file)
 
-                    # FIXME
-                    # if date != to nutritionlog.json date then "data_transferred" = False 
-
-                    # try:
-                    #     if date != data["date"]:
-                    #         with open(f"user_data/{user}.json", "r") as user_data_file:
-                    #             user_data = json.load(user_data_file)
-
-                    #         try:
-                    #             for date_data in user_data["nutrition_log"].values():
-                    #                 date_data["data_transferred"] = "False"
-                    #         except KeyError:
-                    #             pass
-
-                    #     with open(f"user_data/{user}.json", "w") as write_user_data_file:
-                    #         json.dump(user_data, write_user_data_file)
-
-                    # except KeyError:
-                    #     pass
                 except:
                     data = {"date":date, "food_log":[]}
 
