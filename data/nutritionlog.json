@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
     "date": "2023-11-02",
     "food_log": [
@@ -84,3 +85,6 @@
         }
     ]
 }
+=======
+{"date": "2025-06-03", "food_log": [{"name": "pizza", "quantity": "1283452", "units": "mL", "calories": "361038641.3", "carbs": "45149787.8", "fat": "13392693.3", "protein": "15613578.6"}]}
+>>>>>>> Stashed changes

@@ -1,5 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import python.Api, os, random
+import python.Api, os, random, calendar
 from python.hash_function import password_hash 
 from python.Nutrition_Calculator import nutrition_calculator as nc
 from datetime import datetime
@@ -7,6 +7,7 @@ from python.Create_Program import create_program
 from python.requirements import *
 import time, json, datetime, uuid 
 from datetime import date
+from python.polyline_decoder import decode_polyline
 
 MIME_TYPES = {
     "svg": "image/svg+xml",
@@ -103,11 +104,9 @@ class FittnessServer(BaseHTTPRequestHandler):
 
     def get_user_data(self):
         user = self.get_username()
-        print(user)
         user_data_file = f"user_data/{user}.json"
         with open(user_data_file, "r") as data_file:
             data = json.load(data_file)
-
         return data
     
     def get_current_date(self):
@@ -119,12 +118,10 @@ class FittnessServer(BaseHTTPRequestHandler):
         match self.path.split("?")[0]:
             case "/regenerate_my_program": #avoid losing nutrition log
                 user = self.get_username()
-                print(user)
                 with open(f"user_data/{user}.json", "r") as read_user_data:
                     user_data = json.load(read_user_data)
                 
                 program = create_program(user_data)
-                print(program)
                 user_data["program"] = program
                 
 
@@ -281,7 +278,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                         tbody = ""
                         for i in range(len(data["food_log"])):
                             food_water = food_water_template
-                            print(data)
                             food_water = food_water.replace("template_quantity", data["food_log"][i]["quantity"])
                             food_water = food_water.replace("template_units", data["food_log"][i]["units"])
                             food_water = food_water.replace("template_food_name", data["food_log"][i]["name"])
@@ -331,7 +327,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 date = logged_data["date"]
 
                 if not "nutrition_log" in user_data:
-                    print("in")
                     user_data["nutrition_log"] = {}
                 
                 user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
@@ -357,9 +352,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                         # later check
                         python.Api.refresh(user)
                         activity_data = python.Api.get_user_activites(user)
-                        tbody = ""
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
+                        tbody=""
                         for i in range(min(200, len(activity_data))):
                             activity_type = self.query().get("type", "")
                             if activity_data[i]['type'] == activity_type or activity_type == "":
@@ -369,7 +364,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
-                                # print(activity_data[i])
                                 activity = activity.replace("template_id", str(activity_data[i]['upload_id'])) #not working
 
                                 
@@ -398,8 +392,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 tbody += activity
 
                                 table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
-                                # print(len(table_activity_data))
-
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
 
@@ -510,14 +502,40 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
+
+
                 user = self.get_username()
+                cookie = self.get_cookie()
+                if "user" not in cookie:
+                    self.redirect("/signin")
+                    return
+                if not python.Api.check(user):
+                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
+                    return
+                if not os.path.exists(f"user_data/{user}.json"):
+                    self.redirect("/signupquestions")
+                    return
                 date = self.get_current_date()
+                
 
                 with open("web/html/home.html", "r") as home_file:
                     with open(f"user_data/{user}.json", "r") as user_data_file:
                         user_data = json.load(user_data_file)
                     
-                    
+                    recent_activity = python.Api.get_user_activites(user)[0]
+                    cords = decode_polyline(recent_activity['map']['summary_polyline'])
+
+                    most_north = cords[0][0]
+                    most_south = cords[0][0]
+                    most_east  = cords[0][1]
+                    most_west  = cords[0][1]
+                    for lat, lng in cords:
+                        most_north = max(most_north, lat)
+                        most_south = min(most_south, lat)
+                        most_east  = max(most_east,  lng)
+                        most_west  = min(most_west,  lng)
+                    size = (most_north - most_south +  most_east - most_west)*2
+    
                     try:
                         total_calories = user_data["nutrition_log"][date]["totals"]["total_calories"]
                         goal_cals = user_data["goal_cals"]
@@ -534,30 +552,26 @@ class FittnessServer(BaseHTTPRequestHandler):
                         calories_remaining = "-"
 
                     calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
+                    formatted_time = time.strftime('%H:%M:%S', time.gmtime(recent_activity["moving_time"]))
+                   
+                    input_datetime = datetime.datetime.strptime(recent_activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+                    formatted_date = input_datetime.strftime("%a, %d/%m/%Y")  
 
-                    home_page = home_file.read().replace("calories_content", calories_content_body) 
-                
-
+                    home_page = (home_file.read().replace("calories_content", calories_content_body)
+                        .replace("template_topleft", str([most_north + size, most_west - size]))
+                        .replace("template_bottomright", str([most_south - size, most_east + size]))
+                        .replace("template_points", str([list(coord) for coord in cords]))
+                        .replace("template_activity_name", recent_activity['name'])
+                        .replace("template_type", recent_activity['type'])
+                        .replace("template_distance", str(round(recent_activity['distance']/1000, 2))+"km")
+                        .replace("template_date", formatted_date)
+                        .replace("template_time", formatted_time)
+                    )
                     self.wfile.write(home_page.encode())
-                
-
-
-
-
-
-                cookie = self.get_cookie()
-                if "user" not in cookie:
-                    self.redirect("/signin")
-                    return
-                if not python.Api.check(user):
-                    self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
-                    return
-                if not os.path.exists(f"user_data/{user}.json"):
-                    self.redirect("/signupquestions")
-                    return
-                
-            # FIXME check point
-
+                    
+                    months = {"January": 31, "February": 28, "March": 31, "April": 30, "May": 31, "June": 30, "July": 31, "August": 31, "September": 30, "October": 31, "November": 30, "December": 31}
+                    
+                    month = calendar.month_name[datetime.datetime.now().month]
 
 
             case "/food&water":
@@ -624,12 +638,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                     user_data_pro = open(f"user_data/{user}.json")
                     user_data_pro = json.load(user_data_pro)
 
-
                     birth_day = str(user_data_pro['dob']).split('-')
                     today = str(datetime.datetime.today()).split(' ')[0].split("-")
                     age = int(today[0])-int(birth_day[0])
                     myprofile_page = myprofile_page.replace("age-temp", str(age))
-
 
                     myprofile_page = myprofile_page.replace("gender-temp", user_data_pro['sex'])
                     myprofile_page = myprofile_page.replace("muscle-goals-temp", user_data_pro['muscle_goals'])
@@ -654,10 +666,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprofile_page = myprofile_page.replace("training-days-temp", str(days))
                     myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
                     myprofile_page = myprofile_page.replace("rhr-temp", user_data_pro['rhr'])
-                    self.wfile.write(myprofile_page.encode())
+                    equipment = []
+                    for key,value in user_data_pro['equipment'].items():
+                        if value:
+                            equipment.append(key)
+                    myprofile_page = myprofile_page.replace("equipment-temp", "<br>".join(equipment))
 
-            case "/myprofile_action":
-                ...
+                    if python.Api.check(user):    
+                        myprofile_page = myprofile_page.replace("Strava Api: False", "Strava Api: True")                
+                    
+                    self.wfile.write(myprofile_page.encode())
 
             case "/activity":
                 self.send_response(200)
@@ -668,7 +686,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     id = int(self.query()["id"])
                     for activity in python.Api.get_user_activites(user):
                         if id == activity["upload_id"]:
-
                             activity_page = file.read()
                             activity_page = (activity_page.replace("template_name", str(activity["name"]))
                                 .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
@@ -790,13 +807,14 @@ if __name__ == "__main__":
         pass
     webServer.server_close()
     print("Server stopped.")
+    print()
 
 # NOTE
-# 1 - indavile activity view
+# 1 - only one fav sport
 
 # 2 -
 
-# 3 -
+# 3 - add intersex option when choosing sex
 
 # 4 - 
 
