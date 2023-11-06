@@ -31,13 +31,12 @@ def refresh_tokens(client_id, client_secret, refresh_token):
         return None
 
 @cache(max_age=10*60)
-def get_user_activites(user):
+def get_user_activites(user, param = {'per_page': 200, 'page': 1}):
     activites_url = "https://www.strava.com/api/v3/athlete/activities"
 
     header = {'Authorization': 'Bearer ' +
               refresh_tokens(client_id, client_secret, load(user)[0])[0]}
 
-    param = {'per_page': 200, 'page': 1}
     my_dataset = requests.get(
         activites_url, headers = header, params = param).json()
     return my_dataset

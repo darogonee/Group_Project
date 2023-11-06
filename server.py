@@ -43,7 +43,7 @@ class FittnessServer(BaseHTTPRequestHandler):
     #     match content["title"]:
     #         case "edit-json":
     #             data = json.load("data/"+content["body"][0])
-    #             del data["food_log"][content["body"][1]]
+                # del data["food_log"][content["body"][1]]
 
     #             response = "deletion-successful"
     #         case _:
@@ -73,9 +73,6 @@ class FittnessServer(BaseHTTPRequestHandler):
             value = query.split("=")[1]
             values[name] = value
         return values
-    
-        for key, value in dictionary.items():
-            print(key, value)
 
     def get_cookie(self):
         if self.headers.get("Cookie") is None:
@@ -113,6 +110,19 @@ class FittnessServer(BaseHTTPRequestHandler):
         current_date = str(datetime.date.today())
 
         return current_date
+    
+    def map_bounds(self, cords):
+        most_north = cords[0][0]
+        most_south = cords[0][0]
+        most_east  = cords[0][1]
+        most_west  = cords[0][1]
+        for lat, lng in cords:
+            most_north = max(most_north, lat)
+            most_south = min(most_south, lat)
+            most_east  = max(most_east,  lng)
+            most_west  = min(most_west,  lng)
+        size = (most_north - most_south +  most_east - most_west)*2
+        return most_north, most_south, most_east, most_west, size
     
     def do_GET(self):
         match self.path.split("?")[0]:
@@ -401,7 +411,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/refresh":
                 user = self.get_username()
-                python.Api.get_user_activites.clear(user)
+                python.Api.get_user_activites.clear_args(user)
                 self.redirect("/activities")
               
             case "/oauth":
@@ -521,20 +531,17 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/home.html", "r") as home_file:
                     with open(f"user_data/{user}.json", "r") as user_data_file:
                         user_data = json.load(user_data_file)
-                    
-                    recent_activity = python.Api.get_user_activites(user)[0]
-                    cords = decode_polyline(recent_activity['map']['summary_polyline'])
 
-                    most_north = cords[0][0]
-                    most_south = cords[0][0]
-                    most_east  = cords[0][1]
-                    most_west  = cords[0][1]
-                    for lat, lng in cords:
-                        most_north = max(most_north, lat)
-                        most_south = min(most_south, lat)
-                        most_east  = max(most_east,  lng)
-                        most_west  = min(most_west,  lng)
-                    size = (most_north - most_south +  most_east - most_west)*2
+                    now = datetime.datetime.now()
+                    startofmonth = datetime.date(now.year, now.month, 1).strftime('%s')
+                    month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth})
+                    recent_activity = month_activitys[0]
+                    cords = []
+                    most_north = most_south = most_east = most_west = size = 0
+                    
+                    if "map" in recent_activity and "summary_polyline" in recent_activity['map'] and recent_activity['map']['summary_polyline']:
+                        cords = decode_polyline(recent_activity['map']['summary_polyline'])
+                        most_north, most_south, most_east, most_west, size = self.map_bounds(cords)
     
                     try:
                         total_calories = user_data["nutrition_log"][date]["totals"]["total_calories"]
@@ -546,10 +553,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                             calories_percent_eaten = "0"
                             
                     except KeyError:
-                        total_calories = "-"
-                        goal_cals = "-"
-                        calories_percent_eaten = "-"
-                        calories_remaining = "-"
+                        total_calories = "N/A"
+                        goal_cals = "N/A"
+                        calories_percent_eaten = "N/A"
+                        calories_remaining = "N/A"
 
                     calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
                     formatted_time = time.strftime('%H:%M:%S', time.gmtime(recent_activity["moving_time"]))
@@ -557,6 +564,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                     input_datetime = datetime.datetime.strptime(recent_activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                     formatted_date = input_datetime.strftime("%a, %d/%m/%Y")  
 
+
+                    month_distance = 0
+                    month_time = 0
+                    for activity in month_activitys:
+                        month_distance += activity['distance']
+                        month_time += activity['moving_time']       
+                    
                     home_page = (home_file.read().replace("calories_content", calories_content_body)
                         .replace("template_topleft", str([most_north + size, most_west - size]))
                         .replace("template_bottomright", str([most_south - size, most_east + size]))
@@ -566,14 +580,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                         .replace("template_distance", str(round(recent_activity['distance']/1000, 2))+"km")
                         .replace("template_date", formatted_date)
                         .replace("template_time", formatted_time)
+                        .replace("template_lastm_distance", str(round(month_distance/1000, 2))+"km")
+                        .replace("template_lastm_activities", str(len(month_activitys)))
+                        .replace("template_lastm_ttime", str(datetime.timedelta(seconds=month_time)))
                     )
                     self.wfile.write(home_page.encode())
                     
-                    months = {"January": 31, "February": 28, "March": 31, "April": 30, "May": 31, "June": 30, "July": 31, "August": 31, "September": 30, "October": 31, "November": 30, "December": 31}
-                    
-                    month = calendar.month_name[datetime.datetime.now().month]
-
-
             case "/food&water":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
