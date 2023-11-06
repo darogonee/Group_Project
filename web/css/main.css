@@ -250,7 +250,7 @@ input#username {
 }
 
 .input-box:has(input:active){
-    border: 1px solid blue;
+    border: 1px solid rgb(255, 255, 255);
 }
 
 #inline_label { 

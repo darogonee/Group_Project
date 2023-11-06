@@ -100,8 +100,18 @@ class FittnessServer(BaseHTTPRequestHandler):
         self.redirect("/signin")
 
     def get_user_data(self):
+        try:
+            user = self.get_username()
+            user_data_file = f"user_data/{user}.json"
+            with open(user_data_file, "r") as data_file:
+                data = json.load(data_file)
+            return data
+        except:
+            return False
+    
+    def get_my_program(self):
         user = self.get_username()
-        user_data_file = f"user_data/{user}.json"
+        user_data_file = f"user_data/program/{user}.json"
         with open(user_data_file, "r") as data_file:
             data = json.load(data_file)
         return data
@@ -147,12 +157,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/myprogram.html", "r") as myprogram_file:
                     with open("web/html/html-template/myprogram-template.html", "r") as myprogram_template_file:
                         myprogram_template = myprogram_template_file.read()
-                        data = self.get_user_data()
-                        if "program" not in data.keys():
+                        data = self.get_program()
+                        if data == False:
                             program = create_program(data)
                             username = self.get_username()
                             data["program"] = program
-                            with open(f"user_data/{username}.json", "w") as file:
+                            with open(f"user_data/program/{username}.json", "w") as file:
                                 json.dump(data, file)
                         else:
                             program = data["program"]
@@ -492,6 +502,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/signupqs").encode())
 
+            
+
             case "/signup":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -536,7 +548,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                     now = datetime.datetime.now()
                     startofmonth = datetime.date(now.year, now.month, 1).strftime('%s')
                     month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth})
-                    recent_activity = month_activitys[0]
+
+                    try:
+                        recent_activity = month_activitys[0]
+                    except:
+                        recent_activity = {'resource_state': 2, 'athlete': {'id': 59474850, 'resource_state': 1}, 'name': 'n/a', 'distance': 0, 'moving_time': 0, 'elapsed_time': 0, 'total_elevation_gain': 0, 'type': 'Run', 'sport_type': 'Run', 'workout_type': 0, 'id': 10151679572, 'start_date': '2023-11-02T07:19:42Z', 'start_date_local': '2023-11-02T18:19:42Z', 'timezone': '(GMT+10:00) Australia/Hobart', 'utc_offset': 39600.0, 'location_city': None, 'location_state': None, 'location_country': None, 'achievement_count': 0, 'kudos_count': 3, 'comment_count': 0, 'athlete_count': 1, 'photo_count': 0, 'map': {'id': 'a10151679572', 'summary_polyline': '', 'resource_state': 2}, 'trainer': False, 'commute': False, 'manual': True, 'private': False, 'visibility': 'everyone', 'flagged': False, 'gear_id': 'g15342740', 'start_latlng': [], 'end_latlng': [], 'average_speed': 3.342, 'max_speed': 0, 'has_heartrate': False, 'heartrate_opt_out': False, 'display_hide_heartrate_option': False, 'upload_id': None, 'external_id': None, 'from_accepted_tag': False, 'pr_count': 0, 'total_photo_count': 0, 'has_kudoed': False}
+
+
                     cords = []
                     most_north = most_south = most_east = most_west = size = 0
                     
@@ -799,6 +817,10 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     }, file, indent = 4
                 )
+                open(f"user_data/program/{user}.json", "a")
+                open(f"user_data/perm_nutrition_log/{user}.json", "a")
+                open(f"user_data/temp_nutrition_log/{user}.json", "a")
+
                 
                 self.redirect("/")
 
