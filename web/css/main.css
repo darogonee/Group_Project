@@ -263,3 +263,7 @@ input#username {
     overflow: hidden;
     font-size: 0px;
 }
+
+.tittle {
+    text-align: center;
+}

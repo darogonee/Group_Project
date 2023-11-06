@@ -5,8 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="main.js" defer></script>
     <title>Fitness</title>
+    <style>
+      #map {
+          border-top: 2px solid black;
+          border-bottom: 2px solid black;
+          width: 100%;
+          height: 100%;
+      }
+  </style>
 </head>
 <body>
     <div class="container">
@@ -35,10 +49,16 @@
         </nav>
     </div>
     <h1>Home</h1>
+    <a href="refresh">Refresh</a>
     <div class="dashboard-container">
       <div class="recent-activity home-box">
         <!-- recent exercise stats + map -->
         <h3>Recent exercise</h3>
+        <div id="map"></div>
+        <h4 class="tittle">Activity Type: template_type</h4>
+        <h4 class="tittle">Date: template_date</h4>
+        <h4 class="tittle">Time: template_time</h4>
+        <h4 class="tittle">Distance: template_distance</h4>
       </div>
       <div class="nutrition-water-box-container">
         <div class="estimated-calories home-box">
@@ -58,6 +78,9 @@
         </div>
         <div class="last-month home-box">
           <h3>Last month</h3>
+          <h4>Distance: template_lastm_distance</h4>
+          <h4>Number of Activities: template_lastm_activities</h4>
+          <h4>Totoal Time: template_lastm_ttime</h4>
         </div>
       </div>
 
@@ -73,3 +96,26 @@
 
 
 </body>
+  
+
+<script>
+  topleft = template_topleft
+  bottomright = template_bottomright
+var map = L.map("map", {
+    minZoom: 15.0,
+    maxBounds: [[topleft], [bottomright]],
+    maxBoundsViscosity: 0.9
+}).setView([(topleft[0]+bottomright[0])/2, (topleft[1]+bottomright[1])/2], 15)
+
+// Add the OpenStreetMap tile layer to the map
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{noLabels}", {
+    attribution: "template_activity_name",
+    maxZoom: 30,
+    noLabels: true
+}).addTo(map)
+
+
+points = template_points
+line = L.polyline(points, {color: "red"})
+map.addLayer(line)
+</script>

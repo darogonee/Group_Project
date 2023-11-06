@@ -81,18 +81,37 @@
   document.addEventListener("DOMContentLoaded", function () {
     const date = new Date();
     var day = date.getDate();
+    if (day < 10) {
+      day = "0" + day
+    }
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
     var currentDate = `${year}-${month}-${day}`
     console.log(currentDate)
     document.getElementById("log_food_date").value = currentDate;
-  })
+  })  
 
-  // function deleteRow(selected_row) {
-  //   var row_index = selected_row.parentElement.parentElement.rowIndex;
-  //   console.log("yes")
-  //   document.getElementById("tb").deleteRow(row_index); 
-  // }
 
+  async function deleteRow(selected_row) {
+    var row_index = selected_row.parentElement.parentElement.rowIndex;
+    console.log("yes")
+    document.getElementById("tb").deleteRow(row_index); 
+    response = await sendPOST({"title":"edit-json", "body":["nutritionlog.json", row_index]})
+    console.log(response)
+  }
+
+  const baseurl = new URL(window.location.href)
+  async function sendPOST(body){
+    const response = await fetch(baseurl.href, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    const content = await response.json()
+    console.log(content)
+    return content
+}
 </script>
 </html>
