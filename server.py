@@ -448,43 +448,44 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(login_page.encode())
 
             case "/action_signin":
-                values = self.query()
-                username = values["username"].lower()
-                password = password_hash(values["password"])
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
                 with open("data/passwords.json", "r") as file:
                     data = json.load(file)  
+                values = self.query()
+                username = values["username"].lower()
                 if username in data:
-                    if password == data[username]:
+                    hash_password = password_hash(values["password"], data[username][1])
+                    self.send_response(200)
+                    self.send_header("Content-type", "text/html")
+                    if hash_password == data[username][0]:
                         self.set_cookie(username)
                         with open("web/html/redirect.html", "r") as file:
                             self.wfile.write(file.read().replace("url", "/").encode())
                         return
-                self.redirect("/signin")
+                    self.redirect("/signin")
+                self.redirect("/signup")
             
             case "/action_signup":
+                with open("data/passwords.json", "r") as file:
+                    data = json.load(file)
                 values = self.query()
-                # replace the .replace funtion with something to remove special charicters
                 username = values["username"].lower()
-                password = password_hash(values["password"])
-                passwordrentry = password_hash(values["password-rentry"])
-                if len(username) < 3 or len(username) > 13 or password != passwordrentry or not username.isalnum():
+                if username in data:
+                    self.redirect("/signin")
+                    return
+                if len(username) < 3 or len(username) > 13 or values["password"] != values["password-rentry"] or not username.isalnum():
                     self.redirect("/signup")
                     return
+                
+                salt = uuid.uuid4().hex
+                
+                hash_password = password_hash(values["password"], salt)
 
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
-                with open("data/passwords.json", "r") as file:
-                    data = json.load(file)  
 
-                    if username in data:
-                        self.redirect("/signup")
-                        return
-
-                    data[username] = password
-                    with open("data/passwords.json", "w") as file:
-                        json.dump(data, file, indent = 4)
+                data[username] = [hash_password, salt]
+                with open("data/passwords.json", "w") as file:
+                    json.dump(data, file, indent = 4)
 
                 self.set_cookie(username)
                 
