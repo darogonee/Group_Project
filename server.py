@@ -99,23 +99,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                 return uuid2user[cookie["user"]]       
         self.redirect("/signin")
 
-    def get_user_data(self):
+    def get_user_data(self, folder):
         try:
             user = self.get_username()
-            user_data_file = f"user_data/{user}.json"
+            user_data_file = f"{folder}/{user}.json"
             with open(user_data_file, "r") as data_file:
                 data = json.load(data_file)
             return data
         except:
             return False
-    
-    def get_my_program(self):
-        user = self.get_username()
-        user_data_file = f"user_data/program/{user}.json"
-        with open(user_data_file, "r") as data_file:
-            data = json.load(data_file)
-        return data
-    
+        
     def get_current_date(self):
         current_date = str(datetime.date.today())
 
@@ -136,16 +129,16 @@ class FittnessServer(BaseHTTPRequestHandler):
     
     def do_GET(self):
         match self.path.split("?")[0]:
-            case "/regenerate_my_program": #avoid losing nutrition log
+            case "/regenerate_my_program":
                 user = self.get_username()
-                with open(f"user_data/{user}.json", "r") as read_user_data:
+                with open(f"program/{user}.json", "r") as read_user_data:
                     user_data = json.load(read_user_data)
                 
                 program = create_program(user_data)
                 user_data["program"] = program
                 
 
-                with open(f"user_data/{user}.json", "w") as write_user_data:
+                with open(f"program/{user}.json", "w") as write_user_data:
                     json.dump(user_data, write_user_data)
 
                 self.redirect("/myprogram")
@@ -157,15 +150,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/myprogram.html", "r") as myprogram_file:
                     with open("web/html/html-template/myprogram-template.html", "r") as myprogram_template_file:
                         myprogram_template = myprogram_template_file.read()
-                        data = self.get_program()
-                        if data == False:
-                            program = create_program(data)
-                            username = self.get_username()
-                            data["program"] = program
-                            with open(f"user_data/program/{username}.json", "w") as file:
-                                json.dump(data, file)
-                        else:
-                            program = data["program"]
+                        data = self.get_user_data("user_data")
+                        program = create_program(data)
+                        username = self.get_username()
+                        data["program"] = program
+                        with open(f"program/{username}.json", "w") as file:
+                            json.dump(data, file)
+
 
                         tbody = ""
                         myprogram = myprogram_template
@@ -216,10 +207,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
-                with open("data/nutritionlog.json", "w") as file:
+                with open(f"temp_nutrition_log/{user}.json", "w") as file:
                     json.dump({}, file)
 
-                with open(f"user_data/{user}.json", "r") as user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
                 try:
@@ -228,7 +219,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 except KeyError:
                     pass
             
-                with open(f"user_data/{user}.json", "w") as write_user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "w") as write_user_data_file:
                     json.dump(user_data, write_user_data_file)
 
 
@@ -249,13 +240,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                 existing_food_log = False
 
                 try:
-                    with open("data/nutritionlog.json", "r") as file:
+                    with open(f"temp_nutrition_log/{user}.json", "r") as file:
                         data = json.load(file)
 
                 except:
                     data = {"date":date, "food_log":[]}
 
-                with open(f"user_data/{user}.json", "r") as user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
                 if "nutrition_log" in user_data.keys():
@@ -278,14 +269,14 @@ class FittnessServer(BaseHTTPRequestHandler):
                             
                         user_data["nutrition_log"][date]["data_transferred"] = "True"
 
-                        with open(f"user_data/{user}.json", "w") as write_user_data:
+                        with open(f"perm_nutrition_log/{user}.json", "w") as write_user_data:
                             json.dump(user_data, write_user_data)
 
                 try:
                     nutrition = nc(quantity, units, name)
                     data["food_log"].append({"name":" ".join(name.split("+")), "quantity":str(quantity), "units":str(units), "calories":str(nutrition["calories"]), "carbs":str(nutrition["carbs"]), "fat":str(nutrition["fat"]), "protein":str(nutrition["protein"])})
                     data["date"] = date
-                    with open("data/nutritionlog.json", "w") as file:
+                    with open(f"temp_nutrition_log/{user}.json", "w") as file:
                         json.dump(data, file)
                     food_not_found = False
 
@@ -334,10 +325,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 user = self.get_username()
-                with open("data/nutritionlog.json", "r") as nutrition_log:
+                with open(f"temp_nutrition_log/{user}.json", "r") as nutrition_log:
                     logged_data = json.load(nutrition_log)
 
-                with open(f"user_data/{user}.json", "r") as user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
                 total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
@@ -351,7 +342,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 
                 user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
-                with open(f"user_data/{user}.json", "w") as user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "w") as user_data_file:
                     json.dump(user_data, user_data_file)
 
                 
@@ -817,10 +808,15 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     }, file, indent = 4
                 )
-                open(f"user_data/program/{user}.json", "a")
-                open(f"user_data/perm_nutrition_log/{user}.json", "a")
-                open(f"user_data/temp_nutrition_log/{user}.json", "a")
+                    
+                user_file = f"{user}.json"
 
+                
+                open(f"program/{user_file}", "w")
+                
+                open(f"temp_nutrition_log/{user_file}", "w")
+                
+                open(f"perm_nutrition_log/{user_file}", "w")
                 
                 self.redirect("/")
 
@@ -845,17 +841,17 @@ if __name__ == "__main__":
     print()
 
 # NOTE
-# 1 - only one fav sport
+# 1 - only one fav sport     why???
 
-# 2 -
+# 2 - 
 
-# 3 - add intersex option when choosing sex
+# 3 - add intersex option when choosing sex    impossible when calculating calories
 
 # 4 - 
 
 # 5 - put stuff in the home page
 
-# 6 - remove the defult case off get for lewis to do
+# 6 - remove the defult case off get for lewis to do 
 
 # NOTE/BUG/FIXME/TODO
 
