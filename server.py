@@ -5,9 +5,13 @@ from python.Nutrition_Calculator import nutrition_calculator as nc
 from datetime import datetime
 from python.Create_Program import create_program
 from python.requirements import *
-import time, json, datetime, uuid 
+import time, json, datetime, uuid, math
 from datetime import date
 from python.polyline_decoder import decode_polyline
+import matplotlib.pyplot as plt 
+# use this command to install matplotlib.pyplot:     pip3 install matplotlib
+import numpy as np
+from python.pie_chart import generate_pie_chart
 
 MIME_TYPES = {
     "svg": "image/svg+xml",
@@ -198,12 +202,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                 os.remove(f"user_data/{user}.json")
                 self.redirect("/signupqs")
 
-            case "/logfood&water":
+            case "/logfood":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 user = self.get_username()
-                with open("web/html/logfood&water.html", "r") as file:
+                with open("web/html/logfood.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
@@ -223,7 +227,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     json.dump(user_data, write_user_data_file)
 
 
-            case "/action_logfood&water": # delete data from json file if delete button pressed
+            case "/action_logfood": # delete data from json file if delete button pressed
                 user = self.get_username()
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -283,42 +287,42 @@ class FittnessServer(BaseHTTPRequestHandler):
                 except IndexError:
                     food_not_found = True
 
-                with open("web/html/logfood&water.html", "r") as food_water_file:
-                    with open("web/html/html-template/nutrition-template.html", "r") as food_water_template_file:
-                        food_water_template = food_water_template_file.read()
+                with open("web/html/logfood.html", "r") as food_file:
+                    with open("web/html/html-template/nutrition-template.html", "r") as food_template_file:
+                        food_template = food_template_file.read()
                         tbody = ""
                         for i in range(len(data["food_log"])):
-                            food_water = food_water_template
-                            food_water = food_water.replace("template_quantity", data["food_log"][i]["quantity"])
-                            food_water = food_water.replace("template_units", data["food_log"][i]["units"])
-                            food_water = food_water.replace("template_food_name", data["food_log"][i]["name"])
-                            food_water = food_water.replace("template_food_calories", data["food_log"][i]["calories"])
-                            food_water = food_water.replace("template_carbs", data["food_log"][i]["carbs"])
-                            food_water = food_water.replace("template_protein", data["food_log"][i]["protein"])
-                            food_water = food_water.replace("template_fat", data["food_log"][i]["fat"])
+                            food = food_template
+                            food = food.replace("template_quantity", data["food_log"][i]["quantity"])
+                            food = food.replace("template_units", data["food_log"][i]["units"])
+                            food = food.replace("template_food_name", data["food_log"][i]["name"])
+                            food = food.replace("template_food_calories", data["food_log"][i]["calories"])
+                            food = food.replace("template_carbs", data["food_log"][i]["carbs"])
+                            food = food.replace("template_protein", data["food_log"][i]["protein"])
+                            food = food.replace("template_fat", data["food_log"][i]["fat"])
 
-                            tbody += food_water
+                            tbody += food
 
-                        food_water = food_water_template
-                        food_water = food_water.replace('<button onclick="deleteRow(this)">Delete</button>', "")
-                        food_water = food_water.replace("template_quantity", "")
-                        food_water = food_water.replace("template_units", "")
-                        food_water = food_water.replace("template_food_name", "<b>Total</b>")
-                        food_water = food_water.replace("template_food_calories", "<b>" + str(round(sum(float(item["calories"]) for item in data["food_log"]), 1))+"</b>")
-                        food_water = food_water.replace("template_carbs", "<b>"+str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1))+"</b>")
-                        food_water = food_water.replace("template_protein", "<b>"+str(round(sum(float(item["protein"]) for item in data["food_log"]), 1))+"</b>")
-                        food_water = food_water.replace("template_fat", "<b>"+str(round(sum(float(item["fat"]) for item in data["food_log"]), 1))+"</b>")
+                        food = food_template
+                        food = food.replace('<button onclick="deleteRow(this)">Delete</button>', "")
+                        food = food.replace("template_quantity", "")
+                        food = food.replace("template_units", "")
+                        food = food.replace("template_food_name", "<b>Total</b>")
+                        food = food.replace("template_food_calories", "<b>" + str(round(sum(float(item["calories"]) for item in data["food_log"]), 1))+"</b>")
+                        food = food.replace("template_carbs", "<b>"+str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1))+"</b>")
+                        food = food.replace("template_protein", "<b>"+str(round(sum(float(item["protein"]) for item in data["food_log"]), 1))+"</b>")
+                        food = food.replace("template_fat", "<b>"+str(round(sum(float(item["fat"]) for item in data["food_log"]), 1))+"</b>")
 
-                        tbody += food_water
+                        tbody += food
 
-                        food_water_final = ""
+                        food_final = ""
 
-                        food_water_final = food_water_file.read().replace("template_nutrition", tbody)  
+                        food_final = food_file.read().replace("template_nutrition", tbody)  
 
                         if food_not_found:
-                            food_water_final = food_water_final.replace("</body>", food_not_found_alert_script + "</body>")  
+                            food_final = food_final.replace("</body>", food_not_found_alert_script + "</body>")  
 
-                        self.wfile.write(food_water_final.encode())
+                        self.wfile.write(food_final.encode())
                     
             case "/action_confirm_food_log":
                 self.send_response(200)
@@ -346,7 +350,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     json.dump(user_data, user_data_file)
 
                 
-                self.redirect("/logfood&water")
+                self.redirect("/logfood")
 
                 
 
@@ -533,8 +537,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                 
 
                 with open("web/html/home.html", "r") as home_file:
+                    with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
+                        nutrition_data = json.load(user_data_file)
+
                     with open(f"user_data/{user}.json", "r") as user_data_file:
                         user_data = json.load(user_data_file)
+                        
 
                     now = datetime.datetime.now()
                     startofmonth = datetime.date(now.year, now.month, 1).strftime('%s')
@@ -554,21 +562,51 @@ class FittnessServer(BaseHTTPRequestHandler):
                         most_north, most_south, most_east, most_west, size = self.map_bounds(cords)
     
                     try:
-                        total_calories = user_data["nutrition_log"][date]["totals"]["total_calories"]
+                        total_calories = nutrition_data["nutrition_log"][date]["totals"]["total_calories"]
                         goal_cals = user_data["goal_cals"]
                         calories_remaining = int(float(goal_cals)) - int(float(total_calories))
                         try:
                             calories_percent_eaten = int(round(int(total_calories) / int(goal_cals) * 100))
                         except:
                             calories_percent_eaten = "0"
-                            
+
+                        total_carbs = float(nutrition_data["nutrition_log"][date]["totals"]["total_carbs"])
+                        total_protein = float(nutrition_data["nutrition_log"][date]["totals"]["total_protein"])
+                        total_fat = float(nutrition_data["nutrition_log"][date]["totals"]["total_fat"])
+                        total_calories = float(nutrition_data["nutrition_log"][date]["totals"]["total_calories"])
+
+                        carbs_calories_percent = int((total_carbs * 4)/total_calories * 100) 
+                        protein_calories_percent = int((total_protein * 4)/total_calories * 100)
+                        fat_calories_percent = int((total_fat * 9)/total_calories * 100)
+
+
+                        
+                        carbs_dif = round(1-(abs(50 - carbs_calories_percent)/((50 + carbs_calories_percent)/2)), 2)
+                        protein_dif = round(1-(abs(25 - protein_calories_percent)/((25 + protein_calories_percent)/2)), 2)
+                        fat_dif = round(1-(abs(25 - fat_calories_percent)/((25 + fat_calories_percent)/2)), 2)
+
+                        print(carbs_dif, protein_dif, fat_dif)
+                        # green (0, 255, 0)
+                        # yellow (255, 255, 0)
+                        # red (255, 0, 0)
+
+
+                        generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], [(0, 0, 1, carbs_dif), (0, 0, 1, protein_dif), (0, 0, 1, fat_dif)],  "macros_pie_chart")
+
                     except KeyError:
                         total_calories = "N/A"
                         goal_cals = "N/A"
                         calories_percent_eaten = "N/A"
                         calories_remaining = "N/A"
 
+
                     calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
+                    
+                    if os.path.exists("web/images/generated/macros_pie_chart.png"):
+                        macros_content_body = '<img src="images/generated/macros_pie_chart.png" style="width:50%;" class="centre">'
+                    else:
+                        macros_content_body = 'No food logged today'
+
                     formatted_time = time.strftime('%H:%M:%S', time.gmtime(recent_activity["moving_time"]))
                    
                     input_datetime = datetime.datetime.strptime(recent_activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
@@ -581,7 +619,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                         month_distance += activity['distance']
                         month_time += activity['moving_time']       
                     
-                    home_page = (home_file.read().replace("calories_content", calories_content_body)
+                    home_page = (home_file.read()
+                        .replace("calories_content", calories_content_body)
+                        .replace("macros_content", macros_content_body)
                         .replace("template_topleft", str([most_north + size, most_west - size]))
                         .replace("template_bottomright", str([most_south - size, most_east + size]))
                         .replace("template_points", str([list(coord) for coord in cords]))
@@ -596,11 +636,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                     )
                     self.wfile.write(home_page.encode())
                     
-            case "/food&water":
+            case "/food":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                with open("web/html/food&water.html", "r") as file:
+                with open("web/html/food.html", "r") as file:
                     foodwater_page = file.read()
                     self.wfile.write(foodwater_page.encode())
 
@@ -814,9 +854,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                 
                 open(f"program/{user_file}", "w")
                 
-                open(f"temp_nutrition_log/{user_file}", "w")
+                with open(f"temp_nutrition_log/{user_file}", "w") as file:
+                    json.dump({}, file)
                 
-                open(f"perm_nutrition_log/{user_file}", "w")
+                with open(f"perm_nutrition_log/{user_file}", "w") as file:
+                    json.dump({}, file)
                 
                 self.redirect("/")
 

@@ -4,7 +4,6 @@ body {
 
 .center {
     margin: auto;
-    width: 50%;
     padding: 10px;
 }
 
@@ -267,3 +266,18 @@ input#username {
 .tittle {
     text-align: center;
 }
+
+a { 
+    cursor: pointer; 
+}
+
+.colour-gradient {
+    width: 80%;
+    text-align: center;
+    margin: auto;
+    padding: 10px;
+    height: 10px;
+    border: 2px solid black;
+    background: linear-gradient(to right, white, blue)
+}
+
