@@ -2,7 +2,7 @@
 <head>
     <link rel="stylesheet" href="main.css">
 </head>
-<body>
+<body class="signup">
     <div class="container">
         <nav class="navbar">
             <ul>
@@ -23,13 +23,16 @@
                     <input type="text" id="username" name="username"><br><br>
                     <label for="password">Password</label> 
                     <br>
-                    <input type="password" id="password" name="password">
-                    <br><br>
+                    <div class="input-box">
+                        <input type="password" id="password" name="password">
+                        <img src="/images/eyeslash.png" id="toggle-password">
+                    </div>
+                    <br>
                     <label for="password-reentry">Re-enter password</label> 
                     <br>
                     <input type="password" id="password-reentry" name="password-rentry">
                     
-                    <p>Already have an account? <a href="signin">Sign In</a></p>
+                    <p>Already have an account? <a href="signin">Log In</a></p>
                     <br>
                     <input type="submit" value="Sign Up" id="signup-bt">
                 </form>
@@ -37,4 +40,18 @@
         </div>
     </div>
 </body>
+<script>
+    const passwordInput = document.getElementById('password');
+    const showPasswordIcon = document.getElementById('toggle-password');
+
+    showPasswordIcon.addEventListener('click', function () {
+        if (passwordInput.type == "text") {
+            passwordInput.type = 'password';
+            showPasswordIcon.src = "images/eyeslash.png"
+        } else{
+            passwordInput.type = 'text';
+            showPasswordIcon.src = "images/eye.png"
+        }
+    });
+</script>
 </html>

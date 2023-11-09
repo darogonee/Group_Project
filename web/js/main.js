@@ -78,3 +78,18 @@ function addRow() {
     newRow.appendChild(cell6)
     tableBody.appendChild(newRow);
 }
+
+function togglePassword() {
+    const passwordInput = document.getElementById('password');
+    const showPasswordIcon = document.getElementById('toggle-password');
+
+    showPasswordIcon.addEventListener('click', function () {
+        if (passwordInput.type == "text") {
+            passwordInput.type = 'password';
+            showPasswordIcon.src = "images/eyeslash.png"
+        } else{
+            passwordInput.type = 'text';
+            showPasswordIcon.src = "images/eye.png"
+        }
+    });
+}

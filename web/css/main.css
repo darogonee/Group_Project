@@ -1,20 +1,49 @@
-body{
-    background: #d4e7f4;
+body {
+    background: #c1e6ff;
+}
+
+.center {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
+
+.border-table, th, td {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+.border-table {
+    width: 90%;
+    font-size: 17px;
+}
+
+.login, .signup {
+    background-image: url("images/login-bg.jpeg");
+    background-repeat: no-repeat;
+    background-size: 110%, 110%;
+}
+
+body {
     font-family: 'Lucida Grande';
 }
 
 h1, h2 {
     color: black;
-    font-family: Roboto;
+    font-family: 'Roboto';
     font-size: 32px;
 }
 
-h3, h4 {
+  
+table thead tr th {
+    text-align: left;
+}
+h3 {
     text-align: center;    
 }
 
 table {
-    width: 100%;
+    width: 90%;
 } 
 
 thead {
@@ -99,6 +128,7 @@ body, ul {
     border-radius: 10px;
     padding-bottom: 100%;
     background-color: white;
+    /* opacity: 0.5; */
 }
 
 .signin-container {
@@ -178,27 +208,22 @@ p {
     flex: 0.1;
 }
   
-.tb {
-    /* border: 2px solid black; */
-}
 
 .nonlink {
     text-decoration: none;
     color: rgb(0, 0, 202);
 }
 
-table, th, td {
-    border: 1px solid black;
-  }
-
-.center {
+table {
     margin: auto;
-    width: 50%;
+    width: 90%;
     padding: 10px;
 }
 
+
 th {
     text-align: center;
+    font-size: 16px;
 }
 
 input#password {
@@ -230,4 +255,11 @@ input#username {
 
 #inline_label { 
     font-weight: bold;
+}
+
+.NA {
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 0px;
 }
