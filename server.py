@@ -147,6 +147,26 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 self.redirect("/myprogram")
 
+
+            case "/food":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open("web/html/food.html", "r") as food_file:
+                    with open("web/html/html-template/myprogram-template.html", "r") as food_template_file:
+                        food_template = food_template_file.read()
+                        user_data = self.get_user_data("perm_nutrition_log")
+                        tbody = ""
+                        food = food_template
+                        
+                        for date,food_data in user_data["nutrition_log"]:
+                            food = food.replace("template_date", date)
+
+                    tbody += food
+                    food_final = food_file.read().replace("template_nutrition_table", tbody)
+                    self.wfile.write(food_final.encode())
+
+
             case "/myprogram":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -596,17 +616,15 @@ class FittnessServer(BaseHTTPRequestHandler):
                         carbs_calories_percent = int((total_carbs * 4)/total_calories * 100) 
                         protein_calories_percent = int((total_protein * 4)/total_calories * 100)
                         fat_calories_percent = int((total_fat * 9)/total_calories * 100)
-
-
                         
                         carbs_dif = round(1-(abs(50 - carbs_calories_percent)/((50 + carbs_calories_percent)/2)), 2)
                         protein_dif = round(1-(abs(25 - protein_calories_percent)/((25 + protein_calories_percent)/2)), 2)
                         fat_dif = round(1-(abs(25 - fat_calories_percent)/((25 + fat_calories_percent)/2)), 2)
 
                         print(carbs_dif, protein_dif, fat_dif)
-                        # green (0, 255, 0)
-                        # yellow (255, 255, 0)
-                        # red (255, 0, 0)
+                        # green (0, 1, 0) 100%
+                        # yellow (1, 1, 0) r+ 50%
+                        # red (, 0, 0) b+ 0%
 
 
                         generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], [(0, 0, 1, carbs_dif), (0, 0, 1, protein_dif), (0, 0, 1, fat_dif)],  "macros_pie_chart")
@@ -621,7 +639,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
                     
                     if os.path.exists("web/images/generated/macros_pie_chart.png"):
-                        macros_content_body = '<img src="images/generated/macros_pie_chart.png" style="width:50%;" class="centre">'
+                        macros_content_body = f'<img src="images/generated/macros_pie_chart.png" style="width:50%;" class="centre">'
                     else:
                         macros_content_body = 'No food logged today'
 
@@ -663,13 +681,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                     )
                     self.wfile.write(home_page.encode())
                     
-            case "/food":
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                with open("web/html/food.html", "r") as file:
-                    foodwater_page = file.read()
-                    self.wfile.write(foodwater_page.encode())
+    
+                
+
+                
 
 
             case "/logexercise":
