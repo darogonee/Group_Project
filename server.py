@@ -909,18 +909,29 @@ if __name__ == "__main__":
     print("Server stopped.")
     print()
 
-# NOTE
-# 1 - only one fav sport     why???
+# TODO
 
-# 2 - 
+# Megar Bug ---clikc anywhere on home page takes you to signin
+
+# 1 - only one fav sport    \
+
+# 2 - code is usinf defult data when it shouldnt be
 
 # 3 - add intersex option when choosing sex    impossible when calculating calories
 
-# 4 - 
+# 4 - logging page signingnup?
 
-# 5 - put stuff in the home page
+# 5 - when user creates activity the user cant indivully view them
 
-# 6 - remove the defult case off get for lewis to do 
+# 6 -
+
+# 7 - remove the defult case off get for lewis to do 
+
+# NOTE
+
+# 1 - add pb list 
+
+# 2 - the refresh button
 
 # NOTE/BUG/FIXME/TODO
 
