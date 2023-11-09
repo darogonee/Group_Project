@@ -547,7 +547,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     now = datetime.datetime.now()
                     startofmonth = datetime.date(now.year, now.month, 1)
                     month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s')})
-                    recent_activity = month_activitys[-1]
+                    recent_activity = {'resource_state': 2, 'athlete': {'id': 0, 'resource_state': 1}, 'name': 'n/a', 'distance': 0, 'moving_time': 0, 'elapsed_time': 0, 'total_elevation_gain': 0, 'type': 'Run', 'sport_type': 'Run', 'workout_type': 0, 'id': 0, 'start_date': '2023-11-02T07:19:42Z', 'start_date_local': '2023-11-02T18:19:42Z', 'timezone': '(GMT+10:00) Australia/Hobart', 'utc_offset': 39600.0, 'location_city': None, 'location_state': None, 'location_country': None, 'achievement_count': 0, 'kudos_count': 3, 'comment_count': 0, 'athlete_count': 1, 'photo_count': 0, 'map': {'id': 'a10151679572', 'summary_polyline': '', 'resource_state': 2}, 'trainer': False, 'commute': False, 'manual': True, 'private': False, 'visibility': 'everyone', 'flagged': False, 'gear_id': 'g15342740', 'start_latlng': [], 'end_latlng': [], 'average_speed': 3.342, 'max_speed': 0, 'has_heartrate': False, 'heartrate_opt_out': False, 'display_hide_heartrate_option': False, 'upload_id': None, 'external_id': None, 'from_accepted_tag': False, 'pr_count': 0, 'total_photo_count': 0, 'has_kudoed': False}
 
                     #NOTE ITS EPIC ITS lambda: check if `activity` has a map and summary_polyline
                     check_map = lambda activity: "map" in activity and "summary_polyline" in activity['map'] and activity['map']['summary_polyline']
@@ -555,19 +555,20 @@ class FittnessServer(BaseHTTPRequestHandler):
                     emptym = 0
                     while not month_activitys:
                         emptym += 1
+                        if now.month - emptym < 1:
+                            break
                         startofmonthnext = startofmonth
                         startofmonth = datetime.date(now.year, now.month-emptym, 1)
                         month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s'), 'befor': startofmonthnext.strftime('%s')})
                         i = -1
                         while -i <= len(month_activitys) and not check_map(month_activitys[i]):
                             i -= 1
-                        if -i <= len(month_activitys):
+                        if -i > len(month_activitys):
                             month_activitys = []
                             continue
                         else:
+                            print(month_activitys, i)
                             recent_activity = month_activitys[i]
-                        if emptym >= 3:
-                            break
 
 
 
