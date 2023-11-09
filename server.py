@@ -534,13 +534,37 @@ class FittnessServer(BaseHTTPRequestHandler):
                         user_data = json.load(user_data_file)
 
                     now = datetime.datetime.now()
-                    startofmonth = datetime.date(now.year, now.month, 1).strftime('%s')
-                    month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth})
-                    recent_activity = month_activitys[0]
+                    startofmonth = datetime.date(now.year, now.month, 1)
+                    month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s')})
+                    recent_activity = month_activitys[-1]
+
+                    #NOTE ITS EPIC ITS lambda: check if `activity` has a map and summary_polyline
+                    check_map = lambda activity: "map" in activity and "summary_polyline" in activity['map'] and activity['map']['summary_polyline']
+
+                    emptym = 0
+                    while not month_activitys:
+                        emptym += 1
+                        startofmonthnext = startofmonth
+                        startofmonth = datetime.date(now.year, now.month-emptym, 1)
+                        month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s'), 'befor': startofmonthnext.strftime('%s')})
+                        i = -1
+                        while -i <= len(month_activitys) and not check_map(month_activitys[i]):
+                            i -= 1
+                        if -i <= len(month_activitys):
+                            month_activitys = []
+                            continue
+                        else:
+                            recent_activity = month_activitys[i]
+                        if emptym >= 3:
+                            break
+
+
+
+                    
                     cords = []
                     most_north = most_south = most_east = most_west = size = 0
                     
-                    if "map" in recent_activity and "summary_polyline" in recent_activity['map'] and recent_activity['map']['summary_polyline']:
+                    if check_map(recent_activity):
                         cords = decode_polyline(recent_activity['map']['summary_polyline'])
                         most_north, most_south, most_east, most_west, size = self.map_bounds(cords)
     
@@ -565,13 +589,22 @@ class FittnessServer(BaseHTTPRequestHandler):
                     input_datetime = datetime.datetime.strptime(recent_activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                     formatted_date = input_datetime.strftime("%a, %d/%m/%Y")  
 
+                    month_day, month_length = calendar.monthrange(startofmonth.year, startofmonth.month)
+                    day_data = [[0, 0] for _ in range(month_length)]
 
                     month_distance = 0
                     month_time = 0
                     for activity in month_activitys:
                         month_distance += activity['distance']
-                        month_time += activity['moving_time']       
-                    
+                        month_time += activity['moving_time'] 
+
+                        start_time = datetime.datetime.strptime(activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+                        day = start_time.day-1
+
+                        day_data[day][0] += activity['distance']
+                        day_data[day][1] += activity['moving_time']
+                    print(day_data)
+
                     home_page = (home_file.read().replace("calories_content", calories_content_body)
                         .replace("template_topleft", str([most_north + size, most_west - size]))
                         .replace("template_bottomright", str([most_south - size, most_east + size]))

@@ -264,6 +264,12 @@ input#username {
     font-size: 0px;
 }
 
+#calendar {
+    font-family: monospace;
+    text-align: center;
+    border: #c1e6ff;
+}
+
 .tittle {
     text-align: center;
 }
