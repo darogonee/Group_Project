@@ -29,7 +29,7 @@ def imperial_to_metric_height(height, height_units):
         metric_height = (height*2.54)/100
     elif height_units == "ft":
         metric_height = (height*30.48)/100
-    elif height_units == "m":
+    elif height_units == "cm":
         metric_height = height/100
     else:
         metric_height = height

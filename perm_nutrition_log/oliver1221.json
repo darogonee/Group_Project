@@ -131,13 +131,22 @@
                     "carbs": "40.9",
                     "fat": "26.1",
                     "protein": "34.4"
+                },
+                {
+                    "name": "apple",
+                    "quantity": "100000",
+                    "units": "serve",
+                    "calories": "9637020.0",
+                    "carbs": "2559060.0",
+                    "fat": "31330.0",
+                    "protein": "47450.0"
                 }
             ],
             "totals": {
-                "total_calories": "537.2",
-                "total_carbs": "40.9",
-                "total_fat": "26.1",
-                "total_protein": "34.4"
+                "total_calories": "9637557.2",
+                "total_carbs": "2559100.9",
+                "total_fat": "31356.1",
+                "total_protein": "47484.4"
             },
             "data_transferred": "False"
         }

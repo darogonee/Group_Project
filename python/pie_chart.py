@@ -11,3 +11,4 @@ def generate_pie_chart(percentages: list, labels: list, colours: list, image_nam
 
 def generate_slider(label: str):
     slider = Slider(label=label)
+    
