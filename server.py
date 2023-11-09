@@ -567,7 +567,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                             month_activitys = []
                             continue
                         else:
-                            print(month_activitys, i)
                             recent_activity = month_activitys[i]
 
 
