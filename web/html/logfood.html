@@ -18,12 +18,12 @@
                 <li><a href="/">Home</a></li>
                 <li><a href="/activities">Activities</a></li>
                 <li><a href="myprogram">My Program</a></li>
-                <li><a href="food&water">Food & Water</a></li>
+                <li><a href="food">Nutrition</a></li>
                 <li class="dropdown right">
                   <a href="#"><img src="/images/plus.png" height="50px" width="50"></a>
                   <ul class="dropdown-content">
                     <li><a href="logexercise">Log exercise</a></li>
-                    <li><a href="logfood&water">Log food/water</a></li>
+                    <li><a href="logfood">Log food/water</a></li>
                   </ul>
                 </li>
                 <li class="dropdown">
@@ -37,11 +37,11 @@
         </nav>
     </div>
     <h1>Log Food & Water</h1>
-    <form method="get" action="action_logfood&water">
+    <form method="get" action="action_logfood">
       <input type="date" id="log_food_date" name="log_food_date" required>
       <br>
     
-      <input type="number" id="food_quantity" name="amount" placeholder="1" required min="1">
+      <input type="number" id="food_quantity" name="amount" placeholder="quantity" required min="1">
       <select name="food_units" id="food-units" required>
         <option value="serve">serve/s</option>
         <option value="kg">kg</option>
@@ -50,7 +50,7 @@
         <option value="mL">mL</option>
       </select>
       
-      <input type="text" id="food_name" name="food_name" placeholder="apple" required>
+      <input type="text" id="food_name" name="food_name" placeholder="food" required>
   
       <input type="submit" id="submit" name="Add Food" value="Add Food">
     
@@ -81,18 +81,37 @@
   document.addEventListener("DOMContentLoaded", function () {
     const date = new Date();
     var day = date.getDate();
+    if (day < 10) {
+      day = "0" + day
+    }
     var month = date.getMonth() + 1;
     var year = date.getFullYear();
     var currentDate = `${year}-${month}-${day}`
     console.log(currentDate)
     document.getElementById("log_food_date").value = currentDate;
-  })
+  })  
 
-  // function deleteRow(selected_row) {
-  //   var row_index = selected_row.parentElement.parentElement.rowIndex;
-  //   console.log("yes")
-  //   document.getElementById("tb").deleteRow(row_index); 
-  // }
 
+  async function deleteRow(selected_row) {
+    var row_index = selected_row.parentElement.parentElement.rowIndex;
+    console.log("yes")
+    document.getElementById("tb").deleteRow(row_index); 
+    response = await sendPOST({"title":"edit-json", "body":["nutritionlog.json", row_index]})
+    console.log(response)
+  }
+
+  const baseurl = new URL(window.location.href)
+  async function sendPOST(body){
+    const response = await fetch(baseurl.href, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    const content = await response.json()
+    console.log(content)
+    return content
+}
 </script>
 </html>

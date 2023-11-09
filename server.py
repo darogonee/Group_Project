@@ -1,12 +1,17 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import python.Api, os, random
+import python.Api, os, random, calendar
 from python.hash_function import password_hash 
 from python.Nutrition_Calculator import nutrition_calculator as nc
 from datetime import datetime
 from python.Create_Program import create_program
 from python.requirements import *
-import time, json, datetime, uuid 
+import time, json, datetime, uuid, math
 from datetime import date
+from python.polyline_decoder import decode_polyline
+import matplotlib.pyplot as plt 
+# use this command to install matplotlib.pyplot:     pip3 install matplotlib
+import numpy as np
+from python.pie_chart import generate_pie_chart
 
 MIME_TYPES = {
     "svg": "image/svg+xml",
@@ -30,6 +35,31 @@ serverPort = 8080
 uuid2user = {}
 
 class FittnessServer(BaseHTTPRequestHandler):
+    # def _set_response(self):
+    #     self.send_response(200)
+    #     self.send_header('Content-type', 'text/html')
+    #     self.end_headers()
+
+    # def do_POST(self):
+    #     content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+    #     post_data = self.rfile.read(content_length) # <--- Gets the data itself
+    #     content = json.loads(post_data.decode('utf-8'))
+    #     match content["title"]:
+    #         case "edit-json":
+    #             data = json.load("data/"+content["body"][0])
+                # del data["food_log"][content["body"][1]]
+
+    #             response = "deletion-successful"
+    #         case _:
+    #             response = "err:invalid-title"
+
+
+    #     self._set_response()
+    #     if type(response) != type(""):
+    #         response = json.dumps(response)
+    #     self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
+    #     print("request fulfilled")
+
     def redirect(self, link):
         self.send_response(200)
         self.send_header("Content-type", "text/html")
@@ -73,37 +103,69 @@ class FittnessServer(BaseHTTPRequestHandler):
                 return uuid2user[cookie["user"]]       
         self.redirect("/signin")
 
-    def get_user_data(self):
-        user = self.get_username()
-        print(user)
-        user_data_file = f"user_data/{user}.json"
-        with open(user_data_file, "r") as data_file:
-            data = json.load(data_file)
-
-        return data
-    
+    def get_user_data(self, folder):
+        try:
+            user = self.get_username()
+            user_data_file = f"{folder}/{user}.json"
+            with open(user_data_file, "r") as data_file:
+                data = json.load(data_file)
+            return data
+        except:
+            return False
+        
     def get_current_date(self):
         current_date = str(datetime.date.today())
 
         return current_date
     
+    def map_bounds(self, cords):
+        most_north = cords[0][0]
+        most_south = cords[0][0]
+        most_east  = cords[0][1]
+        most_west  = cords[0][1]
+        for lat, lng in cords:
+            most_north = max(most_north, lat)
+            most_south = min(most_south, lat)
+            most_east  = max(most_east,  lng)
+            most_west  = min(most_west,  lng)
+        size = (most_north - most_south +  most_east - most_west)*2
+        return most_north, most_south, most_east, most_west, size
+    
     def do_GET(self):
         match self.path.split("?")[0]:
-            case "/regenerate_my_program": #avoid losing nutrition log
+            case "/regenerate_my_program":
                 user = self.get_username()
-                print(user)
-                with open(f"user_data/{user}.json", "r") as read_user_data:
+                with open(f"program/{user}.json", "r") as read_user_data:
                     user_data = json.load(read_user_data)
                 
                 program = create_program(user_data)
-                print(program)
                 user_data["program"] = program
                 
 
-                with open(f"user_data/{user}.json", "w") as write_user_data:
+                with open(f"program/{user}.json", "w") as write_user_data:
                     json.dump(user_data, write_user_data)
 
                 self.redirect("/myprogram")
+
+
+            case "/food":
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                with open("web/html/food.html", "r") as food_file:
+                    with open("web/html/html-template/myprogram-template.html", "r") as food_template_file:
+                        food_template = food_template_file.read()
+                        user_data = self.get_user_data("perm_nutrition_log")
+                        tbody = ""
+                        food = food_template
+                        
+                        for date,food_data in user_data["nutrition_log"]:
+                            food = food.replace("template_date", date)
+
+                    tbody += food
+                    food_final = food_file.read().replace("template_nutrition_table", tbody)
+                    self.wfile.write(food_final.encode())
+
 
             case "/myprogram":
                 self.send_response(200)
@@ -112,15 +174,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/myprogram.html", "r") as myprogram_file:
                     with open("web/html/html-template/myprogram-template.html", "r") as myprogram_template_file:
                         myprogram_template = myprogram_template_file.read()
-                        data = self.get_user_data()
-                        if "program" not in data.keys():
-                            program = create_program(data)
-                            username = self.get_username()
-                            data["program"] = program
-                            with open(f"user_data/{username}.json", "w") as file:
-                                json.dump(data, file)
-                        else:
-                            program = data["program"]
+                        data = self.get_user_data("user_data")
+                        program = create_program(data)
+                        username = self.get_username()
+                        data["program"] = program
+                        with open(f"program/{username}.json", "w") as file:
+                            json.dump(data, file)
+
 
                         tbody = ""
                         myprogram = myprogram_template
@@ -162,19 +222,19 @@ class FittnessServer(BaseHTTPRequestHandler):
                 os.remove(f"user_data/{user}.json")
                 self.redirect("/signupqs")
 
-            case "/logfood&water":
+            case "/logfood":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 user = self.get_username()
-                with open("web/html/logfood&water.html", "r") as file:
+                with open("web/html/logfood.html", "r") as file:
                     logfoodwater_page = file.read()
                     self.wfile.write(logfoodwater_page.encode())
 
-                with open("data/nutritionlog.json", "w") as file:
+                with open(f"temp_nutrition_log/{user}.json", "w") as file:
                     json.dump({}, file)
 
-                with open(f"user_data/{user}.json", "r") as user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
                 try:
@@ -183,11 +243,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                 except KeyError:
                     pass
             
-                with open(f"user_data/{user}.json", "w") as write_user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "w") as write_user_data_file:
                     json.dump(user_data, write_user_data_file)
 
 
-            case "/action_logfood&water": # delete data from json file if delete button pressed
+            case "/action_logfood": # delete data from json file if delete button pressed
                 user = self.get_username()
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -204,32 +264,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                 existing_food_log = False
 
                 try:
-                    with open("data/nutritionlog.json", "r") as file:
+                    with open(f"temp_nutrition_log/{user}.json", "r") as file:
                         data = json.load(file)
 
-                    # FIXME
-                    # if date != to nutritionlog.json date then "data_transferred" = False 
-
-                    # try:
-                    #     if date != data["date"]:
-                    #         with open(f"user_data/{user}.json", "r") as user_data_file:
-                    #             user_data = json.load(user_data_file)
-
-                    #         try:
-                    #             for date_data in user_data["nutrition_log"].values():
-                    #                 date_data["data_transferred"] = "False"
-                    #         except KeyError:
-                    #             pass
-
-                    #     with open(f"user_data/{user}.json", "w") as write_user_data_file:
-                    #         json.dump(user_data, write_user_data_file)
-
-                    # except KeyError:
-                    #     pass
                 except:
                     data = {"date":date, "food_log":[]}
 
-                with open(f"user_data/{user}.json", "r") as user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
                 if "nutrition_log" in user_data.keys():
@@ -252,67 +293,66 @@ class FittnessServer(BaseHTTPRequestHandler):
                             
                         user_data["nutrition_log"][date]["data_transferred"] = "True"
 
-                        with open(f"user_data/{user}.json", "w") as write_user_data:
+                        with open(f"perm_nutrition_log/{user}.json", "w") as write_user_data:
                             json.dump(user_data, write_user_data)
 
                 try:
                     nutrition = nc(quantity, units, name)
                     data["food_log"].append({"name":" ".join(name.split("+")), "quantity":str(quantity), "units":str(units), "calories":str(nutrition["calories"]), "carbs":str(nutrition["carbs"]), "fat":str(nutrition["fat"]), "protein":str(nutrition["protein"])})
                     data["date"] = date
-                    with open("data/nutritionlog.json", "w") as file:
+                    with open(f"temp_nutrition_log/{user}.json", "w") as file:
                         json.dump(data, file)
                     food_not_found = False
 
                 except IndexError:
                     food_not_found = True
 
-                with open("web/html/logfood&water.html", "r") as food_water_file:
-                    with open("web/html/html-template/nutrition-template.html", "r") as food_water_template_file:
-                        food_water_template = food_water_template_file.read()
+                with open("web/html/logfood.html", "r") as food_file:
+                    with open("web/html/html-template/nutrition-template.html", "r") as food_template_file:
+                        food_template = food_template_file.read()
                         tbody = ""
                         for i in range(len(data["food_log"])):
-                            food_water = food_water_template
-                            print(data)
-                            food_water = food_water.replace("template_quantity", data["food_log"][i]["quantity"])
-                            food_water = food_water.replace("template_units", data["food_log"][i]["units"])
-                            food_water = food_water.replace("template_food_name", data["food_log"][i]["name"])
-                            food_water = food_water.replace("template_food_calories", data["food_log"][i]["calories"])
-                            food_water = food_water.replace("template_carbs", data["food_log"][i]["carbs"])
-                            food_water = food_water.replace("template_protein", data["food_log"][i]["protein"])
-                            food_water = food_water.replace("template_fat", data["food_log"][i]["fat"])
+                            food = food_template
+                            food = food.replace("template_quantity", data["food_log"][i]["quantity"])
+                            food = food.replace("template_units", data["food_log"][i]["units"])
+                            food = food.replace("template_food_name", data["food_log"][i]["name"])
+                            food = food.replace("template_food_calories", data["food_log"][i]["calories"])
+                            food = food.replace("template_carbs", data["food_log"][i]["carbs"])
+                            food = food.replace("template_protein", data["food_log"][i]["protein"])
+                            food = food.replace("template_fat", data["food_log"][i]["fat"])
 
-                            tbody += food_water
+                            tbody += food
 
-                        food_water = food_water_template
-                        food_water = food_water.replace('<button onclick="deleteRow(this)">Delete</button>', "")
-                        food_water = food_water.replace("template_quantity", "")
-                        food_water = food_water.replace("template_units", "")
-                        food_water = food_water.replace("template_food_name", "")
-                        food_water = food_water.replace("template_food_calories", str(round(sum(float(item["calories"]) for item in data["food_log"]), 1)))
-                        food_water = food_water.replace("template_carbs", str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1)))
-                        food_water = food_water.replace("template_protein", str(round(sum(float(item["protein"]) for item in data["food_log"]), 1)))
-                        food_water = food_water.replace("template_fat", str(round(sum(float(item["fat"]) for item in data["food_log"]), 1)))
+                        food = food_template
+                        food = food.replace('<button onclick="deleteRow(this)">Delete</button>', "")
+                        food = food.replace("template_quantity", "")
+                        food = food.replace("template_units", "")
+                        food = food.replace("template_food_name", "<b>Total</b>")
+                        food = food.replace("template_food_calories", "<b>" + str(round(sum(float(item["calories"]) for item in data["food_log"]), 1))+"</b>")
+                        food = food.replace("template_carbs", "<b>"+str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1))+"</b>")
+                        food = food.replace("template_protein", "<b>"+str(round(sum(float(item["protein"]) for item in data["food_log"]), 1))+"</b>")
+                        food = food.replace("template_fat", "<b>"+str(round(sum(float(item["fat"]) for item in data["food_log"]), 1))+"</b>")
 
-                        tbody += food_water
+                        tbody += food
 
-                        food_water_final = ""
+                        food_final = ""
 
-                        food_water_final = food_water_file.read().replace("template_nutrition", tbody)  
+                        food_final = food_file.read().replace("template_nutrition", tbody)  
 
                         if food_not_found:
-                            food_water_final = food_water_final.replace("</body>", food_not_found_alert_script + "</body>")  
+                            food_final = food_final.replace("</body>", food_not_found_alert_script + "</body>")  
 
-                        self.wfile.write(food_water_final.encode())
+                        self.wfile.write(food_final.encode())
                     
             case "/action_confirm_food_log":
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 user = self.get_username()
-                with open("data/nutritionlog.json", "r") as nutrition_log:
+                with open(f"temp_nutrition_log/{user}.json", "r") as nutrition_log:
                     logged_data = json.load(nutrition_log)
 
-                with open(f"user_data/{user}.json", "r") as user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
                 total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
@@ -322,16 +362,15 @@ class FittnessServer(BaseHTTPRequestHandler):
                 date = logged_data["date"]
 
                 if not "nutrition_log" in user_data:
-                    print("in")
                     user_data["nutrition_log"] = {}
                 
                 user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
-                with open(f"user_data/{user}.json", "w") as user_data_file:
+                with open(f"perm_nutrition_log/{user}.json", "w") as user_data_file:
                     json.dump(user_data, user_data_file)
 
                 
-                self.redirect("/logfood&water")
+                self.redirect("/logfood")
 
                 
 
@@ -348,9 +387,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                         # later check
                         python.Api.refresh(user)
                         activity_data = python.Api.get_user_activites(user)
-                        tbody = ""
                         # change the number to how ever many activities you want to load
                         table_activity_data = []
+                        tbody=""
                         for i in range(min(200, len(activity_data))):
                             activity_type = self.query().get("type", "")
                             if activity_data[i]['type'] == activity_type or activity_type == "":
@@ -360,7 +399,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
-                                # print(activity_data[i])
                                 activity = activity.replace("template_id", str(activity_data[i]['upload_id'])) #not working
 
                                 
@@ -389,8 +427,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 tbody += activity
 
                                 table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
-                                # print(len(table_activity_data))
-
                         activity_final = activities_file.read().replace("template_activities", tbody)                         
                         self.wfile.write(activity_final.encode())
 
@@ -400,7 +436,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/refresh":
                 user = self.get_username()
-                python.Api.get_user_activites.clear(user)
+                python.Api.get_user_activites.clear_args(user)
                 self.redirect("/activities")
               
             case "/oauth":
@@ -437,48 +473,51 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(login_page.encode())
 
             case "/action_signin":
-                values = self.query()
-                username = values["username"].lower()
-                password = password_hash(values["password"])
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
                 with open("data/passwords.json", "r") as file:
                     data = json.load(file)  
+                values = self.query()
+                username = values["username"].lower()
                 if username in data:
-                    if password == data[username]:
+                    hash_password = password_hash(values["password"], data[username][1])
+                    self.send_response(200)
+                    self.send_header("Content-type", "text/html")
+                    if hash_password == data[username][0]:
                         self.set_cookie(username)
                         with open("web/html/redirect.html", "r") as file:
                             self.wfile.write(file.read().replace("url", "/").encode())
                         return
-                self.redirect("/signin")
+                    self.redirect("/signin")
+                self.redirect("/signup")
             
             case "/action_signup":
+                with open("data/passwords.json", "r") as file:
+                    data = json.load(file)
                 values = self.query()
-                # replace the .replace funtion with something to remove special charicters
                 username = values["username"].lower()
-                password = password_hash(values["password"])
-                passwordrentry = password_hash(values["password-rentry"])
-                if len(username) < 3 or len(username) > 13 or password != passwordrentry or not username.isalnum():
+                if username in data:
+                    self.redirect("/signin")
+                    return
+                if len(username) < 3 or len(username) > 13 or values["password"] != values["password-rentry"] or not username.isalnum():
                     self.redirect("/signup")
                     return
+                
+                salt = uuid.uuid4().hex
+                
+                hash_password = password_hash(values["password"], salt)
 
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
-                with open("data/passwords.json", "r") as file:
-                    data = json.load(file)  
 
-                    if username in data:
-                        self.redirect("/signup")
-                        return
-
-                    data[username] = password
-                    with open("data/passwords.json", "w") as file:
-                        json.dump(data, file, indent = 4)
+                data[username] = [hash_password, salt]
+                with open("data/passwords.json", "w") as file:
+                    json.dump(data, file, indent = 4)
 
                 self.set_cookie(username)
                 
                 with open("web/html/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/signupqs").encode())
+
+            
 
             case "/signup":
                 self.send_response(200)
@@ -501,41 +540,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
+
+
                 user = self.get_username()
-                date = self.get_current_date()
-
-                with open("web/html/home.html", "r") as home_file:
-                    with open(f"user_data/{user}.json", "r") as user_data_file:
-                        user_data = json.load(user_data_file)
-                    
-                    
-                    try:
-                        total_calories = user_data["nutrition_log"][date]["totals"]["total_calories"]
-                        goal_cals = user_data["goal_cals"]
-                        calories_remaining = int(float(goal_cals)) - int(float(total_calories))
-                        try:
-                            calories_percent_eaten = int(round(int(total_calories) / int(goal_cals) * 100))
-                        except:
-                            calories_percent_eaten = "0"
-                            
-                    except KeyError:
-                        total_calories = "-"
-                        goal_cals = "-"
-                        calories_percent_eaten = "-"
-                        calories_remaining = "-"
-
-                    calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
-
-                    home_page = home_file.read().replace("calories_content", calories_content_body) 
-                
-
-                    self.wfile.write(home_page.encode())
-                
-
-
-
-
-
                 cookie = self.get_cookie()
                 if "user" not in cookie:
                     self.redirect("/signin")
@@ -546,18 +553,138 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if not os.path.exists(f"user_data/{user}.json"):
                     self.redirect("/signupquestions")
                     return
+                date = self.get_current_date()
                 
-            # FIXME check point
+
+                with open("web/html/home.html", "r") as home_file:
+                    with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
+                        nutrition_data = json.load(user_data_file)
+
+                    with open(f"user_data/{user}.json", "r") as user_data_file:
+                        user_data = json.load(user_data_file)
+                        
+
+                    now = datetime.datetime.now()
+                    startofmonth = datetime.date(now.year, now.month, 1)
+                    month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s')})
+                    recent_activity = {'resource_state': 2, 'athlete': {'id': 0, 'resource_state': 1}, 'name': 'n/a', 'distance': 0, 'moving_time': 0, 'elapsed_time': 0, 'total_elevation_gain': 0, 'type': 'Run', 'sport_type': 'Run', 'workout_type': 0, 'id': 0, 'start_date': '2023-11-02T07:19:42Z', 'start_date_local': '2023-11-02T18:19:42Z', 'timezone': '(GMT+10:00) Australia/Hobart', 'utc_offset': 39600.0, 'location_city': None, 'location_state': None, 'location_country': None, 'achievement_count': 0, 'kudos_count': 3, 'comment_count': 0, 'athlete_count': 1, 'photo_count': 0, 'map': {'id': 'a10151679572', 'summary_polyline': '', 'resource_state': 2}, 'trainer': False, 'commute': False, 'manual': True, 'private': False, 'visibility': 'everyone', 'flagged': False, 'gear_id': 'g15342740', 'start_latlng': [], 'end_latlng': [], 'average_speed': 3.342, 'max_speed': 0, 'has_heartrate': False, 'heartrate_opt_out': False, 'display_hide_heartrate_option': False, 'upload_id': None, 'external_id': None, 'from_accepted_tag': False, 'pr_count': 0, 'total_photo_count': 0, 'has_kudoed': False}
+
+                    #NOTE ITS EPIC ITS lambda: check if `activity` has a map and summary_polyline
+                    check_map = lambda activity: "map" in activity and "summary_polyline" in activity['map'] and activity['map']['summary_polyline']
+
+                    emptym = 0
+                    while not month_activitys:
+                        emptym += 1
+                        if now.month - emptym < 1:
+                            break
+                        startofmonthnext = startofmonth
+                        startofmonth = datetime.date(now.year, now.month-emptym, 1)
+                        month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s'), 'befor': startofmonthnext.strftime('%s')})
+                        i = -1
+                        while -i <= len(month_activitys) and not check_map(month_activitys[i]):
+                            i -= 1
+                        if -i > len(month_activitys):
+                            month_activitys = []
+                            continue
+                        else:
+                            recent_activity = month_activitys[i]
 
 
 
-            case "/food&water":
-                self.send_response(200)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                with open("web/html/food&water.html", "r") as file:
-                    foodwater_page = file.read()
-                    self.wfile.write(foodwater_page.encode())
+                    
+                    cords = []
+                    most_north = most_south = most_east = most_west = size = 0
+                    
+                    if check_map(recent_activity):
+                        cords = decode_polyline(recent_activity['map']['summary_polyline'])
+                        most_north, most_south, most_east, most_west, size = self.map_bounds(cords)
+    
+                    try:
+                        total_calories = nutrition_data["nutrition_log"][date]["totals"]["total_calories"]
+                        goal_cals = user_data["goal_cals"]
+                        calories_remaining = int(float(goal_cals)) - int(float(total_calories))
+                        try:
+                            calories_percent_eaten = int(round(int(total_calories) / int(goal_cals) * 100))
+                        except:
+                            calories_percent_eaten = "0"
+
+                        total_carbs = float(nutrition_data["nutrition_log"][date]["totals"]["total_carbs"])
+                        total_protein = float(nutrition_data["nutrition_log"][date]["totals"]["total_protein"])
+                        total_fat = float(nutrition_data["nutrition_log"][date]["totals"]["total_fat"])
+                        total_calories = float(nutrition_data["nutrition_log"][date]["totals"]["total_calories"])
+
+                        carbs_calories_percent = int((total_carbs * 4)/total_calories * 100) 
+                        protein_calories_percent = int((total_protein * 4)/total_calories * 100)
+                        fat_calories_percent = int((total_fat * 9)/total_calories * 100)
+                        
+                        carbs_dif = round(1-(abs(50 - carbs_calories_percent)/((50 + carbs_calories_percent)/2)), 2)
+                        protein_dif = round(1-(abs(25 - protein_calories_percent)/((25 + protein_calories_percent)/2)), 2)
+                        fat_dif = round(1-(abs(25 - fat_calories_percent)/((25 + fat_calories_percent)/2)), 2)
+
+                        print(carbs_dif, protein_dif, fat_dif)
+                        # green (0, 1, 0) 100%
+                        # yellow (1, 1, 0) r+ 50%
+                        # red (, 0, 0) b+ 0%
+
+
+                        generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], [(0, 0, 1, carbs_dif), (0, 0, 1, protein_dif), (0, 0, 1, fat_dif)],  "macros_pie_chart")
+
+                    except KeyError:
+                        total_calories = "N/A"
+                        goal_cals = "N/A"
+                        calories_percent_eaten = "N/A"
+                        calories_remaining = "N/A"
+
+
+                    calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
+                    
+                    if os.path.exists("web/images/generated/macros_pie_chart.png"):
+                        macros_content_body = f'<img src="images/generated/macros_pie_chart.png" style="width:50%;" class="centre">'
+                    else:
+                        macros_content_body = 'No food logged today'
+
+                    formatted_time = time.strftime('%H:%M:%S', time.gmtime(recent_activity["moving_time"]))
+                   
+                    input_datetime = datetime.datetime.strptime(recent_activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+                    formatted_date = input_datetime.strftime("%a, %d/%m/%Y")  
+
+                    month_day, month_length = calendar.monthrange(startofmonth.year, startofmonth.month)
+                    day_data = [[0, 0] for _ in range(month_length)]
+
+                    month_distance = 0
+                    month_time = 0
+                    for activity in month_activitys:
+                        month_distance += activity['distance']
+                        month_time += activity['moving_time'] 
+
+                        start_time = datetime.datetime.strptime(activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
+                        day = start_time.day-1
+
+                        day_data[day][0] += activity['distance']
+                        day_data[day][1] += activity['moving_time']
+                    print(day_data)
+
+                    home_page = (home_file.read()
+                        .replace("calories_content", calories_content_body)
+                        .replace("macros_content", macros_content_body)
+                        .replace("template_topleft", str([most_north + size, most_west - size]))
+                        .replace("template_bottomright", str([most_south - size, most_east + size]))
+                        .replace("template_points", str([list(coord) for coord in cords]))
+                        .replace("template_activity_name", recent_activity['name'])
+                        .replace("template_type", recent_activity['type'])
+                        .replace("template_distance", str(round(recent_activity['distance']/1000, 2))+"km")
+                        .replace("template_date", formatted_date)
+                        .replace("template_time", formatted_time)
+                        .replace("template_lastm_distance", str(round(month_distance/1000, 2))+"km")
+                        .replace("template_lastm_activities", str(len(month_activitys)))
+                        .replace("template_lastm_ttime", str(datetime.timedelta(seconds=month_time)))
+                    )
+                    self.wfile.write(home_page.encode())
+                    
+    
+                
+
+                
 
 
             case "/logexercise":
@@ -615,12 +742,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                     user_data_pro = open(f"user_data/{user}.json")
                     user_data_pro = json.load(user_data_pro)
 
-
                     birth_day = str(user_data_pro['dob']).split('-')
                     today = str(datetime.datetime.today()).split(' ')[0].split("-")
                     age = int(today[0])-int(birth_day[0])
                     myprofile_page = myprofile_page.replace("age-temp", str(age))
-
 
                     myprofile_page = myprofile_page.replace("gender-temp", user_data_pro['sex'])
                     myprofile_page = myprofile_page.replace("muscle-goals-temp", user_data_pro['muscle_goals'])
@@ -645,10 +770,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprofile_page = myprofile_page.replace("training-days-temp", str(days))
                     myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
                     myprofile_page = myprofile_page.replace("rhr-temp", user_data_pro['rhr'])
-                    self.wfile.write(myprofile_page.encode())
+                    equipment = []
+                    for key,value in user_data_pro['equipment'].items():
+                        if value:
+                            equipment.append(key)
+                    myprofile_page = myprofile_page.replace("equipment-temp", "<br>".join(equipment))
 
-            case "/myprofile_action":
-                ...
+                    if python.Api.check(user):    
+                        myprofile_page = myprofile_page.replace("Strava Api: False", "Strava Api: True")                
+                    
+                    self.wfile.write(myprofile_page.encode())
 
             case "/activity":
                 self.send_response(200)
@@ -659,7 +790,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     id = int(self.query()["id"])
                     for activity in python.Api.get_user_activites(user):
                         if id == activity["upload_id"]:
-
                             activity_page = file.read()
                             activity_page = (activity_page.replace("template_name", str(activity["name"]))
                                 .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
@@ -760,6 +890,17 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     }, file, indent = 4
                 )
+                    
+                user_file = f"{user}.json"
+
+                
+                open(f"program/{user_file}", "w")
+                
+                with open(f"temp_nutrition_log/{user_file}", "w") as file:
+                    json.dump({}, file)
+                
+                with open(f"perm_nutrition_log/{user_file}", "w") as file:
+                    json.dump({}, file)
                 
                 self.redirect("/")
 
@@ -781,19 +922,20 @@ if __name__ == "__main__":
         pass
     webServer.server_close()
     print("Server stopped.")
+    print()
 
 # NOTE
-# 1 - indavile activity view
+# 1 - only one fav sport     why???
 
-# 2 -
+# 2 - 
 
-# 3 -
+# 3 - add intersex option when choosing sex    impossible when calculating calories
 
 # 4 - 
 
 # 5 - put stuff in the home page
 
-# 6 - remove the defult case off get for lewis to do
+# 6 - remove the defult case off get for lewis to do 
 
 # NOTE/BUG/FIXME/TODO
 
