@@ -514,8 +514,9 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/refresh":
                 user = self.get_username()
+                values = self.query()
                 python.Api.get_user_activites.clear_args(user)
-                self.redirect("/activities")
+                self.redirect(values["path"])
               
             case "/oauth":
                 values = self.query()
