@@ -284,6 +284,6 @@ a {
     padding: 10px;
     height: 10px;
     border: 2px solid black;
-    background: linear-gradient(to right, white, blue)
+    background: linear-gradient(to right, rgb(255, 0, 0), rgb(255, 255, 0), rgb(0, 255, 0))
 }
 
