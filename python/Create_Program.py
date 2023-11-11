@@ -215,9 +215,9 @@ def create_program(data):
         weights = True
 
     # cardio?
-    if cardio == "cardio_True":
+    if cardio == "cardio_true":
         cardio = True
-    elif cardio == "cardio_False":
+    elif cardio == "cardio_false":
         cardio = False
 
     # both?
@@ -257,7 +257,7 @@ def create_program(data):
     random.shuffle(training_days)
 
     assigned_workouts = {}
-    if cardio:
+    if cardio and fav_cardio_bool:
         for cardio_type, val in fav_cardio_bool.items():
             if val == True:
                 fav_cardio.append(cardio_type)
@@ -300,6 +300,7 @@ def create_program(data):
         if exercises == "Cardio":
             random_cardio = random.choice(fav_cardio)
             program[day] = random_cardio.capitalize()
+
 
     return program
 

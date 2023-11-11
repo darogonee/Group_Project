@@ -149,6 +149,55 @@
                 "total_protein": "47484.4"
             },
             "data_transferred": "False"
+        },
+        "2023-11-10": {
+            "food": [
+                {
+                    "name": "cake",
+                    "quantity": "1",
+                    "units": "serve",
+                    "calories": "263.7",
+                    "carbs": "38.3",
+                    "fat": "11.8",
+                    "protein": "2.0"
+                }
+            ],
+            "totals": {
+                "total_calories": "263.7",
+                "total_carbs": "38.3",
+                "total_fat": "11.8",
+                "total_protein": "2.0"
+            },
+            "data_transferred": "False"
+        },
+        "2023-11-11": {
+            "food": [
+                {
+                    "name": "apple",
+                    "quantity": "10",
+                    "units": "serve",
+                    "calories": "963.7",
+                    "carbs": "255.9",
+                    "fat": "3.1",
+                    "protein": "4.7"
+                },
+                {
+                    "name": "cake",
+                    "quantity": "1",
+                    "units": "serve",
+                    "calories": "263.7",
+                    "carbs": "38.3",
+                    "fat": "11.8",
+                    "protein": "2.0"
+                }
+            ],
+            "totals": {
+                "total_calories": "1227.4",
+                "total_carbs": "294.2",
+                "total_fat": "14.9",
+                "total_protein": "6.7"
+            },
+            "data_transferred": "False"
         }
     }
 }

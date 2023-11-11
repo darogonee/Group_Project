@@ -104,13 +104,13 @@ class FittnessServer(BaseHTTPRequestHandler):
         self.redirect("/signin")
 
     def get_user_data(self, folder):
-        try:
-            user = self.get_username()
+        user = self.get_username()
+        if os.path.exists(f"{folder}/{user}.json"):
             user_data_file = f"{folder}/{user}.json"
             with open(user_data_file, "r") as data_file:
                 data = json.load(data_file)
             return data
-        except:
+        else:
             return False
         
     def get_current_date(self):
@@ -131,6 +131,57 @@ class FittnessServer(BaseHTTPRequestHandler):
         size = (most_north - most_south +  most_east - most_west)*2
         return most_north, most_south, most_east, most_west, size
     
+
+    def get_pie_colours(self, carbs_calories_percent, protein_calories_percent, fat_calories_percent):
+        carbs_dif = round(((abs(50 - carbs_calories_percent))/((50 + carbs_calories_percent)/2)), 2)
+        protein_dif = round((abs(25 - protein_calories_percent)/((25 + protein_calories_percent)/2)), 2)
+        fat_dif = round(((abs(25 - fat_calories_percent))/((25 + fat_calories_percent)/2)), 2)
+
+        print(carbs_dif, protein_dif, fat_dif)
+
+        # if the differnce is close to 0% (green @ 0 - yellow @ 0.5)
+        if carbs_dif <= 0.5:
+            carbs_colour = (2*(carbs_dif), 1, 0)
+            # 0: (0, 1, 0)
+            # 0.25: (0.5, 1, 0)0
+            # 0.5: (1, 1, 0)
+        elif carbs_dif < 1:
+            carbs_colour = (1, -2*(carbs_dif)+2, 0)
+            # 0.5: (1, 1, 0)
+            # 0.75: (1, 0.5, 0)
+            # 1: (1, 0, 0)
+        else:
+            carbs_colour = (1, 0, 0)
+
+        if protein_dif <= 0.5:
+            protein_colour = (2*(protein_dif), 1, 0)
+        elif protein_dif < 1:
+            protein_colour = (1, -2*(protein_dif)+2, 0)
+        else:
+            protein_colour = (1, 0, 0)
+
+        if fat_dif <= 0.5:
+            fat_colour = (2*(fat_dif), 1, 0)
+        elif fat_dif < 1:
+            fat_colour = (1, -2*(fat_dif)+2, 0)
+        else:
+            fat_colour = (1, 0, 0)
+
+        return [carbs_colour, protein_colour, fat_colour]
+    
+    # def remove_existing_chart(self, page, template, content, image_name):
+    #     with open(page, "r") as read_page:
+    #         with open(template, "r") as page_template_file:
+    #             body = ""
+    #             template = page_template_file.read()
+    #             template = template.replace(content, "")
+
+    #         body += template
+    #         final = read_page.read().replace(content, body)
+    #         self.wfile.write(final.encode())
+                    
+        
+
     def do_GET(self):
         match self.path.split("?")[0]:
             case "/regenerate_my_program":
@@ -158,89 +209,105 @@ class FittnessServer(BaseHTTPRequestHandler):
                         nutrition_log_data = self.get_user_data("perm_nutrition_log")
                         user_data = self.get_user_data("user_data")
                         tbody = ""
-                        food = food_template
                         
-                        for date,food_data in nutrition_log_data["nutrition_log"].items():
-                            food = food.replace("template_date", datetime.datetime.strptime(date, '%Y-%m-%d').strftime("%a, %d/%m/%Y"))
-                            print(date, food_data)
-                            food_list = ""
-                            for i in range(len(food_data["food"])):
-                                food_list = food_list + (food_data["food"][i]["name"]).capitalize() + "<br>"
+                        if "nutrition_log" in nutrition_log_data:
+                            for date,food_data in nutrition_log_data["nutrition_log"].items():
+                                food = food_template
+                                food = food.replace("template_date", datetime.datetime.strptime(date, '%Y-%m-%d').strftime("%a, %d/%m/%Y"))
+                                print(food, food_data)
+                                food_list = ""
+                                for i in range(len(food_data["food"])):
+                                    food_list = f'{food_list}{food_data["food"][i]["quantity"]} {food_data["food"][i]["units"]} {(food_data["food"][i]["name"]).capitalize()}<br>'
 
-                            food = food.replace("template_food_list", food_list)
+                                food = food.replace("template_food_list", food_list)
 
-                            total_carbs = int(float(food_data["totals"]["total_carbs"]))
-                            total_protein = int(float(food_data["totals"]["total_protein"]))
-                            total_fat = int(float(food_data["totals"]["total_fat"]))
-                            total_calories = int(float(food_data["totals"]["total_calories"]))
+                                total_carbs = int(float(food_data["totals"]["total_carbs"]))
+                                total_protein = int(float(food_data["totals"]["total_protein"]))
+                                total_fat = int(float(food_data["totals"]["total_fat"]))
+                                total_calories = int(float(food_data["totals"]["total_calories"]))
 
-                            goal_carbs = int(float(user_data["goal_carbs"]))
-                            goal_protein = int(float(user_data["goal_protein"]))
-                            goal_fat = int(float(user_data["goal_fat"]))
-                            # goal_cals = int(float(user_data["goal_cals"]))
+                                goal_carbs = int(float(user_data["goal_carbs"]))
+                                goal_protein = int(float(user_data["goal_protein"]))
+                                goal_fat = int(float(user_data["goal_fat"]))
+                                goal_cals = int(float(user_data["goal_cals"]))
 
-                            carbs_calories_percent = int((total_carbs * 4)/total_calories * 100) 
-                            protein_calories_percent = int((total_protein * 4)/total_calories * 100)
-                            fat_calories_percent = int((total_fat * 9)/total_calories * 100)
-
-                            carbs_under_goal = (goal_carbs - total_carbs)/goal_carbs
-                            protein_under_goal = (goal_protein - total_protein)/goal_protein
-                            fat_under_goal = (goal_fat - total_fat)/goal_fat
-
-
-                            # red (1, 0, 0) 1
-                            # yellow (1, 1, 0) 0.5
-
-                            if abs(carbs_under_goal) <= 0.5:
-                                carbs_colour = (255*(-2*(abs(carbs_under_goal))+2), 255, 0)
-                            else:
-                                carbs_colour = (255, 255*(-2*(abs(carbs_under_goal))+2), 0)
-
-                            if abs(protein_under_goal) <= 0.5:
-                                protein_colour = (255*(-2*(abs(protein_under_goal))+2), 255, 0)
-                            else:
-                                protein_colour = (255, 255*(-2*(abs(protein_under_goal))+2), 0)
-
-                            if abs(fat_under_goal) <= 0.5:
-                                fat_colour = (255*(-2*(abs(fat_under_goal))+2), 255, 0)
-                            else:
-                                fat_colour = (255, 255*(-2*(abs(fat_under_goal))+2), 0)
+                                carbs_calories_percent = int((total_carbs * 4)/total_calories * 100) 
+                                protein_calories_percent = int((total_protein * 4)/total_calories * 100)
+                                fat_calories_percent = int((total_fat * 9)/total_calories * 100)
                                 
+                                carbs_under_goal = (goal_carbs - total_carbs)/goal_carbs
+                                protein_under_goal = (goal_protein - total_protein)/goal_protein
+                                fat_under_goal = (goal_fat - total_fat)/goal_fat
+                                calories_under_goal = (goal_cals - total_calories)/goal_cals
+
+                                # red (1, 0, 0) 1
+                                # yellow (1, 1, 0) 0.5
+
+                                if abs(carbs_under_goal) <= 0.5:
+                                    carbs_colour = (255*(-2*(abs(carbs_under_goal))+2), 255, 0)
+                                else:
+                                    carbs_colour = (255, 255*(-2*(abs(carbs_under_goal))+2), 0)
+
+                                if abs(protein_under_goal) <= 0.5:
+                                    protein_colour = (255*(-2*(abs(protein_under_goal))+2), 255, 0)
+                                else:
+                                    protein_colour = (255, 255*(-2*(abs(protein_under_goal))+2), 0)
+
+                                if abs(fat_under_goal) <= 0.5:
+                                    fat_colour = (255*(-2*(abs(fat_under_goal))+2), 255, 0)
+                                else:
+                                    fat_colour = (255, 255*(-2*(abs(fat_under_goal))+2), 0)
+
+                                if abs(calories_under_goal) <= 0.5:
+                                    calories_colour = (255*(-2*(abs(calories_under_goal))+2), 255, 0)
+                                else:
+                                    calories_colour = (255, 255*(-2*(abs(calories_under_goal))+2), 0)
+
+                                    
+                                if carbs_under_goal < 0:
+                                    carbs_sign =  "↑"
+                                elif carbs_under_goal == 0: 
+                                    carbs_sign = "-"
+                                else:
+                                    carbs_sign = "↓"
+
+                                if protein_under_goal < 0:
+                                    protein_sign =  "↑"
+                                elif protein_under_goal == 0: 
+                                    protein_sign = "-"
+                                else:
+                                    protein_sign = "↓"
+
+                                if fat_under_goal < 0:
+                                    fat_sign =  "↑"
+                                elif fat_under_goal == 0: 
+                                    fat_sign = "-"
+                                else:
+                                    fat_sign = "↓"
+
+                                if calories_under_goal < 0:
+                                    calories_sign =  "↑"
+                                elif calories_under_goal == 0: 
+                                    calories_sign = "-"
+                                else:
+                                    calories_sign = "↓"
                                 
-                            if carbs_under_goal < 0:
-                                carbs_sign =  "↑"
-                            elif carbs_under_goal == 0: 
-                                carbs_sign = "-"
-                            else:
-                                carbs_sign = "↓"
 
-                            if protein_under_goal < 0:
-                                protein_sign =  "↑"
-                            elif protein_under_goal == 0: 
-                                protein_sign = "-"
-                            else:
-                                protein_sign = "↓"
+                                print(carbs_colour, protein_colour, fat_colour)
+                                print(carbs_under_goal, protein_under_goal, fat_under_goal)
+                                carbs_display = f"Carbs: <p style='color:rgb{str(carbs_colour)}'>{total_carbs}g ({round(abs(carbs_under_goal)*100)}% {carbs_sign})</p>"
+                                protein_display = f"Protein: <p style='color:rgb{str(protein_colour)}'>{total_protein}g ({round(abs(protein_under_goal)*100)}% {protein_sign})</p>"
+                                fat_display = f"Fat: <p style='color:rgb{str(fat_colour)}'>{total_fat}g ({round(abs(fat_under_goal)*100)}% {fat_sign})</p>"
+                                calories_display = f"Calories: <p style='color:rgb{str(calories_colour)}'>{total_calories} kcal ({round(abs(calories_under_goal)*100)}% {calories_sign})</p>"
 
-                            if fat_under_goal < 0:
-                                fat_sign =  "↑"
-                            elif fat_under_goal == 0: 
-                                fat_sign = "-"
-                            else:
-                                fat_sign = "↓"
-
-                            print(carbs_colour, protein_colour, fat_colour)
-                            print(carbs_under_goal, protein_under_goal, fat_under_goal)
-                            carbs_display = f"Carbs: <p style='color:rgb{str(carbs_colour)}'>{total_carbs}g ({round(abs(carbs_under_goal)*100)}% {carbs_sign})</p>"
-                            protein_display = f"Protein: <p style='color:rgb{str(protein_colour)}'>{total_protein}g ({round(abs(protein_under_goal)*100)}% {protein_sign})</p>"
-                            fat_display = f"Fat: <p style='color:rgb{str(fat_colour)}'>{total_fat}g ({round(abs(fat_under_goal)*100)}% {fat_sign})</p>"
-
-                            print(carbs_display)
-
-                            food = food.replace("template_macros", f"{carbs_display}<br><br>{protein_display}<br><br>{fat_display}")
-                            # food = food.replace("template_pie_chart", )
-
-
-                    tbody += food
+                                
+                                generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent), f"pie_chart_{date}")
+                                food = food.replace("template_macros", f"{carbs_display}<br><br>{protein_display}<br><br>{fat_display}<br><br>{calories_display}")
+                                food = food.replace("template_pie_chart", f"<img src='images/generated/pie_chart_{date}.png'")
+                    
+                                # print(food)
+                                tbody += food
+        
                     food_final = food_file.read().replace("template_nutrition_table", tbody)
                     self.wfile.write(food_final.encode())
 
@@ -258,7 +325,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                         data["program"] = program
                         with open(f"program/{username}.json", "w") as file:
                             json.dump(data, file)
-
 
                         tbody = ""
                         myprogram = myprogram_template
@@ -315,11 +381,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
-                try:
+                if "nutrition_log" in user_data:
                     for date_data in user_data["nutrition_log"].values():
                         date_data["data_transferred"] = "False"
-                except KeyError:
-                    pass
+
             
                 with open(f"perm_nutrition_log/{user}.json", "w") as write_user_data_file:
                     json.dump(user_data, write_user_data_file)
@@ -341,11 +406,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                 food_not_found = True
                 existing_food_log = False
 
-                try:
+                if os.path.exists(f"temp_nutrition_log/{user}.json"):
                     with open(f"temp_nutrition_log/{user}.json", "r") as file:
                         data = json.load(file)
-
-                except:
+                else:
                     data = {"date":date, "food_log":[]}
 
                 with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
@@ -465,7 +529,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                         # later check
                         python.Api.refresh(user)
                         activity_data = python.Api.get_user_activites(user)
-                        # change the number to how ever many activities you want to load
                         table_activity_data = []
                         tbody=""
                         for i in range(min(200, len(activity_data))):
@@ -497,9 +560,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 activity = activity.replace("template_distancekm", str(distancekm)+" km")
                                 activity = activity.replace("template_elevgain", str(activity_data[i]["total_elevation_gain"])+" m")
 
-                                try:
+                                if "kilojoules" in activity_data[i]:
                                     activity = activity.replace("template_calories", str(round(activity_data[i]["kilojoules"]/4.184, 2)))
-                                except KeyError:
+                                else:
                                     activity = activity.replace("template_calories", "0")
 
                                 tbody += activity
@@ -633,7 +696,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.redirect("/signupquestions")
                     return
                 date = self.get_current_date()
-                
+                # self.remove_existing_chart("web/html/home.html", "web/html/html-template/macros_template.html", "macros_content", "macros_pie_chart")
 
                 with open("web/html/home.html", "r") as home_file:
                     with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
@@ -668,9 +731,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                         else:
                             recent_activity = month_activitys[i]
 
-
-
-                    
                     cords = []
                     most_north = most_south = most_east = most_west = size = 0
                     
@@ -678,59 +738,35 @@ class FittnessServer(BaseHTTPRequestHandler):
                         cords = decode_polyline(recent_activity['map']['summary_polyline'])
                         most_north, most_south, most_east, most_west, size = self.map_bounds(cords)
     
-                    try:
-                        total_calories = nutrition_data["nutrition_log"][date]["totals"]["total_calories"]
-                        goal_cals = user_data["goal_cals"]
-                        calories_remaining = int(float(goal_cals)) - int(float(total_calories))
-                        try:
-                            calories_percent_eaten = int(round(int(total_calories) / int(goal_cals) * 100))
-                        except:
-                            calories_percent_eaten = "0"
+                    if "nutrition_log" in nutrition_data and "goal_cals" in user_data:
+                        if date in nutrition_data["nutrition_log"]:
+                            total_calories = nutrition_data["nutrition_log"][date]["totals"]["total_calories"]
+                            goal_cals = user_data["goal_cals"]
+                            calories_remaining = int(float(goal_cals)) - int(float(total_calories))
+                            
+                            if goal_cals == 0:
+                                calories_percent_eaten = "0"
+                            else:
+                                calories_percent_eaten = int(round(int(float(total_calories)) / int(goal_cals) * 100))
+                            
+                            
 
-                        total_carbs = float(nutrition_data["nutrition_log"][date]["totals"]["total_carbs"])
-                        total_protein = float(nutrition_data["nutrition_log"][date]["totals"]["total_protein"])
-                        total_fat = float(nutrition_data["nutrition_log"][date]["totals"]["total_fat"])
-                        total_calories = float(nutrition_data["nutrition_log"][date]["totals"]["total_calories"])
+                            total_carbs = float(nutrition_data["nutrition_log"][date]["totals"]["total_carbs"])
+                            total_protein = float(nutrition_data["nutrition_log"][date]["totals"]["total_protein"])
+                            total_fat = float(nutrition_data["nutrition_log"][date]["totals"]["total_fat"])
+                            total_calories = float(nutrition_data["nutrition_log"][date]["totals"]["total_calories"])
 
-                        carbs_calories_percent = int((total_carbs * 4)/total_calories * 100) 
-                        protein_calories_percent = int((total_protein * 4)/total_calories * 100)
-                        fat_calories_percent = int((total_fat * 9)/total_calories * 100)
-                        
-                        carbs_dif = round(1-(abs(50 - carbs_calories_percent)/((50 + carbs_calories_percent)/2)), 2)
-                        protein_dif = round(1-(abs(25 - protein_calories_percent)/((25 + protein_calories_percent)/2)), 2)
-                        fat_dif = round(1-(abs(25 - fat_calories_percent)/((25 + fat_calories_percent)/2)), 2)
-
-                        print(carbs_dif, protein_dif, fat_dif)
-                        # green (0, 1, 0) 100%
-
-                        # yellow (1, 1, 0) r+ 1
-                        # red (1, 0, 0) g+ 0
-
-                        # green (0, 1, 0) 1
-                        # 1: 0
-                        # 0.5 : 0.5
-                        # 0: 1
-
-                        # yellow (1, 1, 0) 0.5
-
-                        if carbs_dif <= 0.5:
-                            carbs_colour = (1, 2*(carbs_dif), 0)
+                            carbs_calories_percent = int((total_carbs * 4)/total_calories * 100) 
+                            protein_calories_percent = int((total_protein * 4)/total_calories * 100)
+                            fat_calories_percent = int((total_fat * 9)/total_calories * 100)
+                            
+                            generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent),  "macros_pie_chart")
                         else:
-                            carbs_colour = (-2*(carbs_dif)+2, 1, 0)
-
-                        if protein_dif <= 0.5:
-                            protein_colour = (1, 2*(protein_dif), 0)
-                        else:
-                            protein_colour = (-2*(protein_dif)+2, 1, 0)
-
-                        if fat_dif <= 0.5:
-                            fat_colour = (1, 2*(fat_dif), 0)
-                        else:
-                            fat_colour = (-2*(fat_dif)+2, 1, 0)
-
-                        generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], [carbs_colour, protein_colour, fat_colour],  "macros_pie_chart")
-
-                    except KeyError:
+                            total_calories = "N/A"
+                            goal_cals = "N/A"
+                            calories_percent_eaten = "N/A"
+                            calories_remaining = "N/A"
+                    else:
                         total_calories = "N/A"
                         goal_cals = "N/A"
                         calories_percent_eaten = "N/A"
@@ -994,15 +1030,17 @@ class FittnessServer(BaseHTTPRequestHandler):
                     
                 user_file = f"{user}.json"
 
+                if not os.path.exists(f"program/{user_file}"):
+                    open(f"program/{user_file}", "w")
                 
-                open(f"program/{user_file}", "w")
+                if not os.path.exists(f"temp_nutrition_log/{user_file}"):
+                    with open(f"temp_nutrition_log/{user_file}", "w") as file:
+                        json.dump({}, file)
                 
-                with open(f"temp_nutrition_log/{user_file}", "w") as file:
-                    json.dump({}, file)
-                
-                with open(f"perm_nutrition_log/{user_file}", "w") as file:
-                    json.dump({}, file)
-                
+                if not os.path.exists(f"perm_nutrition_log/{user_file}"):
+                    with open(f"perm_nutrition_log/{user_file}", "w") as file:
+                        json.dump({}, file)
+                    
                 self.redirect("/")
 
             case _:
@@ -1048,6 +1086,10 @@ if __name__ == "__main__":
 # 1 - add pb list 
 
 # 2 - the refresh button
+
+# 3 - get profile pics and badges from strava and put on home page 
+
+# 4 - make a button that connects with strava in my profile
 
 # NOTE/BUG/FIXME/TODO
 
