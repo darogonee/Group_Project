@@ -203,6 +203,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
+                user = self.get_username()
                 with open("web/html/food.html", "r") as food_file:
                     with open("web/html/html-template/nutrition_table_template.html", "r") as food_template_file:
                         food_template = food_template_file.read()
@@ -217,7 +218,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 print(food, food_data)
                                 food_list = ""
                                 for i in range(len(food_data["food"])):
-                                    food_list = f'{food_list}{food_data["food"][i]["quantity"]} {food_data["food"][i]["units"]} {(food_data["food"][i]["name"]).capitalize()}<br>'
+                                    if food_data["food"][i]["quantity"] == "serve":
+                                        food_quantity = "x"
+                                    else:
+                                        food_quantity = food_data["food"][i]["quantity"]
+                                        
+                                    food_list = f'{food_list}{food_quantity} {food_data["food"][i]["units"]} {food_data["food"][i]["name"]}<br>'
 
                                 food = food.replace("template_food_list", food_list)
 
@@ -301,9 +307,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 calories_display = f"Calories: <p style='color:rgb{str(calories_colour)}'>{total_calories} kcal ({round(abs(calories_under_goal)*100)}% {calories_sign})</p>"
 
                                 
-                                generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent), f"pie_chart_{date}")
+                                generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent), f"pie_chart_{date}", user)
                                 food = food.replace("template_macros", f"{carbs_display}<br><br>{protein_display}<br><br>{fat_display}<br><br>{calories_display}")
-                                food = food.replace("template_pie_chart", f"<img src='images/generated/pie_chart_{date}.png'")
+                                food = food.replace("template_pie_chart", f"<img src='images/generated/user_charts/{user}/pie_chart_{date}.png'")
                     
                                 # print(food)
                                 tbody += food
@@ -760,7 +766,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                             protein_calories_percent = int((total_protein * 4)/total_calories * 100)
                             fat_calories_percent = int((total_fat * 9)/total_calories * 100)
                             
-                            generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent),  "macros_pie_chart")
+                            generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent),  "homepage_macros_pie_chart", user)
                         else:
                             total_calories = "N/A"
                             goal_cals = "N/A"
@@ -775,8 +781,8 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
                     
-                    if os.path.exists("web/images/generated/macros_pie_chart.png"):
-                        macros_content_body = f'<img src="images/generated/macros_pie_chart.png" style="width:50%;" class="centre">'
+                    if os.path.exists(f"web/images/generated/user_charts/{user}/homepage_macros_pie_chart.png"):
+                        macros_content_body = f'<img src="images/generated/user_charts/{user}/homepage_macros_pie_chart.png" style="width:50%;" class="centre">'
                     else:
                         macros_content_body = 'No food logged today'
 
@@ -1040,6 +1046,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if not os.path.exists(f"perm_nutrition_log/{user_file}"):
                     with open(f"perm_nutrition_log/{user_file}", "w") as file:
                         json.dump({}, file)
+
+                if not os.path.exists(f"web/images/generated/user_charts/{user}"):
+                    os.mkdir(f"web/images/generated/user_charts/{user}")
                     
                 self.redirect("/")
 
