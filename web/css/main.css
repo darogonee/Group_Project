@@ -68,12 +68,10 @@ body, ul {
 }
 
 .container {
-    background-color: #333;
-    position:fixed;
-    top:0;
-    width:100%;
-    z-index: 1001;
+    /* background-color: #333; */
     height: 100px;
+    width: 100%;
+    margin: 0;
 }
 
 :has(.container) {
@@ -82,6 +80,12 @@ body, ul {
 
 .navbar {
     background-color: #333;
+    position: fixed;
+    top: 0;
+    z-index: 1001;
+    width: calc(100% + 1px);
+    height: 100px;
+    margin-left: -16px;
 }
 
 
@@ -102,7 +106,7 @@ body, ul {
     color: #fff;
     padding: 10px 20px; 
     transition: background-color 0.3s; 
-    font-size: 2vh;
+    font-size: 15pt;
 }
 
 .dropdown-content {
@@ -131,9 +135,14 @@ body, ul {
 .navbar a:hover .dropdown-content:hover {
     background-color: #555; 
 }
-.right{
+.right:last-child {
     display: inline;
-    margin-left: auto;
+    position: fixed;
+    right: 0;
+}
+.right.startright {
+    position: static;
+    padding-left: calc(100vw - 1000px); /* 1000px is the width of the other things in the container */
 }
 
 .signin {
@@ -342,9 +351,6 @@ a {
     background-color: black;
     color: white
 }
-/* }:has(.navbar) {
-    padding-top: 100px;
-} */
 .macros {
     text-align: center;
 }
