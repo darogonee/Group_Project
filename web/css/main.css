@@ -1,5 +1,7 @@
 body {
     background: #c1e6ff;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
 }
 
 .center {
@@ -289,4 +291,13 @@ a {
 
 :has(.navbar) {
     padding-top: 100px;
+}.major-title {
+}
+
+.macros {
+    text-align: center;
+}
+
+.macros img {
+    min-width: 80%;
 }

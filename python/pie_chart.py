@@ -1,6 +1,6 @@
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # use this command to install matplotlib.pyplot:     pip3 install matplotlib
 import numpy as np
 from matplotlib.widgets import Slider
 
