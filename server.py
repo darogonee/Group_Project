@@ -721,7 +721,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     check_map = lambda activity: "map" in activity and "summary_polyline" in activity['map'] and activity['map']['summary_polyline']
 
                     emptym = 0
-                    while now.month - emptym >= 1:
+                    while now.month - emptym >= 2:
                         i = -1
                         while -i <= len(month_activitys) and not check_map(month_activitys[i]):
                             i -= 1
