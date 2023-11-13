@@ -8,3 +8,6 @@ def password_hash(password, salt):
     for char in password:
         value = _hash(value + ord(char))
     return value
+
+# this is not the best hash function
+# for more secruity you should probaly use a libary

@@ -1,10 +1,14 @@
 import requests, json, os
 from python.cache import cache
 
+# checks if the users has user file
+# returns True or False
 def check(user):
     return os.path.exists(f"users/{user}.json")
 
+# loads user data
 def load(user):
+    # checks if the user has a user file
     if check(user):
         user_info = json.load(open(f"users/{user}.json"))
         refresh_token = user_info["refresh_token"]
@@ -16,11 +20,14 @@ strava_api = json.load(open("data/strava_api.json"))
 client_secret = strava_api["client_secret"]
 client_id = strava_api["client_id"]
 
+# sends a request to strava go get the access_token and refresh_token
 def get_access(client_id, client_secret, code):
     res = requests.post(
         f"https://www.strava.com/oauth/token?client_id={client_id}&client_secret={client_secret}&code={code}&grant_type=authorization_code").json()
     return res["access_token"], res["refresh_token"]
 
+# gets the new access_token and refresh_token
+# tokens expire relativly ofter
 def refresh_tokens(client_id, client_secret, refresh_token):
     try:
         res = requests.post(
@@ -30,6 +37,8 @@ def refresh_tokens(client_id, client_secret, refresh_token):
         print(res, refresh_token)
         return None
 
+# uses the custom cache decoration the cache the user info to load page fatser
+# make the cache expire after 10 min
 @cache(max_age=10*60)
 def get_user_activites(user, param = {'per_page': 200, 'page': 1}):
     activites_url = "https://www.strava.com/api/v3/athlete/activities"
@@ -41,6 +50,7 @@ def get_user_activites(user, param = {'per_page': 200, 'page': 1}):
         activites_url, headers = header, params = param).json()
     return my_dataset
 
+# saves the users refresh_token and access_token to a file
 def save(access_token, refresh_token, path):
     with open(path, "w") as file:
         json.dump(
@@ -50,9 +60,12 @@ def save(access_token, refresh_token, path):
             },
             file, indent = 4
         )
+
+# refresh nessasery info for strava api
 def refresh(user):
     save(*refresh_tokens(client_id, client_secret, load(user)[0]), f"users/{user}.json")
 
+# uploads custom activites to the users strava
 def upload(user:str, name:str, type:str, start_date_local:str, 
         elapsed_time:int, distance:float = 0, elevation:float = 0, 
         description:str = "", trainer:int = 0, commute:int = 0,

@@ -2,25 +2,22 @@
 Zamo Fitness App
 Programmed by Oliver Thiessen, Oliver Magill, Alex Tran, and Lewis Clennett
 
-
-
-
 '''
 
 # required imports
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import python.Api, os, random, calendar
-from python.hash_function import password_hash 
+
 from python.Nutrition_Calculator import nutrition_calculator as nc
-from datetime import datetime
-from python.Create_Program import create_program
-from python.requirements import *
-import time, json, datetime, uuid, math
-from datetime import date
-from python.polyline_decoder import decode_polyline
-import matplotlib.pyplot as plt 
-import numpy as np
+from python.hash_function import password_hash 
 from python.pie_chart import generate_pie_chart
+from python.Create_Program import create_program
+from python.polyline_decoder import decode_polyline
+
+from python.requirements import *
+from datetime import datetime
+
+import time, json, datetime, uuid, os, calendar
+import python.Api
 
 MIME_TYPES = {
     "svg": "image/svg+xml",
@@ -151,6 +148,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         size = (most_north - most_south +  most_east - most_west)*2
         return most_north, most_south, most_east, most_west, size
     
+    @staticmethod
     def calculate_color(difference):
         if difference <= 0.5: # if the difference is between 0 and 0.5 (green @ 0 - yellow @ 0.5)
             return (2 * difference, 1, 0)
@@ -173,6 +171,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
         return [carbs_colour, protein_colour, fat_colour]
     
+    @staticmethod
     def calculate_color_and_sign(under_goal):
         color_intensity = min(255, int((-2 * abs(under_goal) + 2) * 255))
         color = (color_intensity, 255, 0)
@@ -759,7 +758,6 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         day_data[day][0] += activity['distance']
                         day_data[day][1] += activity['moving_time']
-                    print(day_data)
 
                     home_page = (home_file.read()
                         .replace("calories_content", calories_content_body)
@@ -1014,7 +1012,6 @@ if __name__ == "__main__":
         pass
     webServer.server_close()
     print("Server stopped.")
-    print()
 
 # TODO
 
