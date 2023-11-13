@@ -349,10 +349,3 @@ a {
     min-width: 80%;
 }
 
-progress {
-    -webkit-appearance: none;
-}
-  
-::-webkit-progress-bar {
-    background-color: orange;
-}
