@@ -338,16 +338,21 @@ a {
     background-color: black;
     color: white
 }
-:has(.container .navbar) {
-    padding-top: 75px;
-}
-.major-title {
-}
-
+/* }:has(.navbar) {
+    padding-top: 100px;
+} */
 .macros {
     text-align: center;
 }
 
 .macros img {
     min-width: 80%;
+}
+
+progress {
+    -webkit-appearance: none;
+}
+  
+::-webkit-progress-bar {
+    background-color: orange;
 }
