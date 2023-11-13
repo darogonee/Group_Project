@@ -77,121 +77,102 @@
           <table id="calendar">
             <thead>
               <h3>Training Calendar</h3>
+              <tr>
+                <td>M
+                </td>
+                <td>T
+                </td>
+                <td>W
+                </td>
+                <td>T
+                </td>
+                <td>F
+                </td>
+                <td>S
+                </td>
+                <td>S
+                </td>
+              </tr>
             </thead>
             <tbody>
               <tr>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
               </tr>
               <tr>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
               </tr>
               <tr>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
               </tr>
               <tr>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
               </tr>
               <tr>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
                 <td>
-                  x
                 </td>
               </tr>
             </tbody>
@@ -270,30 +251,29 @@ const month = calendar.children[1]
 month_day = template_month_day
 month_data = template_month_data
 
+maxDist = 0
+maxTime = 0
+for (d = 0; d < month_data.length; d++) {
+  maxDist = Math.max(maxDist, month_data[d][0])
+  maxTime = Math.max(maxTime, month_data[d][1])
+}
+
 i = 2 - month_day
 for (const week of month.children) {
   for (const day of week.children) {
     if (i > 0 && i <= month_data.length) {
-      day.innerHTML = month_data[i-1]
+      day.innerHTML = `
+<div class="progress-bar"  
+  style="
+    --dist: ${month_data[i-1][0]/maxDist*50}%; 
+    --time: ${month_data[i-1][1]/maxTime*50}%"
+>
+  <div>${month_data[i-1][0]}m<br>${month_data[i-1][1]}s</div>
+</div>`
     }  
     i++
   }
 }
 
+
 </script>
-<style>
-  .progress-bar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: 
-    radial-gradient(closest-side, white 79%, transparent 80% 100%),
-    conic-gradient(hotpink 70%, pink 0);    
-}
-</style>
-<div class="progress-bar">
-  <progress value="70" min="0" max="100" style="visibility:hidden;height:0;width:0;">70%</progress>
-</div>
-<div class="progress-bar">
-  <progress value="70" min="0" max="100" style="visibility:hidden;height:0;width:0;">70%</progress>
-</div>
