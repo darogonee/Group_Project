@@ -69,6 +69,11 @@ body, ul {
 
 .container {
     background-color: #333;
+    position:fixed;
+    top:0;
+    width:100%;
+    z-index: 1001;
+    height: 100px;
 }
 
 .navbar {
@@ -332,9 +337,11 @@ a {
     height: min-content;
     background-color: black;
     color: white
-}:has(.navbar) {
-    padding-top: 100px;
-}.major-title {
+}
+:has(.container .navbar) {
+    padding-top: 75px;
+}
+.major-title {
 }
 
 .macros {
