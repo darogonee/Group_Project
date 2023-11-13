@@ -651,21 +651,19 @@ class FittnessServer(BaseHTTPRequestHandler):
                     check_map = lambda activity: "map" in activity and "summary_polyline" in activity['map'] and activity['map']['summary_polyline']
 
                     emptym = 0
-                    while not month_activitys:
-                        emptym += 1
-                        if now.month - emptym < 1:
-                            break
-                        startofmonthnext = startofmonth
-                        startofmonth = datetime.date(now.year, now.month-emptym, 1)
-                        month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s'), 'befor': startofmonthnext.strftime('%s')})
+                    while now.month - emptym >= 1:
                         i = -1
                         while -i <= len(month_activitys) and not check_map(month_activitys[i]):
                             i -= 1
                         if -i > len(month_activitys):
-                            month_activitys = []
-                            continue
+                            emptym += 1
+                            startofmonthnext = startofmonth
+                            startofmonth = datetime.date(now.year, now.month-emptym, 1)
+                            month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s'), 'befor': startofmonthnext.strftime('%s')})
                         else:
                             recent_activity = month_activitys[i]
+                            break
+                      
 
 
 
@@ -778,6 +776,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                         .replace("template_lastm_distance", str(round(month_distance/1000, 2))+"km")
                         .replace("template_lastm_activities", str(len(month_activitys)))
                         .replace("template_lastm_ttime", str(datetime.timedelta(seconds=month_time)))
+
+                        .replace("template_month_day", str(month_day))
+                        .replace("template_month_data", str(day_data))
                     )
                     self.wfile.write(home_page.encode())
                     

@@ -221,10 +221,12 @@
   
 
 <script>
+// Map
+
   topleft = template_topleft
   bottomright = template_bottomright
 var map = L.map("map", {
-    minZoom: 15.0,
+    minZoom: 12.0,
     maxBounds: [[topleft], [bottomright]],
     maxBoundsViscosity: 0.9
 }).setView([(topleft[0]+bottomright[0])/2, (topleft[1]+bottomright[1])/2], 15)
@@ -240,4 +242,58 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{noLabels}", {
 points = template_points
 line = L.polyline(points, {color: "red"})
 map.addLayer(line)
+
+// Icons
+
+icon = L.Icon.extend({
+  options: {
+    iconSize:     [38, 38], // size of the icon
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+  }
+});
+
+// Start
+startIcon = new icon({iconUrl: '/images/zamologo_name.png'}), 
+L.marker(points[0], {icon: startIcon}).addTo(map);
+
+// End 
+endIcon = new icon({iconUrl: '/images/zamologo_name.png'}), 
+L.marker(points[points.length-1], {icon: endIcon}).addTo(map);
+
 </script>
+
+<script>
+// Calendar
+
+const calendar = document.getElementById("calendar")
+const month = calendar.children[1]
+month_day = template_month_day
+month_data = template_month_data
+
+i = 2 - month_day
+for (const week of month.children) {
+  for (const day of week.children) {
+    if (i > 0 && i <= month_data.length) {
+      day.innerHTML = month_data[i-1]
+    }  
+    i++
+  }
+}
+
+</script>
+<style>
+  .progress-bar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: 
+    radial-gradient(closest-side, white 79%, transparent 80% 100%),
+    conic-gradient(hotpink 70%, pink 0);    
+}
+</style>
+<div class="progress-bar">
+  <progress value="70" min="0" max="100" style="visibility:hidden;height:0;width:0;">70%</progress>
+</div>
+<div class="progress-bar">
+  <progress value="70" min="0" max="100" style="visibility:hidden;height:0;width:0;">70%</progress>
+</div>
