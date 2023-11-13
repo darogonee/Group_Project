@@ -76,6 +76,10 @@ body, ul {
     height: 100px;
 }
 
+:has(.container) {
+    padding-top: 100px;
+}
+
 .navbar {
     background-color: #333;
 }
