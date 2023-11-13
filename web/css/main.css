@@ -27,7 +27,7 @@ body {
 }
 
 .login, .signup {
-    background-image: url("images/login-bg.jpeg");
+    background-image: url("images/home_login_screen.jpg");
     background-repeat: no-repeat;
     background-size: 110%, 110%;
 }
