@@ -149,7 +149,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         return most_north, most_south, most_east, most_west, size
     
     @staticmethod
-    def calculate_color(self, difference):
+    def calculate_color(difference):
         if difference <= 0.5: # if the difference is between 0 and 0.5 (green @ 0 - yellow @ 0.5)
             return (2 * difference, 1, 0)
         elif difference < 1: # if the difference is between 0.5 and 1 (yellow @ 0.5 - red @ 1)
@@ -173,10 +173,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
         return [carbs_colour, protein_colour, fat_colour]
     
-    def calculate_color_and_sign(under_goal):
-        color_intensity = min(255, int((-2 * abs(under_goal) + 2) * 255))
-        color = (color_intensity, 255, 0)
-        
+    def calculate_sign(self, under_goal):
         if under_goal < 0:
             sign = "↑"
         elif under_goal == 0:
@@ -184,19 +181,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         else:
             sign = "↓"
         
-        return sign
-    
-    # def remove_existing_chart(self, page, template, content, image_name):
-    #     with open(page, "r") as read_page:
-    #         with open(template, "r") as page_template_file:
-    #             body = ""
-    #             template = page_template_file.read()
-    #             template = template.replace(content, "")
-
-    #         body += template
-    #         final = read_page.read().replace(content, body)
-    #         self.wfile.write(final.encode())
-                    
+        return sign 
     
     def do_GET(self):
         match self.path.split("?")[0]:
@@ -270,7 +255,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 calories_sign = self.calculate_sign(calories_under_goal)
 
                                 # display on nutrition log table
-                                carbs_display = f"Carbs: '>{str(total_carbs)}g ({round(abs(carbs_under_goal)*100)}% {carbs_sign})</p>"
+                                carbs_display = f"Carbs: {str(total_carbs)}g ({round(abs(carbs_under_goal)*100)}% {carbs_sign})</p>"
                                 protein_display = f"Protein: {total_protein}g ({round(abs(protein_under_goal)*100)}% {protein_sign})</p>"
                                 fat_display = f"Fat: {total_fat}g ({round(abs(fat_under_goal)*100)}% {fat_sign})</p>"
                                 calories_display = f"Calories: {total_calories} kcal ({round(abs(calories_under_goal)*100)}% {calories_sign})</p>"
