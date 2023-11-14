@@ -68,10 +68,7 @@ body, ul {
 }
 
 .container {
-    /* background-color: #333; */
-    height: 100px;
-    width: 100%;
-    margin: 0;
+    background-color: #333;
 }
 
 :has(.container) {
@@ -85,7 +82,6 @@ body, ul {
     z-index: 1001;
     width: calc(100% + 1px);
     height: 100px;
-    margin-left: -16px;
 }
 
 
