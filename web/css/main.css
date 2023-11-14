@@ -13,7 +13,7 @@ body {
     padding: 100px;
 }
 
-form {
+.signupqs {
     max-width: 600px;
     margin: 20px auto;
     padding: 20px;
@@ -481,13 +481,19 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
     background-image: linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%);
 }
 
-input, select {
+.signupqs input {
     margin-bottom: 10px;
     padding: 8px;
     box-sizing: border-box;
 }
 
-input[type="submit"] {
+.signupqs select {
+    margin-bottom: 10px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.signupqs input[type="submit"] {
     background-color: #14bbee;
     color: black;
     cursor: pointer;
@@ -497,7 +503,7 @@ input[type="submit"] {
     margin: 20px auto; 
 }
 
-input[type="submit"]:hover {
+.signupqs input[type="submit"]:hover {
     background-color: #2377ed;
 }
 
