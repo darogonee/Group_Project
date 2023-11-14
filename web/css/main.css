@@ -10,16 +10,31 @@ body {
     background: #c1e6ff;
     overflow-x: hidden;
     overscroll-behavior-y: none;
+    padding: 100px;
 }
 
-.center {
-    margin: auto;
-    padding: 10px;
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.border-table,
-th,
-td {
+
+
+.border-table {
+    border: 2px solid black;
+    border-collapse: collapse;
+    padding-bottom: 100px;
+}
+
+.border-table th {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+.border-table td {
     border: 2px solid black;
     border-collapse: collapse;
 }
@@ -29,8 +44,7 @@ td {
     font-size: 17px;
 }
 
-.login,
-.signup {
+.login, .signup {
     background-image: url("images/home_login_screen.jpg");
     background-repeat: no-repeat;
     background-size: 110%, 110%;
@@ -47,6 +61,9 @@ h2 {
     font-size: 32px;
 }
 
+.table-align {
+    padding-left: 6%;
+}
 
 table thead tr th {
     text-align: left;
@@ -58,6 +75,10 @@ h3 {
 
 table {
     width: 90%;
+}
+
+.no-border {
+    border: none;
 }
 
 thead {
@@ -170,9 +191,7 @@ ul {
     padding-top: 100px;
 }
 
-#username,
-#password-reentry,
-#password-signup {
+#username, #password-reentry, #password-signup {
     width: 100%;
     height: 30px;
 }
@@ -185,8 +204,7 @@ ul {
     align-items: left;
 }
 
-#signup-bt,
-#login-bt {
+#signup-bt, #login-bt {
     background-color: red;
     color: white;
     border: none;
@@ -378,10 +396,9 @@ a {
 .progress-bar:hover span {
     display: none;
 }
+
 :has(.container .navbar) {
     padding-top: 75px;
-}
-.major-title {
 }
 
 .macros {
@@ -463,3 +480,106 @@ section.svg-container:nth-last-of-type(1) svg.radial-progress {
 section.svg-container:nth-last-of-type(0) svg.radial-progress {
     background-image: linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%);
 }
+
+input, select {
+    margin-bottom: 10px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    background-color: #14bbee;
+    color: black;
+    cursor: pointer;
+    width: 50%;
+    display: block;
+    padding: 10px;
+    margin: 20px auto; 
+}
+
+input[type="submit"]:hover {
+    background-color: #2377ed;
+}
+
+.label-text {
+    font-size: 12px;
+}
+
+.cookie-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2147483645;
+    box-sizing: border-box;
+    width: 100%;
+  
+    background-color: #F1F6F4;
+  }
+  
+  .cookie-consent-banner_inner {     
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 0;
+  }
+  
+  .cookie-consent-banner_copy { 
+    margin-bottom: 16px;
+  }
+  
+  .cookie-consent-banner_header {
+    margin-bottom: 8px;
+    font-family: "CeraPRO-Bold", sans-serif, arial;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  
+  .cookie-consent-banner_description {
+    font-family: "CeraPRO-Regular", sans-serif, arial;
+    font-weight: normal;
+    color: #838F93;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  
+  .cookie-consent-banner_cta {
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 164px;
+    padding: 11px 13px;
+    border-radius: 2px;
+    background-color: #2CE080;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    font-family: "CeraPRO-Regular", sans-serif, arial;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+  }
+  
+  .cookie-consent-banner_cta--secondary { 
+    padding: 9px 13px;
+    
+    border: 2px solid #3A4649;
+    
+    background-color: transparent;
+    
+    color: #2CE080;
+  }
+  
+  .cookie-consent-banner_cta:hover {
+    background-color: #20BA68;
+  }
+  
+  /* .cookie-consent-banner_cta--secondary:hover {
+    border-color: #838F93;
+      
+    background-color: transparent;
+    
+    color: #22C870;
+  } */
+  
+  .cookie-consent-banner_cta:last-child {
+    margin-left: 16px;
+  }

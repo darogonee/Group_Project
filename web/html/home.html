@@ -37,7 +37,7 @@
                   <a href="#"><img src="/images/pluslogo2.svg" height="50px" width="50"></a>
                   <ul class="dropdown-content">
                     <li><a href="logexercise">Log exercise</a></li>
-                    <li><a href="logfood">Log food/water</a></li>
+                    <li><a href="logfood">Log food</a></li>
                   </ul>
                 </li>
                 <li class="dropdown">
@@ -66,15 +66,7 @@
         <div class="estimated-calories home-box">
           
           <p>calories_content</p>
-          <div class="radial-progress-container">
-            <section class="svg-container">
-              <svg class="radial-progress" data-countervalue="200" viewBox="0 0 80 80">
-                  <circle class="bar-static" cx="40" cy="40" r="35"></circle>
-                  <circle class="bar--animated" cx="40" cy="40" r="35" style="stroke-dashoffset: 217.8;"></circle>
-                  <text class="countervalue start" x="50%" y="57%" transform="matrix(0, 1, -1, 0, 80, 0)">50</text>
-              </svg>
-            </section>
-          </div>
+          calories_progress
         </div>
         <div class="macros home-box">
           <h3>Macros <i class="fa-solid fa-burger" style="color: #05aeef;"></i></h3>
@@ -195,11 +187,23 @@
           <h4>Totoal Time: template_lastm_ttime</h4>
         </div>
       </div>
+      
     </div>
-
+    <div class="cookie-consent-banner" id="cookie-consent-banner">
+      <div class="cookie-consent-banner_inner">
+        <div class="cookie-consent-banner_copy">
+          <div class="cookie-consent-banner_header">THIS WEBSITE USES COOKIES</div>
+          <div class="cookie-consent-banner_description">We use cookies to give you the best user experience. Through accessing this website you consent to our cookies. We will not share any of your information with a third party and the cookies we use are essential only. </div>
+        </div>
     
-
-
+        <a onclick="closeCookiePopUp()" class="cookie-consent-banner_cta">
+          OK
+        </a>
+        
+  
+      </div>
+    </div>
+    
 </body>
   
 
@@ -343,7 +347,11 @@ function radial_animate() {
       $window.on('scroll', check_if_in_view);
       $window.on('load', check_if_in_view);
 
-
+      function closeCookiePopUp() {
+        var cookieDiv = document.getElementById("cookie-consent-banner");
+        cookieDiv.style.display = "none"
+        console.log("y")
+      }
 
 
 </script>

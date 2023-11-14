@@ -5,24 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="main.css">
+    <script src="main.js" defer></script>
     <title>Fitness</title>
 </head>
 <body>
+  <div class="container">
+    <nav class="navbar">
+        <ul>
+            <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
+            <li class="right"><a onclick="logout()" id="signup-bt">Log Out</a></li>
+        </ul>
+    </nav>
+  </div> 
   <form action="/signupquestions_action" method="get">
     <div id="pal" class="pal">
-      <h4>What is you current physical activity level?</h4>
+      <h4>1. What is you current physical activity level?</h4>
       <input type="radio" id="sedentary" name="pal" value="sedentary">
-      <label for="sedentary">Exclusively sedentary activity/seated work with little or no strenuous leisure activity</label><br>
+      <label for="sedentary"><b>Sedentary</b> <p class="label-text">&emsp;&emsp;Exclusively sedentary activity/seated work with little or no strenuous leisure activity</p></label><br>
       <input type="radio" id="minimally_active" name="pal" value="minimally_active">
-      <label for="minimally_active">Low active: Sedentary activity/seated work with some requirement for occasional walking and standing but little or no strenuous leisure activity</label><br>
+      <label for="minimally_active"><b>Low active</b><p class="label-text">&emsp;&emsp;Sedentary activity/seated work with some requirement for occasional walking and standing but <br>&emsp;&emsp;little or no strenuous leisure activity</p></label><br>
       <input type="radio" id="moderately_active" name="pal" value="moderately_active">
-      <label for="moderately_active">Moderately active: Predominantly standing or walking work</label><br>
+      <label for="moderately_active"><b>Moderately active</b><p class="label-text">&emsp;&emsp;Predominantly standing or walking work</p></label><br>
       <input type="radio" id="very_active" name="pal" value="very_active">
-      <label for="very_active">Very active: Heavy occupational work or highly active leisure</label><br>
+      <label for="very_active"><b>Very active</b> <p class="label-text">&emsp;&emsp;Heavy occupational work or highly active leisure</p></label><br>
     </div>
 
     <div id="cardio" class="cardio">
-      <h4>Do you aim to improve your cardiovascular fitness?</h4>
+      <h4>2. Do you aim to improve your cardiovascular fitness?</h4>
       <input type="radio" id="cardio_true" name="cardio" value="cardio_true">
       <label for="cardio_true">Yes</label><br>
       <input type="radio" id="cardio_false" name="cardio" value="cardio_false">
@@ -30,7 +39,7 @@
     </div>
 
     <div id="muscle_goals" class="muscle_goals">
-      <h4>What is your primary muscle goal? (Optional)</h4>
+      <h4>3. What is your primary muscle goal? (Optional)</h4>
       <input type="radio" id="strength" name="muscle_goals" value="strength">
       <label for="strength">Muscular Strength</label><br>
 
@@ -42,7 +51,7 @@
     </div>
 
     <div class="fav_cardio" id="fav_cardio">
-      <h4>Cardio (Optional): </h4>
+      <h4>4. Cardio (Optional): </h4>
 
       <input type="checkbox" id="running" name="fav_cardio_running" value="">
       <label for="running">Running</label><br>
@@ -67,7 +76,7 @@
       <option value="advanced">Advanced</option>
     </select>
 
-    <h4>What is your weight goal?</h4>
+    <h4>5. What is your weight goal?</h4>
     <div id="weight_goal" class="weight_goal">
       <input type="radio" id="weightgain" name="weight_goal" value="gain">
       <label for="weightgain">Weight gain</label><br>
@@ -81,7 +90,7 @@
 
     <br><br>
 
-    <label for="weight" id="inline_label">Weight: </label>
+    <label for="weight" id="inline_label">6. Weight: </label>
     <input type="number" id="weight" name="weight" required>
 
     <select name="weight-units" id="weight-units" required>
@@ -92,7 +101,7 @@
 
     <br>
 
-    <label for="height" id="inline_label">Height: </label>
+    <label for="height" id="inline_label">7. Height: </label>
     <input type="number" id="height" name="height" required>
 
     <select name="height-units" id="height-units" required>
@@ -102,12 +111,12 @@
 
     <br>
 
-    <label for="dob" id="inline_label">D.O.B: </label>
+    <label for="dob" id="inline_label">8. D.O.B: </label>
     <input type="date" id="dob" name="date_of_birth" required>
 
     <br>
 
-    <h4>Sex: </h4>
+    <h4>9. Sex: </h4>
     <div class="sex" id="sex">
       <input type="radio" id="male" name="sex" value="male">
       <label for="male">Male</label><br>
@@ -116,7 +125,7 @@
       <label for="male">Female</label><br>
     </div>
 
-    <h4>Equipment: </h4>
+    <h4>10. Equipment: </h4>
     <div id="equipment" class="equipment">
       <input type="checkbox" id="Bench" name="equipment_bench" value="">
       <label for="Bench">Bench</label><br>
@@ -188,39 +197,39 @@
       <label for="Dip machine">Dip machine</label><br>
     </div>
     
-    <h4>What days are you able to workout?</h4>
+    <h4>11. What days are you able to workout?</h4>
 
     <div id="workout_days" class="workout_days">
       <input type="checkbox" id="monday" name="monday" value="">
-      <label for="monday">Monday</label>
+      <label for="monday">Monday</label><br>
 
       <input type="checkbox" id="tuesday" name="tuesday" value="">
-      <label for="tuesday">Tuesday</label>
+      <label for="tuesday">Tuesday</label><br>
 
       <input type="checkbox" id="wednesday" name="wednesday" value="">
-      <label for="wednesday">Wednesday</label>
+      <label for="wednesday">Wednesday</label><br>
 
       <input type="checkbox" id="thursday" name="thursday" value="">
-      <label for="thursday">Thursday</label>
+      <label for="thursday">Thursday</label><br>
 
       <input type="checkbox" id="friday" name="friday" value="">
-      <label for="friday">Friday</label>
+      <label for="friday">Friday</label><br>
 
       <input type="checkbox" id="saturday" name="saturday" value="">
-      <label for="saturday">Saturday</label>
+      <label for="saturday">Saturday</label><br>
 
       <input type="checkbox" id="sunday" name="sunday" value="">
-      <label for="sunday">Sunday</label>
+      <label for="sunday">Sunday</label><br>
     </div>
     
     <br><br>
 
-    <label for="rhr" id="inline_label">Resting Heart Rate (RHR): </label>
+    <label for="rhr" id="inline_label">12. Resting Heart Rate (RHR): </label>
     <input type="number" id="rhr" name="rhr" value="" min="0" max="220" required >
 
     <br><br><br>
 
-    <input type="submit" id="submit" value="submit" onclick="validateForm()">
+    <input type="submit" id="submit" value="Start my fitness journey" onclick="validateForm()">
 
 
   </form>
