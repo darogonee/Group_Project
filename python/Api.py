@@ -1,6 +1,7 @@
 import requests, json, os
 from python.cache import cache
 
+PROFILE_IMG_START = "<img class='avatar-img' src="
 # checks if the users has user file
 # returns True or False
 def check(user):
@@ -89,3 +90,35 @@ def upload(user:str, name:str, type:str, start_date_local:str,
         },
         headers = {"Authorization": "Bearer "  + refresh_tokens(client_id, client_secret, load(user)[0])[0]
     }) 
+
+@cache(max_age=10*60)
+def athelete_id(user):
+    athelete_url = "https://www.strava.com/api/v3/athlete"
+
+    header = {'Authorization': 'Bearer ' +
+              refresh_tokens(client_id, client_secret, load(user)[0])[0]}
+
+    athelete_data = requests.get(
+        athelete_url, headers = header).json()
+    return athelete_data['id']  
+
+@cache(max_age=10*60)
+def athelete_profile_img(user):
+    athelete_url = f"https://www.strava.com/athletes/{athelete_id(user)}"
+    page = requests.get(athelete_url).content.decode()
+    start = page.find(PROFILE_IMG_START)+len(PROFILE_IMG_START)
+    end = page.find("'",start)
+    print(start, end, page[max(0, start-100):end+100])
+    return page[start:end]
+    
+
+@cache(max_age=10*60)
+def athelete_profile_img(user):
+    athelete_url = "https://www.strava.com/api/v3/athlete"
+
+    header = {'Authorization': 'Bearer ' +
+              refresh_tokens(client_id, client_secret, load(user)[0])[0]}
+
+    athelete_data = requests.get(
+        athelete_url, headers = header).json()
+    return athelete_data['profile'] 

@@ -485,8 +485,8 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 
 
-                    
-            case  "/activities":
+                 
+            case "/activities":
                 user = self.get_username()
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -499,6 +499,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         python.Api.refresh(user)
                         activity_data = python.Api.get_user_activites(user)
                         table_activity_data = []
+                        # print(activity_data)
                         tbody=""
                         for i in range(min(200, len(activity_data))):
                             activity_type = self.query().get("type", "")
@@ -509,7 +510,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
-                                activity = activity.replace("template_id", str(activity_data[i]['upload_id'])) #not working
+                                activity = activity.replace("template_id", str(activity_data[i]['id'])) #not working
 
                                 
                                 if "-" not in activity_data[i]["name"]:
@@ -606,7 +607,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if username in data:
                     self.redirect("/signin")
                     return
-                if len(username) < 3 or len(username) > 13 or values["password"] != values["password-rentry"] or not username.isalnum():
+                if len(username) < 3 or len(username) > 24 or values["password"] != values["password-rentry"]:
                     self.redirect("/signup")
                     return
                 
@@ -640,6 +641,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
+            # case "/strava":
+            #     user = self.get_username()
+            #     if not python.Api.check(user):
+            #         self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
+            #     else:    
+            #         self.redirect("/myprofile")
 
             case "/":
                 self.set_response()
@@ -776,6 +783,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         .replace("template_month_day", str(month_day))
                         .replace("template_month_data", str(day_data))
+                        .replace("template_profile_img", python.Api.athelete_profile_img(user))
                     )
                     self.wfile.write(home_page.encode())
 
@@ -827,7 +835,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 with open("web/html/myprofile.html", "r") as file:
                     myprofile_page = file.read()
-                    myprofile_page = myprofile_page.replace("name-temp", user)
+                    myprofile_page = myprofile_page.replace("name-temp", user.replace("%40", "@"))
                     user_data_pro = open(f"user_data/{user}.json")
                     user_data_pro = json.load(user_data_pro)
 
@@ -852,18 +860,26 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprofile_page = myprofile_page.replace("height-units-temp", user_data_pro['height-units'])
                     myprofile_page = myprofile_page.replace("height-temp", user_data_pro['height'])
                     myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
+
+                    # myprofile_page = myprofile_page.replace("template_profile_img", python.Api.athelete_profile_img(user))
+
                     days = []
                     for day in user_data_pro['training_days']:
                         if user_data_pro['training_days'][day] == True:
                             days.append(day)
-                    myprofile_page = myprofile_page.replace("training-days-temp", str(days))
+                    days = str(days).replace("'", "")
+                    days = str(days).replace("[", "")
+                    days = str(days).replace("]", "")
+                    myprofile_page = myprofile_page.replace("training-days-temp", days)
+
                     myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
                     myprofile_page = myprofile_page.replace("rhr-temp", user_data_pro['rhr'])
+                    
                     equipment = []
                     for key,value in user_data_pro['equipment'].items():
                         if value:
                             equipment.append(key)
-                    myprofile_page = myprofile_page.replace("equipment-temp", "<br>".join(equipment))
+                    myprofile_page = myprofile_page.replace("equipment-temp", "<br><br>".join(equipment))
 
                     if python.Api.check(user):    
                         myprofile_page = myprofile_page.replace("Strava Api: False", "Strava Api: True")                
@@ -876,16 +892,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/html-template/individual_activitie.html", "r") as file:
                     id = int(self.query()["id"])
                     for activity in python.Api.get_user_activites(user):
-                        if id == activity["upload_id"]:
+                        if id == activity["id"]:
                             activity_page = file.read()
                             activity_page = (activity_page.replace("template_name", str(activity["name"]))
                                 .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
                                 .replace("template_moving_time", str(round(int(activity["moving_time"])/60, 2)))
-                                .replace("template_elapsed_time", str(round(int(activity["elapsed_time"])/60, 2))+"mins elapsed")
+                                .replace("template_elapsed_time", str(round(int(activity["elapsed_time"])/60, 2)))
                                 .replace("template_total_elevation_gain", str(activity["total_elevation_gain"]))
                                 .replace("template_type", str(activity["type"]))
                                 .replace("template_sport_type", str(activity["sport_type"]))
-                                .replace("template_start_date", str(activity["start_date"]))
+                                .replace("template_start_date", str(activity["start_date"]).split("T")[0])
                                 .replace("template_kudos_count", str(activity["kudos_count"]))
                                 .replace("template_achievement_count", str(activity["achievement_count"]))
                                 .replace("template_comment_count", str(activity["comment_count"]))
@@ -894,11 +910,15 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 .replace("template_trainer", str(activity["trainer"]))
                                 .replace("template_commute", str(activity["commute"]))
                                 .replace("template_private", str(activity["private"]))
-                                .replace("template_visibility", str(activity["visibility"]))
+                                .replace("template_visibility", str(activity["visibility"].replace("_", " ")))
                                 .replace("template_average_speed", str(activity["average_speed"]))
-                                .replace("template_max_speed", str(activity["max_speed"]))
-                                .replace("template_elev_high", str(activity["elev_high"]))
-                                .replace("template_elev_low", str(activity["elev_low"])))
+                                .replace("template_max_speed", str(activity["max_speed"])))
+                            try:
+                                activity_page = activity_page.replace("template_elev_high", str(activity["elev_high"]))
+                                activity_page = activity_page.replace("template_elev_low", str(activity["elev_low"]))
+                            except:
+                                activity_page = activity_page.replace("template_elev_high", str(0))
+                                activity_page = activity_page.replace("template_elev_low", str(0))
                             self.wfile.write(activity_page.encode())
 
             case "/signupquestions":
@@ -1015,22 +1035,28 @@ if __name__ == "__main__":
 
 # TODO
 
-# 1 - only one fav sport    \
+# 1 - only one fav sport    
 
-# 2 - logging page signingnup?
+# 2 -
 
-# 3 - when user creates activity the user cant indivully view them
+# 3 - fav activity
 
 # 4 - make a button that connects with strava in my profile
+
+# 5 - 
+
+# 6 - uploaded activity description
+
+# 7 - user profile picture
+
+# 8 - 
 
 
 # NOTE
 
 # 1 - add pb list 
 
-# 2 - the refresh button
-
-# 3 - get profile pics and badges from strava and put on home page 
+# 2 - badges from strava and put on home page 
 
 # 4 - 
 
@@ -1038,6 +1064,10 @@ if __name__ == "__main__":
 
 ### Think done needs bug testing BUG 
 
-# 1 - 
+# 1 - Make My Profile look nice
 
-# 2 - 
+# 2 - when user creates activity the user cant indivully view them
+
+# 3 - add number in cneter of calder circuls
+
+# 4 - Let users signup with a username that has special characters
