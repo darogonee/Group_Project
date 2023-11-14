@@ -164,8 +164,6 @@ class FittnessServer(BaseHTTPRequestHandler):
         protein_dif = round(abs(25 - protein_calories_percent) / ((25 + protein_calories_percent) / 2), 2)
         fat_dif = round(abs(25 - fat_calories_percent) / ((25 + fat_calories_percent) / 2), 2)
 
-        print("carbs dif: ")
-        print(carbs_dif)
         # get color based on differences
         carbs_colour = self.calculate_color(carbs_dif)
         protein_colour = self.calculate_color(protein_dif)
@@ -173,7 +171,11 @@ class FittnessServer(BaseHTTPRequestHandler):
 
         return [carbs_colour, protein_colour, fat_colour]
     
-    def calculate_sign(self, under_goal):
+    @staticmethod
+    def calculate_color_and_sign(under_goal):
+        color_intensity = min(255, int((-2 * abs(under_goal) + 2) * 255))
+        color = (color_intensity, 255, 0)
+        
         if under_goal < 0:
             sign = "↑"
         elif under_goal == 0:
@@ -181,7 +183,19 @@ class FittnessServer(BaseHTTPRequestHandler):
         else:
             sign = "↓"
         
-        return sign 
+        return color, sign
+    
+    # def remove_existing_chart(self, page, template, content, image_name):
+    #     with open(page, "r") as read_page:
+    #         with open(template, "r") as page_template_file:
+    #             body = ""
+    #             template = page_template_file.read()
+    #             template = template.replace(content, "")
+
+    #         body += template
+    #         final = read_page.read().replace(content, body)
+    #         self.wfile.write(final.encode())
+                    
     
     def do_GET(self):
         match self.path.split("?")[0]:
@@ -249,16 +263,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 calories_under_goal = (goal_cals - total_calories)/goal_cals
 
                                 # get pie chart colour and sign based on percentage under goal
-                                carbs_sign = self.calculate_sign(carbs_under_goal)
-                                protein_sign = self.calculate_sign(protein_under_goal)
-                                fat_sign = self.calculate_sign(fat_under_goal)
-                                calories_sign = self.calculate_sign(calories_under_goal)
+                                carbs_colour, carbs_sign = self.calculate_color_and_sign(carbs_under_goal)
+                                protein_colour, protein_sign = self.calculate_color_and_sign(protein_under_goal)
+                                fat_colour, fat_sign = self.calculate_color_and_sign(fat_under_goal)
+                                calories_colour, calories_sign = self.calculate_color_and_sign(calories_under_goal)
 
                                 # display on nutrition log table
-                                carbs_display = f"Carbs: {str(total_carbs)}g ({round(abs(carbs_under_goal)*100)}% {carbs_sign})</p>"
-                                protein_display = f"Protein: {total_protein}g ({round(abs(protein_under_goal)*100)}% {protein_sign})</p>"
-                                fat_display = f"Fat: {total_fat}g ({round(abs(fat_under_goal)*100)}% {fat_sign})</p>"
-                                calories_display = f"Calories: {total_calories} kcal ({round(abs(calories_under_goal)*100)}% {calories_sign})</p>"
+                                carbs_display = f"Carbs: <p style='color:rgb{str(carbs_colour)}'>{total_carbs}g ({round(abs(carbs_under_goal)*100)}% {carbs_sign})</p>"
+                                protein_display = f"Protein: <p style='color:rgb{str(protein_colour)}'>{total_protein}g ({round(abs(protein_under_goal)*100)}% {protein_sign})</p>"
+                                fat_display = f"Fat: <p style='color:rgb{str(fat_colour)}'>{total_fat}g ({round(abs(fat_under_goal)*100)}% {fat_sign})</p>"
+                                calories_display = f"Calories: <p style='color:rgb{str(calories_colour)}'>{total_calories} kcal ({round(abs(calories_under_goal)*100)}% {calories_sign})</p>"
 
                                 # generate and save pie chart to user folder
                                 generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent), f"pie_chart_{date}", user)
@@ -637,7 +651,7 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/":
                 self.set_response()
 
-                date = self.get_current_date()
+
                 user = self.get_username()
                 cookie = self.get_cookie()
                 if "user" not in cookie:
@@ -693,7 +707,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     if "nutrition_log" in nutrition_data and "goal_cals" in user_data:
                         if date in nutrition_data["nutrition_log"]:
                             total_calories = nutrition_data["nutrition_log"][date]["totals"]["total_calories"]
-                            print(total_calories)
                             goal_cals = user_data["goal_cals"]
                             calories_remaining = int(float(goal_cals)) - int(float(total_calories))
                             
@@ -713,7 +726,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                             protein_calories_percent = int((total_protein * 4)/total_calories * 100)
                             fat_calories_percent = int((total_fat * 9)/total_calories * 100)
                             
-                            generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent),  f"pie_chart_{date}", user)
+                            generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent),  "homepage_macros_pie_chart", user)
                         else:
                             total_calories = "N/A"
                             goal_cals = "N/A"
@@ -728,8 +741,8 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
                     
-                    if os.path.exists(f"web/images/generated/user_charts/{user}/pie_chart_{date}.png"):
-                        macros_content_body = f'<img src="images/generated/user_charts/{user}/pie_chart_{date}.png" style="width:50%;" class="centre">'
+                    if os.path.exists(f"web/images/generated/user_charts/{user}/homepage_macros_pie_chart.png"):
+                        macros_content_body = f'<img src="images/generated/user_charts/{user}/homepage_macros_pie_chart.png" style="width:50%;" class="centre">'
                     else:
                         macros_content_body = 'No food logged today'
 
@@ -1058,3 +1071,11 @@ if __name__ == "__main__":
 # 3 - add number in cneter of calder circuls
 
 # 4 - Let users signup with a username that has special characters
+
+
+#NOTE
+"""
+add a pb chart that calculates rate of improvement, prediciton times. thing that emails specific people the session. Pace calculator.
+
+
+"""
