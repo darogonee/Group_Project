@@ -1,9 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Alice:300,400,600,700&&display=swap');
 
 :root {
     --time-color: blue;
     --dist-color: orange;
     --default-color: rgba(0, 0, 0, 0);
-  }
+}
 
 body {
     background: #c1e6ff;
@@ -16,7 +17,9 @@ body {
     padding: 10px;
 }
 
-.border-table, th, td {
+.border-table,
+th,
+td {
     border: 2px solid black;
     border-collapse: collapse;
 }
@@ -26,7 +29,8 @@ body {
     font-size: 17px;
 }
 
-.login, .signup {
+.login,
+.signup {
     background-image: url("images/home_login_screen.jpg");
     background-repeat: no-repeat;
     background-size: 110%, 110%;
@@ -36,23 +40,25 @@ body {
     font-family: 'Lucida Grande';
 }
 
-h1, h2 {
+h1,
+h2 {
     color: black;
     font-family: 'Roboto';
     font-size: 32px;
 }
 
-  
+
 table thead tr th {
     text-align: left;
 }
+
 h3 {
-    text-align: center;    
+    text-align: center;
 }
 
 table {
     width: 90%;
-} 
+}
 
 thead {
     text-align: left;
@@ -62,7 +68,8 @@ tbody {
     text-align: left;
 }
 
-body, ul {
+body,
+ul {
     margin: 0;
     padding: 0;
 }
@@ -86,8 +93,8 @@ body, ul {
 
 
 .navbar ul {
-    list-style-type: none; 
-    display: flex; 
+    list-style-type: none;
+    display: flex;
     align-items: center;
 }
 
@@ -100,8 +107,8 @@ body, ul {
 .navbar a {
     text-decoration: none;
     color: #fff;
-    padding: 10px 20px; 
-    transition: background-color 0.3s; 
+    padding: 10px 20px;
+    transition: background-color 0.3s;
     font-size: 15pt;
 }
 
@@ -112,7 +119,7 @@ body, ul {
     z-index: 1;
     left: -90%;
     top: 100%;
-    width: 200px; 
+    width: 200px;
 }
 
 .dropdown-content li {
@@ -129,16 +136,19 @@ body, ul {
 }
 
 .navbar a:hover .dropdown-content:hover {
-    background-color: #555; 
+    background-color: #555;
 }
+
 .right:last-child {
     display: inline;
     position: fixed;
     right: 0;
 }
+
 .right.startright {
     position: static;
-    padding-left: calc(100vw - 1000px); /* 1000px is the width of the other things in the container */
+    padding-left: calc(100vw - 1000px);
+    /* 1000px is the width of the other things in the container */
 }
 
 .signin {
@@ -160,10 +170,13 @@ body, ul {
     padding-top: 100px;
 }
 
-#username, #password-reentry, #password-signup{
+#username,
+#password-reentry,
+#password-signup {
     width: 100%;
     height: 30px;
 }
+
 #password {
     width: 100%;
     padding-top: 1.5%;
@@ -172,7 +185,8 @@ body, ul {
     align-items: left;
 }
 
-#signup-bt, #login-bt {
+#signup-bt,
+#login-bt {
     background-color: red;
     color: white;
     border: none;
@@ -186,7 +200,7 @@ p {
 }
 
 #toggle-password {
-    width:20px
+    width: 20px
 }
 
 .dashboard-container {
@@ -200,18 +214,23 @@ p {
     border: 1px solid #333;
 }
 
-.estimated-calories, .macros, .water {
+.estimated-calories,
+.macros,
+.water {
     flex: 1;
     padding-bottom: 84px;
     border: 1px solid #333;
 }
 
-.training-calendar, .last-month {
+.training-calendar,
+.last-month {
     flex: 1;
     padding-bottom: 125px;
     border: 1px solid #333;
 }
-.nutrition-water-box-container, .training-box-container {
+
+.nutrition-water-box-container,
+.training-box-container {
     flex: 1;
     flex-direction: column;
 }
@@ -229,7 +248,7 @@ p {
     flex-direction: column;
     flex: 0.1;
 }
-  
+
 
 .nonlink {
     text-decoration: none;
@@ -250,7 +269,7 @@ th {
 
 input#password {
     appearance: none;
-    border:none;
+    border: none;
 }
 
 input#username {
@@ -260,25 +279,28 @@ input#username {
     border-radius: 50%;
 }
 
-.input-box{
-    display: flex; 
+.input-box {
+    display: flex;
     align-items: center;
     border: 1px solid grey;
     border-radius: 1.5px;
 }
 
-#signup-bt, #login-bt{
+#signup-bt,
+#login-bt {
     transition-duration: 100ms;
 }
-#signup-bt:hover, #login-bt:hover{
+
+#signup-bt:hover,
+#login-bt:hover {
     background-color: rgb(171, 0, 0);
 }
 
-.input-box:has(input:active){
+.input-box:has(input:active) {
     border: 1px solid rgb(255, 255, 255);
 }
 
-#inline_label { 
+#inline_label {
     font-weight: bold;
 }
 
@@ -311,8 +333,8 @@ input#username {
     text-align: center;
 }
 
-a { 
-    cursor: pointer; 
+a {
+    cursor: pointer;
 }
 
 .colour-gradient {
@@ -329,7 +351,7 @@ a {
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: 
+    background:
         radial-gradient(closest-side, white 79%, transparent 80% 100%),
         conic-gradient(var(--time-color) var(--time), var(--default-color) var(--time), var(--default-color) calc(100% - var(--dist)), var(--dist-color) 0%);
 }
@@ -368,4 +390,79 @@ a {
 
 .macros img {
     min-width: 80%;
+}
+
+
+/*Required CSS*/
+svg.radial-progress {
+    height: auto;
+    max-width: 240px;
+    padding: 0;
+    transform: rotate(-90deg);
+    width: 100%;
+    background-image: linear-gradient(-225deg, #FF057C 0%, #8D0B93 50%, #321575 100%);
+    border-radius: 50%;
+}
+
+section.svg-container svg.radial-progress:nth-child(even) {
+    margin: 0 15px;
+}
+
+svg.radial-progress circle {
+    fill: transparent;
+    stroke: #fff;
+}
+
+svg.radial-progress circle.bar-static {
+    stroke: #fafafa !important;
+}
+
+svg.radial-progress circle.bar--animated {
+    stroke-dasharray: 219.91148575129;
+    stroke: #ffffff;
+    stroke-dashoffset: 219.91148575129;
+    stroke-width: 4px;
+    stroke-linecap: round;
+}
+
+svg.radial-progress text {
+    fill: #fafafa;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 700;
+    text-anchor: middle;
+    text-shadow: 0 0 5px #0000007a;
+}
+
+radial-progress-container {
+    text-align: center;
+    margin: 0;
+    min-height: 100vh;
+    flex-wrap: wrap;
+    font-family: 'Alice', serif;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='1' y2='0' gradientTransform='rotate(0,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%23ff057c'/%3E%3Cstop offset='1' stop-color='%23321575'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23F00'/%3E%3Cstop offset='1' stop-color='%23FC0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%23FFF' fill-opacity='0' stroke-miterlimit='10'%3E%3Cg stroke='url(%23a)' stroke-width='7.26'%3E%3Cpath d='M1409 581 1450.35 511 1490 581z'/%3E%3Ccircle stroke-width='2.4200000000000004' transform='' cx='500' cy='100' r='40'/%3E%3Cpath transform='' d='M400.86 735.5h-83.73c0-23.12 18.74-41.87 41.87-41.87S400.86 712.38 400.86 735.5z'/%3E%3C/g%3E%3Cg stroke='url(%23b)' stroke-width='2.2'%3E%3Cpath transform='' d='M149.8 345.2 118.4 389.8 149.8 434.4 181.2 389.8z'/%3E%3Crect stroke-width='4.840000000000001' transform='' x='1039' y='709' width='100' height='100'/%3E%3Cpath transform='' d='M1426.8 132.4 1405.7 168.8 1363.7 168.8 1342.7 132.4 1363.7 96 1405.7 96z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-position: bottom;
+    background-size: cover;
+}
+
+section.svg-container {
+    width: 52%;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    min-height: 80vh;
+}
+
+section.svg-container:nth-last-of-type(1) svg.radial-progress {
+    background: linear-gradient(260deg, #ff0300, #ffc900);
+}
+
+section.svg-container:nth-last-of-type(0) svg.radial-progress {
+    background-image: linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%);
 }

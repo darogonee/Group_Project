@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://kit.fontawesome.com/795a04d998.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="main.js" defer></script>
@@ -63,8 +64,17 @@
       </div>
       <div class="nutrition-water-box-container">
         <div class="estimated-calories home-box">
-          <h3>Calories <i class="fa-solid fa-fire" style="color: #ff7b00;"></i></h3>
+          
           <p>calories_content</p>
+          <div class="radial-progress-container">
+            <section class="svg-container">
+              <svg class="radial-progress" data-countervalue="50" viewBox="0 0 80 80">
+                  <circle class="bar-static" cx="40" cy="40" r="35"></circle>
+                  <circle class="bar--animated" cx="40" cy="40" r="35" style="stroke-dashoffset: 217.8;"></circle>
+                  <text class="countervalue start" x="50%" y="57%" transform="matrix(0, 1, -1, 0, 80, 0)">50</text>
+              </svg>
+            </section>
+          </div>
         </div>
         <div class="macros home-box">
           <h3>Macros <i class="fa-solid fa-burger" style="color: #05aeef;"></i></h3>
@@ -187,6 +197,7 @@
       </div>
     </div>
 
+    
 
 
 </body>
@@ -266,4 +277,73 @@ for (const week of month.children) {
     i++
   }
 }
+
+function radial_animate() { 
+          $('svg.radial-progress').each(function( index, value ) { 
+
+              $(this).find($('circle.bar--animated')).removeAttr( 'style' );    
+              // Get element in Veiw port
+              var elementTop = $(this).offset().top;
+              var elementBottom = elementTop + $(this).outerHeight();
+              var viewportTop = $(window).scrollTop();
+              var viewportBottom = viewportTop + $(window).height();
+              
+              if(elementBottom > viewportTop && elementTop < viewportBottom) {
+                  var percent = $(value).data('countervalue');
+                  var radius = $(this).find($('circle.bar--animated')).attr('r');
+                  var circumference = 2 * Math.PI * radius;
+                  var strokeDashOffset = circumference - ((percent * circumference) / 100);
+                  $(this).find($('circle.bar--animated')).animate({'stroke-dashoffset': strokeDashOffset}, 2800);
+              }
+          });
+      }
+// To check If it is in Viewport 
+      var $window = $(window);
+      function check_if_in_view() {    
+          $('.countervalue').each(function(){
+              if ($(this).hasClass('start')){
+                  var elementTop = $(this).offset().top;
+                  var elementBottom = elementTop + $(this).outerHeight();
+
+                  var viewportTop = $(window).scrollTop();
+                  var viewportBottom = viewportTop + $(window).height();
+
+                  if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                            $(this).removeClass('start');
+                            $('.countervalue').text();
+                            var myNumbers = $(this).text();
+                            if (myNumbers == Math.floor(myNumbers)) {
+                                $(this).animate({
+                                    Counter: $(this).text()
+                                }, {
+                                    duration: 2800,
+                                    easing: 'swing',
+                                    step: function(now) {
+                                        $(this).text(Math.ceil(now)  + 'kcal');                                
+                                    }
+                                });
+                            } else {
+                                $(this).animate({
+                                    Counter: $(this).text()
+                                }, {
+                                    duration: 2800,
+                                    easing: 'swing',
+                                    step: function(now) {                                
+                                        $(this).text(now.toFixed(2)  + '$'); 
+                                    }
+                                });
+                            }
+
+                            radial_animate();
+                        }
+              }
+          });
+      }
+
+      $window.on('scroll', check_if_in_view);
+      $window.on('load', check_if_in_view);
+
+
+
+
 </script>
