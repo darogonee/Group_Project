@@ -23,7 +23,7 @@
                   <a href="#"><img src="/images/pluslogo2.svg" height="50px" width="50"></a>
                   <ul class="dropdown-content">
                     <li><a href="logexercise">Log exercise</a></li>
-                    <li><a href="logfood">Log food/water</a></li>
+                    <li><a href="logfood">Log food</a></li>
                   </ul>
                 </li>
                 <li class="dropdown">
@@ -36,8 +36,8 @@
             </ul>
         </nav>
     </div>
-    <h1>Log Food & Water</h1>
-    <form method="get" action="action_logfood">
+    <h1>Log Food</h1>
+    <form method="get" action="action_logfoodauto">
       <input type="date" id="log_food_date" name="log_food_date" required>
       <br>
     
@@ -47,17 +47,15 @@
         <option value="kg">kg</option>
         <option value="lb">lb</option>
         <option value="g">g</option>
-        <option value="mL">mL</option>
       </select>
       
       <input type="text" id="food_name" name="food_name" placeholder="food" required>
   
       <input type="submit" id="submit" name="Add Food" value="Add Food">
     
-      <table class="tb" id="tb">
+      <table class="border-table">
         <thead>
           <tr>
-            <th></th>
             <th>Quantity</th>
             <th>Units</th>
             <th>Food name</th>
@@ -90,28 +88,5 @@
     console.log(currentDate)
     document.getElementById("log_food_date").value = currentDate;
   })  
-
-
-  async function deleteRow(selected_row) {
-    var row_index = selected_row.parentElement.parentElement.rowIndex;
-    console.log("yes")
-    document.getElementById("tb").deleteRow(row_index); 
-    response = await sendPOST({"title":"edit-json", "body":["nutritionlog.json", row_index]})
-    console.log(response)
-  }
-
-  const baseurl = new URL(window.location.href)
-  async function sendPOST(body){
-    const response = await fetch(baseurl.href, {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-    const content = await response.json()
-    console.log(content)
-    return content
-}
 </script>
 </html>

@@ -290,12 +290,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/myprogram.html", "r") as myprogram_file:
                     with open("web/html/html-template/myprogram-template.html", "r") as myprogram_template_file:
                         myprogram_template = myprogram_template_file.read()
-                        data = self.get_user_data("user_data")
-                        program = create_program(data)
+                        data = self.get_user_data("program")
                         username = self.get_username()
-                        data["program"] = program
-                        with open(f"program/{username}.json", "w") as file:
-                            json.dump(data, file)
+
+                        if "program" not in data:
+                            program = create_program(data)
+                            data["program"] = program
+                            with open(f"program/{username}.json", "w") as file:
+                                json.dump(data, file)
+                        else:
+                            program = data["program"]
 
                         tbody = ""
                         myprogram = myprogram_template
@@ -363,7 +367,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     json.dump(user_data, write_user_data_file)
 
 
-            case "/action_logfood": 
+            case "/action_logfoodauto": 
                 user = self.get_username()
                 self.set_response()
 
@@ -715,7 +719,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                             else:
                                 calories_percent_eaten = int(round(int(float(total_calories)) / int(goal_cals) * 100))
                             
-                            
+                            # body = ""
+                            # with open("web/html/html-template/calories-progress-template.html") as template_cal_progress:
+                            #     body = template_cal_progress.read().replace("template_cals_remaining", str(calories_remaining))
+
+                            # cal_progress_final = home_file.read().replace("calories_progress", body)                         
+                            # self.wfile.write(cal_progress_final.encode())
+
 
                             total_carbs = float(nutrition_data["nutrition_log"][date]["totals"]["total_carbs"])
                             total_protein = float(nutrition_data["nutrition_log"][date]["totals"]["total_protein"])
