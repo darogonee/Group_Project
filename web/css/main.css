@@ -256,6 +256,9 @@ input#password {
 input#username {
     color: grey;
 }
+.profile {
+    border-radius: 50%;
+}
 
 .input-box{
     display: flex; 
@@ -330,7 +333,7 @@ a {
         radial-gradient(closest-side, white 79%, transparent 80% 100%),
         conic-gradient(var(--time-color) var(--time), var(--default-color) var(--time), var(--default-color) calc(100% - var(--dist)), var(--dist-color) 0%);
 }
-.progress-bar * {
+.progress-bar div {
     opacity: 0;
     transition-duration: 0.2s;
     transition-property: all;
@@ -339,7 +342,7 @@ a {
     width: min-content;
     padding: 3px;
 }
-.progress-bar:hover * {
+.progress-bar:hover div {
     opacity: 80%;
     transition-duration: 0.2s;
     transition-property: all;
@@ -347,6 +350,18 @@ a {
     background-color: black;
     color: white
 }
+.progress-bar span {
+    padding-left: 7px;
+}
+.progress-bar:hover span {
+    display: none;
+}
+:has(.container .navbar) {
+    padding-top: 75px;
+}
+.major-title {
+}
+
 .macros {
     text-align: center;
 }
@@ -354,4 +369,3 @@ a {
 .macros img {
     min-width: 80%;
 }
-
