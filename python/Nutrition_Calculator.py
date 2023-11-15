@@ -1,6 +1,7 @@
 import requests
 import json
 
+# from: https://api-ninjas.com/api/nutrition
 # function take to parameters and sends request to through api
 def nutrition_calculator(number, units, food):
     api_url = f'https://api.api-ninjas.com/v1/nutrition?query={number} {units} {food}'

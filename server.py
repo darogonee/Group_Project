@@ -105,7 +105,7 @@ class FittnessServer(BaseHTTPRequestHandler):
     def set_cookie(self, user):
         user_uuid = uuid.uuid4().hex
         uuid2user[user_uuid] = user
-        expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 daysdddd
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
         self.send_header("Set-Cookie", f"user={user_uuid}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
         self.end_headers()
 
@@ -172,10 +172,8 @@ class FittnessServer(BaseHTTPRequestHandler):
         return [carbs_colour, protein_colour, fat_colour]
     
     @staticmethod
-    def calculate_color_and_sign(under_goal):
-        color_intensity = min(255, int((-2 * abs(under_goal) + 2) * 255))
-        color = (color_intensity, 255, 0)
-        
+    def calculate_sign(under_goal):
+
         if under_goal < 0:
             sign = "↑"
         elif under_goal == 0:
@@ -183,7 +181,7 @@ class FittnessServer(BaseHTTPRequestHandler):
         else:
             sign = "↓"
         
-        return color, sign
+        return sign
     
     # def remove_existing_chart(self, page, template, content, image_name):
     #     with open(page, "r") as read_page:
@@ -265,16 +263,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 calories_under_goal = (goal_cals - total_calories)/goal_cals
 
                                 # get pie chart colour and sign based on percentage under goal
-                                carbs_colour, carbs_sign = self.calculate_color_and_sign(carbs_under_goal)
-                                protein_colour, protein_sign = self.calculate_color_and_sign(protein_under_goal)
-                                fat_colour, fat_sign = self.calculate_color_and_sign(fat_under_goal)
-                                calories_colour, calories_sign = self.calculate_color_and_sign(calories_under_goal)
+                                carbs_sign = self.calculate_sign(carbs_under_goal)
+                                protein_sign = self.calculate_sign(protein_under_goal)
+                                fat_sign = self.calculate_sign(fat_under_goal)
+                                calories_sign = self.calculate_sign(calories_under_goal)
 
                                 # display on nutrition log table
-                                carbs_display = f"Carbs: <p style='color:rgb{str(carbs_colour)}'>{total_carbs}g ({round(abs(carbs_under_goal)*100)}% {carbs_sign})</p>"
-                                protein_display = f"Protein: <p style='color:rgb{str(protein_colour)}'>{total_protein}g ({round(abs(protein_under_goal)*100)}% {protein_sign})</p>"
-                                fat_display = f"Fat: <p style='color:rgb{str(fat_colour)}'>{total_fat}g ({round(abs(fat_under_goal)*100)}% {fat_sign})</p>"
-                                calories_display = f"Calories: <p style='color:rgb{str(calories_colour)}'>{total_calories} kcal ({round(abs(calories_under_goal)*100)}% {calories_sign})</p>"
+                                carbs_display = f"Carbs: {total_carbs}g ({round(abs(carbs_under_goal)*100)}% {carbs_sign})</p>"
+                                protein_display = f"Protein: {total_protein}g ({round(abs(protein_under_goal)*100)}% {protein_sign})</p>"
+                                fat_display = f"Fat: {total_fat}g ({round(abs(fat_under_goal)*100)}% {fat_sign})</p>"
+                                calories_display = f"Calories: {total_calories} kcal ({round(abs(calories_under_goal)*100)}% {calories_sign})</p>"
 
                                 # generate and save pie chart to user folder
                                 generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent), f"pie_chart_{date}", user)
@@ -651,6 +649,19 @@ class FittnessServer(BaseHTTPRequestHandler):
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
+            case "/new-home":
+                self.set_response()
+                with open("web/html/new-home.html", "r") as file:
+                    signup_page = file.read()                        
+                    self.wfile.write(signup_page.encode())
+
+            # case "/strava":
+            #     user = self.get_username()
+            #     if not python.Api.check(user):
+            #         self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
+            #     else:    
+            #         self.redirect("/myprofile")
+
             case "/":
                 self.set_response()
 
@@ -666,7 +677,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.redirect("/signupquestions")
                     return
                 date = self.get_current_date()
-                # self.remove_existing_chart("web/html/home.html", "web/html/html-template/macros_template.html", "macros_content", "macros_pie_chart")
+                
 
                 with open("web/html/home.html", "r") as home_file:
                     with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:

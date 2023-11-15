@@ -24,7 +24,7 @@ body {
 
 
 .border-table {
-    border: 2px solid black;
+    border: 1px solid black;
     border-collapse: collapse;
     padding-bottom: 100px;
 }
@@ -95,11 +95,11 @@ ul {
     padding: 0;
 }
 
-.container {
+.nav-container {
     background-color: #333;
 }
 
-:has(.container) {
+:has(.nav-container) {
     padding-top: 100px;
 }
 
@@ -228,45 +228,28 @@ p {
 
 .recent-activity {
     flex: 1;
-    padding-bottom: 250px;
+    padding-bottom: 250px; 
     border: 1px solid #333;
 }
 
 .estimated-calories,
-.macros,
-.water {
+.macros {
     flex: 1;
-    padding-bottom: 84px;
+    padding-bottom: 118px; 
     border: 1px solid #333;
 }
 
 .training-calendar,
 .last-month {
     flex: 1;
-    padding-bottom: 125px;
+    padding-bottom: 125px; 
     border: 1px solid #333;
 }
 
-.nutrition-water-box-container,
+.nutrition-box-container,
 .training-box-container {
     flex: 1;
-    flex-direction: column;
-}
-
-.exercise-streak {
-    float: left;
-    width: 76px;
-    height: 76px;
-    border: 1px solid #333;
-}
-
-.recent-badges {
-    border: 1px solid #333;
-    display: flex;
-    flex-direction: column;
-    flex: 0.1;
-}
-
+} 
 
 .nonlink {
     text-decoration: none;
@@ -397,7 +380,7 @@ a {
     display: none;
 }
 
-:has(.container .navbar) {
+:has(.nav-container .navbar) {
     padding-top: 75px;
 }
 
@@ -571,21 +554,157 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
     
     background-color: transparent;
     
-    color: #2CE080;
+    color: #14bbee;
   }
   
   .cookie-consent-banner_cta:hover {
     background-color: #20BA68;
   }
-  
-  /* .cookie-consent-banner_cta--secondary:hover {
-    border-color: #838F93;
-      
-    background-color: transparent;
-    
-    color: #22C870;
-  } */
+ 
   
   .cookie-consent-banner_cta:last-child {
     margin-left: 16px;
   }
+
+
+
+.logexercise input,
+.logexercise select,
+.logexercise textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.logexercise table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+
+.logexercise th,
+.logexercise td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.logexercise th {
+    background-color: #f2f2f2;
+}
+
+#add-to-table, #delete-row {
+    background-color: #2377ed;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#add-to-table:hover, #delete-row:hover{
+    background-color: #ed2623;
+}
+
+.logexercise input[type="submit"] {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.logexercise input[type="submit"]:hover {
+    background-color: #0073a8;
+}
+
+.logexercise label {
+    margin-right: 5px; /* Adjust the margin as needed for spacing */
+}
+
+.duration input[type="number"] {
+    display: inline;
+    width: 40px; /* Adjust the width as needed */
+}
+
+.reps-sets {
+    display: flex;
+    align-items: center;
+}
+
+.add-to-table {
+    margin-right: 100px; /* Adjust the margin as needed for spacing */
+}
+
+.logexercise th {
+    font-weight: 100;
+}
+
+.food_log_container {
+    width: 60%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.input-group input,
+.input-group select {
+    flex-basis: calc(48% - 10px);
+    padding: 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.food_log_container input[type="submit"] {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.food_log_container .border-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.food_log_container th, .food_log_container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.food_log_container th {
+    background-color: #f2f2f2;
+}
+
+.NA {
+    text-align: center;
+    font-style: italic;
+    color: #999;
+    margin: 10px 0;
+}
+
+.food_log_container input, .food_log_container select {
+    padding: 8px;
+    font-size: 16px;
+}
