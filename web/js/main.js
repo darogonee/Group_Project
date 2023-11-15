@@ -9,16 +9,24 @@ function logout() {
 function addToTable() {
     const tableBody = document.querySelector("#tb tbody");
     const newRow = document.createElement("tr");
+    const deleteCell = document.createElement("td");
     const exerciseCell = document.createElement("td");
     const repstimeCell = document.createElement("td");
     const setsCell = document.createElement("td");
     const restCell = document.createElement("td");
 
+    const deleteRow = document.createElement("button")
     const exerciseInput = document.createElement("input");
     const repstimeInput = document.createElement("input");
     const setsInput = document.createElement("input");
     const restInput = document.createElement("input");
     
+    
+    deleteRow.textContent = "Delete"
+    deleteRow.id = "delete-row"
+    deleteRow.addEventListener("click", function(){
+        tableBody.removeChild(newRow);
+    });
 
     exerciseInput.type = "text"
     exerciseInput.name = "exercise_input" + numberOfRows
@@ -36,19 +44,15 @@ function addToTable() {
     restInput.min = "0"
     numberOfRows++
 
-    const deleteRow = document.createElement("button")
-    deleteRow.textContent = "Delete"
-    deleteRow.addEventListener("click", function(){
-        tableBody.removeChild(newRow);
-    });
-
+    // exerciseCell.appendChild(exerciseInput)
+    deleteCell.appendChild(deleteRow)
     exerciseCell.appendChild(exerciseInput)
     repstimeCell.appendChild(repstimeInput)
     setsCell.appendChild(setsInput)
     restCell.appendChild(restInput)
-    exerciseCell.appendChild(deleteRow)
-
     
+
+    newRow.appendChild(deleteCell)
     newRow.appendChild(exerciseCell)
     newRow.appendChild(repstimeCell)
     newRow.appendChild(setsCell)
