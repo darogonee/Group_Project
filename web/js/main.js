@@ -59,9 +59,16 @@ function addToTable() {
     newRow.appendChild(restCell)
 
     tableBody.appendChild(newRow);
+
 };
 numberOfRows = 0
 
+
+
+function simulateClick(){
+    var button = document.getElementById('add-to-table');
+    button.click()
+}
 
 
 function addRow() {

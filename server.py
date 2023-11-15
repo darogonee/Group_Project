@@ -105,7 +105,7 @@ class FittnessServer(BaseHTTPRequestHandler):
     def set_cookie(self, user):
         user_uuid = uuid.uuid4().hex
         uuid2user[user_uuid] = user
-        expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 daysdddd
+        expires = datetime.datetime.utcnow() + datetime.timedelta(days=30) # expires in 30 days
         self.send_header("Set-Cookie", f"user={user_uuid}; Expires={expires.strftime('%a, %d %b %Y %H:%M:%S GMT')}")
         self.end_headers()
 
@@ -645,6 +645,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
+            case "/new-home":
+                self.set_response()
+                with open("web/html/new-home.html", "r") as file:
+                    signup_page = file.read()                        
+                    self.wfile.write(signup_page.encode())
+
             # case "/strava":
             #     user = self.get_username()
             #     if not python.Api.check(user):
@@ -668,7 +674,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.redirect("/signupquestions")
                     return
                 date = self.get_current_date()
-                # self.remove_existing_chart("web/html/home.html", "web/html/html-template/macros_template.html", "macros_content", "macros_pie_chart")
+                
 
                 with open("web/html/home.html", "r") as home_file:
                     with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
