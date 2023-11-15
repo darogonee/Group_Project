@@ -220,6 +220,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/food.html", "r") as food_file:
                     with open("web/html/html-template/nutrition_table_template.html", "r") as food_template_file:
                         food_template = food_template_file.read()
+                        food_file = food_file.read()
+                        food_file = food_file.replace("template_profile_img", python.Api.athelete_profile_img(user))
                         nutrition_log_data = self.get_user_data("perm_nutrition_log")
                         user_data = self.get_user_data("user_data")
                         tbody = ""
@@ -281,7 +283,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     
                                 tbody += food
         
-                    food_final = food_file.read().replace("template_nutrition_table", tbody)
+                    food_final = food_file.replace("template_nutrition_table", tbody)
                     self.wfile.write(food_final.encode()) # write replaced html to html file
 
 
@@ -292,7 +294,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                         myprogram_template = myprogram_template_file.read()
                         data = self.get_user_data("program")
                         username = self.get_username()
-
+                        myprogram_file = myprogram_file.read()
+                        myprogram_file = myprogram_file.replace("template_profile_img", python.Api.athelete_profile_img(username))
                         if "program" not in data:
                             program = create_program(data)
                             data["program"] = program
@@ -317,11 +320,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                                     muscle_group_body += exercise["muscle_group"] + "<br>"
                                 
                                 # replace html for name, reps, sets, and muscle group
-                                myprogram = myprogram.replace(f"template_{day}_name", name_body)
-                                myprogram = myprogram.replace(f"template_{day}_reps", reps_body)
-                                myprogram = myprogram.replace(f"template_{day}_sets", sets_body)
-                                myprogram = myprogram.replace(f"template_{day}_muscle_group", muscle_group_body)
-                                
+                                myprogram = (myprogram.replace(f"template_{day}_name", name_body)
+                                    .replace(f"template_{day}_reps", reps_body)
+                                    .replace(f"template_{day}_sets", sets_body)
+                                    .replace(f"template_{day}_muscle_group", muscle_group_body)
+                                )
                             else: # if cardio or rest day
                                 if exercises == "Rest":
                                     myprogram = myprogram.replace(f"template_{day}_name", "") # rest day nothing in row
@@ -329,14 +332,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                                     myprogram = myprogram.replace(f"template_{day}_name", str(program[day])) # cardio
 
                                 # replace html for name, reps, sets, and muscle group
-                                myprogram = myprogram.replace(f"template_{day}_reps", "")
-                                myprogram = myprogram.replace(f"template_{day}_sets", "")
-                                myprogram = myprogram.replace(f"template_{day}_muscle_group", "")
-                                myprogram = myprogram.replace(f"template_{day}_reps", "")
-
-
+                                myprogram = (myprogram.replace(f"template_{day}_reps", "")
+                                    .replace(f"template_{day}_sets", "")
+                                    .replace(f"template_{day}_muscle_group", "")
+                                    .replace(f"template_{day}_reps", "")
+                                )
                         tbody += myprogram
-                        myprogram_final = myprogram_file.read().replace("template_myprogram", tbody)                         
+                        myprogram_final = myprogram_file.replace("template_myprogram", tbody)                         
                         self.wfile.write(myprogram_final.encode()) # write to myprogram file
 
             case "/remove_sqn": # remove user data file and redirect to reenter signup questions
@@ -349,6 +351,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 user = self.get_username()
                 with open("web/html/logfood.html", "r") as file:
                     logfoodwater_page = file.read()
+                    logfoodwater_page = logfoodwater_page.replace("template_profile_img", python.Api.athelete_profile_img(user))
                     self.wfile.write(logfoodwater_page.encode())
 
                 # clear temporary nutrition log
@@ -373,6 +376,11 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 query = self.query()
                 name = query["food_name"]
+
+                if query["food_name"] == "Secret":
+                    self.redirect("/pace_cau")
+                    return
+                
                 quantity = query["amount"]
                 units = query["food_units"]
                 date = query["log_food_date"]
@@ -430,26 +438,26 @@ class FittnessServer(BaseHTTPRequestHandler):
                         tbody = ""
                         for i in range(len(data["food_log"])): # 
                             food = food_template
-                            food = food.replace("template_quantity", data["food_log"][i]["quantity"])
-                            food = food.replace("template_units", data["food_log"][i]["units"])
-                            food = food.replace("template_food_name", data["food_log"][i]["name"])
-                            food = food.replace("template_food_calories", data["food_log"][i]["calories"])
-                            food = food.replace("template_carbs", data["food_log"][i]["carbs"])
-                            food = food.replace("template_protein", data["food_log"][i]["protein"])
-                            food = food.replace("template_fat", data["food_log"][i]["fat"])
-
+                            food = (food.replace("template_quantity", data["food_log"][i]["quantity"]) # replaces template info with actule info
+                            .replace("template_units", data["food_log"][i]["units"])
+                            .replace("template_food_name", data["food_log"][i]["name"])
+                            .replace("template_food_calories", data["food_log"][i]["calories"])
+                            .replace("template_carbs", data["food_log"][i]["carbs"])
+                            .replace("template_protein", data["food_log"][i]["protein"])
+                            .replace("template_fat", data["food_log"][i]["fat"])
+                        )
                             tbody += food
 
                         food = food_template
-                        food = food.replace('<button onclick="deleteRow(this)">Delete</button>', "")
-                        food = food.replace("template_quantity", "")
-                        food = food.replace("template_units", "")
-                        food = food.replace("template_food_name", "<b>Total</b>")
-                        food = food.replace("template_food_calories", "<b>" + str(round(sum(float(item["calories"]) for item in data["food_log"]), 1))+"</b>")
-                        food = food.replace("template_carbs", "<b>"+str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1))+"</b>")
-                        food = food.replace("template_protein", "<b>"+str(round(sum(float(item["protein"]) for item in data["food_log"]), 1))+"</b>")
-                        food = food.replace("template_fat", "<b>"+str(round(sum(float(item["fat"]) for item in data["food_log"]), 1))+"</b>")
-
+                        food = (food.replace('<button onclick="deleteRow(this)">Delete</button>', "") # replace template info with actule info
+                            .replace("template_quantity", "")
+                            .replace("template_units", "")
+                            .replace("template_food_name", "<b>Total</b>")
+                            .replace("template_food_calories", "<b>" + str(round(sum(float(item["calories"]) for item in data["food_log"]), 1))+"</b>")
+                            .replace("template_carbs", "<b>"+str(round(sum(float(item["carbs"]) for item in data["food_log"]), 1))+"</b>")
+                            .replace("template_protein", "<b>"+str(round(sum(float(item["protein"]) for item in data["food_log"]), 1))+"</b>")
+                            .replace("template_fat", "<b>"+str(round(sum(float(item["fat"]) for item in data["food_log"]), 1))+"</b>")
+                        )
                         tbody += food
 
                         food_final = ""
@@ -459,7 +467,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         if food_not_found:
                             food_final = food_final.replace("</body>", food_not_found_alert_script + "</body>")  
 
-                        self.wfile.write(food_final.encode())
+                        self.wfile.write(food_final.encode()) # replace the old info in the file with the new info
                     
             case "/action_confirm_food_log":
                 self.set_response()
@@ -470,26 +478,24 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
+                # setting nessasery veriables
                 total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
                 total_carbs = str(round(sum(float(item["carbs"]) for item in logged_data["food_log"]), 1))
                 total_fat = str(round(sum(float(item["fat"]) for item in logged_data["food_log"]), 1))
                 total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
                 date = logged_data["date"]
 
-                if not "nutrition_log" in user_data:
+                # checks if the user has nutrition file
+                if not "nutrition_log" in user_data: 
                     user_data["nutrition_log"] = {}
                 
                 user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
                 with open(f"perm_nutrition_log/{user}.json", "w") as user_data_file:
                     json.dump(user_data, user_data_file)
-
                 
                 self.redirect("/logfood")
 
-                
-
-                 
             case "/activities":
                 user = self.get_username()
                 self.send_response(200)
@@ -499,13 +505,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/activities.html", "r") as activities_file:
                     with open("web/html/html-template/activity-template.html", "r") as activity_file:
                         activity_template = activity_file.read()
-                        # later check
-                        python.Api.refresh(user)
-                        activity_data = python.Api.get_user_activites(user)
+                        activities_file = activities_file.read()
+                        python.Api.refresh(user) # calls a function from the api file to refresh the users data
+                        activity_data = python.Api.get_user_activites(user) # use the get_user_activites function and gets info from the user strava acount
                         table_activity_data = []
-                        # print(activity_data)
                         tbody=""
-                        for i in range(min(200, len(activity_data))):
+                        for i in range(min(200, len(activity_data))): # goes throught 200 of the user most recent activies
                             activity_type = self.query().get("type", "")
                             if activity_data[i]['type'] == activity_type or activity_type == "":
                                 activity = activity_template 
@@ -514,7 +519,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
                                 activity = activity.replace("template_date", str(formatted_date))
-                                activity = activity.replace("template_id", str(activity_data[i]['id'])) #not working
+                                activity = activity.replace("template_id", str(activity_data[i]['id'])) 
 
                                 
                                 if "-" not in activity_data[i]["name"]:
@@ -534,22 +539,23 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 activity = activity.replace("template_distancekm", str(distancekm)+" km")
                                 activity = activity.replace("template_elevgain", str(activity_data[i]["total_elevation_gain"])+" m")
 
-                                if "kilojoules" in activity_data[i]:
-                                    activity = activity.replace("template_calories", str(round(activity_data[i]["kilojoules"]/4.184, 2)))
+                                if "kilojoules" in activity_data[i]: # checks that the users activite recorded kilogoules
+                                    activity = activity.replace("template_calories", str(round(activity_data[i]["kilojoules"]/4.184, 2))) # converts to calouries
                                 else:
-                                    activity = activity.replace("template_calories", "0")
+                                    activity = activity.replace("template_calories", "0") # if theres no kilogoues record set it to 0
 
-                                tbody += activity
+                                tbody += activity # adds the template data replaced to tbody each time the loop is run
 
                                 table_activity_data.append({"type":activity_data[i]["type"], "date":activity_data[i]["start_date_local"], "name":activity_data[i]["name"], "time":str(activity_data[i]["moving_time"]), "distance":str(distancekm), "elevgain":str(activity_data[i]["total_elevation_gain"])})
-                        activity_final = activities_file.read().replace("template_activities", tbody)                         
+                        activities_file = activities_file.replace("template_profile_img", python.Api.athelete_profile_img(user))
+                        activity_final = activities_file.replace("template_activities", tbody) # replaces template_activities with tbody                                          
                         self.wfile.write(activity_final.encode())
 
                         
             case "/logout":
-                uuid2user.pop(self.get_cookie()['user'])
+                uuid2user.pop(self.get_cookie()['user']) # removes the cookie from the users browser
 
-            case "/refresh":
+            case "/refresh": # call get_user_activites.clear_args to clear the cache and refresh it
                 user = self.get_username()
                 values = self.query()
                 python.Api.get_user_activites.clear_args(user)
@@ -559,28 +565,28 @@ class FittnessServer(BaseHTTPRequestHandler):
                 values = self.query()
                 code = values["code"]
                 cookie = self.get_cookie()  
-                if "user" not in cookie:
-                    self.redirect("/signin")
+                if "user" not in cookie: # check if the user has a cookie
+                    self.redirect("/signin") # if they dont it redirects them to the signup page
                     return  
                 user = self.get_username()            
                 python.Api.save(*python.Api.get_access(python.Api.client_id, python.Api.client_secret, code), f"users/{user}.json")
                 self.redirect("/")
 
-            case "/main.css":
+            case "/main.css": # loads the main.css file
                 self.send_response(200)
                 self.send_header("Content-type", "text/css")
                 self.end_headers()
                 with open("web/css/main.css", "rb") as file:
                     self.wfile.write(file.read())
             
-            case "/main.js":
+            case "/main.js": # loads the main.js file
                 self.send_response(200)
                 self.send_header("Content-type", "application/javascript")
                 self.end_headers()
                 with open("web/js/main.js", "rb") as file:
                     self.wfile.write(file.read())
             
-            case "/signin":
+            case "/signin": # loads the sign pages html
                 self.set_response()
                 with open("web/html/signin.html", "r") as file:
                     login_page = file.read()                        
@@ -591,14 +597,14 @@ class FittnessServer(BaseHTTPRequestHandler):
                     data = json.load(file)  
                 values = self.query()
                 username = values["username"].lower()
-                if username in data:
+                if username in data: # checks if the user already exists
                     hash_password = password_hash(values["password"], data[username][1])
                     self.send_response(200)
                     self.send_header("Content-type", "text/html")
-                    if hash_password == data[username][0]:
+                    if hash_password == data[username][0]: # checks if the password the user put in is the same as the password in the password json file
                         self.set_cookie(username)
                         with open("web/html/redirect.html", "r") as file:
-                            self.wfile.write(file.read().replace("url", "/").encode())
+                            self.wfile.write(file.read().replace("url", "/").encode()) # if they match redirects them to the home page
                         return
                     self.redirect("/signin")
                 self.redirect("/signup")
@@ -608,63 +614,55 @@ class FittnessServer(BaseHTTPRequestHandler):
                     data = json.load(file)
                 values = self.query()
                 username = values["username"].lower()
-                if username in data:
-                    self.redirect("/signin")
+                if username in data: # checks if the user already exist
+                    self.redirect("/signin") # if it does take the user to the login page
                     return
-                if len(username) < 3 or len(username) > 24 or values["password"] != values["password-rentry"]:
+                if len(username) < 3 or len(username) > 24 or values["password"] != values["password-rentry"]: # if it doesnt exist check the legn of the password entered
                     self.redirect("/signup")
                     return
                 
                 salt = uuid.uuid4().hex
                 
-                hash_password = password_hash(values["password"], salt)
+                hash_password = password_hash(values["password"], salt) # hashes the password the user put in origanly
 
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
 
-                data[username] = [hash_password, salt]
+                data[username] = [hash_password, salt] # add the user uuid and hashed password to the passwords file
                 with open("data/passwords.json", "w") as file:
                     json.dump(data, file, indent = 4)
 
-                self.set_cookie(username)
+                self.set_cookie(username) # sets the cookie to the users username
                 
                 with open("web/html/redirect.html", "r") as file:
                     self.wfile.write(file.read().replace("url", "/signupqs").encode())
 
             
 
-            case "/signup":
+            case "/signup": # loads the signup pages html
                 self.set_response()
                 with open("web/html/signup.html", "r") as file:
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
-            case "/signupqs":
+            case "/signupqs": # loads the signup question html
                 self.set_response()
                 with open("web/html/signupquestions.html", "r") as file:
                     signup_page = file.read()                        
                     self.wfile.write(signup_page.encode())
 
-            # case "/strava":
-            #     user = self.get_username()
-            #     if not python.Api.check(user):
-            #         self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
-            #     else:    
-            #         self.redirect("/myprofile")
-
             case "/":
                 self.set_response()
 
-
                 user = self.get_username()
                 cookie = self.get_cookie()
-                if "user" not in cookie:
-                    self.redirect("/signin")
+                if "user" not in cookie: # checks the users cookie
+                    self.redirect("/signin") # if they dont have a cookie takes them to the signin page
                     return
-                if not python.Api.check(user):
+                if not python.Api.check(user): # checks if the user has authorized starva
                     self.redirect("https://www.strava.com/oauth/authorize?client_id=112868&redirect_uri=http%3A%2F%2Flocalhost:8080/oauth&response_type=code&scope=activity%3Aread_all,activity%3Awrite")
                     return
-                if not os.path.exists(f"user_data/{user}.json"):
+                if not os.path.exists(f"user_data/{user}.json"): # checks if the users answered the sign up questions
                     self.redirect("/signupquestions")
                     return
                 date = self.get_current_date()
@@ -681,11 +679,14 @@ class FittnessServer(BaseHTTPRequestHandler):
                     now = datetime.datetime.now()
                     startofmonth = datetime.date(now.year, now.month, 1)
                     month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s')})
+                    
+                    # sets a defult veriable for recent_activity
                     recent_activity = {'resource_state': 2, 'athlete': {'id': 0, 'resource_state': 1}, 'name': 'n/a', 'distance': 0, 'moving_time': 0, 'elapsed_time': 0, 'total_elevation_gain': 0, 'type': 'Run', 'sport_type': 'Run', 'workout_type': 0, 'id': 0, 'start_date': '2023-11-02T07:19:42Z', 'start_date_local': '2023-11-02T18:19:42Z', 'timezone': '(GMT+10:00) Australia/Hobart', 'utc_offset': 39600.0, 'location_city': None, 'location_state': None, 'location_country': None, 'achievement_count': 0, 'kudos_count': 3, 'comment_count': 0, 'athlete_count': 1, 'photo_count': 0, 'map': {'id': 'a10151679572', 'summary_polyline': '', 'resource_state': 2}, 'trainer': False, 'commute': False, 'manual': True, 'private': False, 'visibility': 'everyone', 'flagged': False, 'gear_id': 'g15342740', 'start_latlng': [], 'end_latlng': [], 'average_speed': 3.342, 'max_speed': 0, 'has_heartrate': False, 'heartrate_opt_out': False, 'display_hide_heartrate_option': False, 'upload_id': None, 'external_id': None, 'from_accepted_tag': False, 'pr_count': 0, 'total_photo_count': 0, 'has_kudoed': False}
 
                     #NOTE ITS EPIC ITS lambda: check if `activity` has a map and summary_polyline
                     check_map = lambda activity: "map" in activity and "summary_polyline" in activity['map'] and activity['map']['summary_polyline']
 
+                    # keeps going back intill it find an activite with a summary polyline
                     emptym = 0
                     while now.month - emptym >= 2:
                         i = -1
@@ -726,7 +727,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                             # cal_progress_final = home_file.read().replace("calories_progress", body)                         
                             # self.wfile.write(cal_progress_final.encode())
 
-
+                            # sets a bunch of veriables
                             total_carbs = float(nutrition_data["nutrition_log"][date]["totals"]["total_carbs"])
                             total_protein = float(nutrition_data["nutrition_log"][date]["totals"]["total_protein"])
                             total_fat = float(nutrition_data["nutrition_log"][date]["totals"]["total_fat"])
@@ -736,8 +737,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                             protein_calories_percent = int((total_protein * 4)/total_calories * 100)
                             fat_calories_percent = int((total_fat * 9)/total_calories * 100)
                             
+                            # ues the veriable set to great a piechart and saves it the users generated images file
                             generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent),  "homepage_macros_pie_chart", user)
-                        else:
+                        else: # if the havent loged any food
                             total_calories = "N/A"
                             goal_cals = "N/A"
                             calories_percent_eaten = "N/A"
@@ -764,6 +766,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     month_day, month_length = calendar.monthrange(startofmonth.year, startofmonth.month)
                     day_data = [[0, 0] for _ in range(month_length)]
 
+                    # 
                     month_distance = 0
                     month_time = 0
                     for activity in month_activitys:
@@ -800,11 +803,12 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/logexercise":
                 self.set_response()
+                user = self.get_username()
                 with open("web/html/logexercise.html", "r") as file:
                     logexercise_page = file.read()
+                    logexercise_page = logexercise_page.replace("template_profile_img", python.Api.athelete_profile_img(user))
                     self.wfile.write(logexercise_page.encode())
-                
-                user = self.get_username()
+
                 value = self.query()             
                 date = value['workout-date'].split("-")
                 times = value['workout-time'].split("%3A")
@@ -870,8 +874,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     myprofile_page = myprofile_page.replace("height-units-temp", user_data_pro['height-units'])
                     myprofile_page = myprofile_page.replace("height-temp", user_data_pro['height'])
                     myprofile_page = myprofile_page.replace("dob-temp", user_data_pro['dob'])
-
-                    # myprofile_page = myprofile_page.replace("template_profile_img", python.Api.athelete_profile_img(user))
+                    myprofile_page = myprofile_page.replace("template_profile_img", python.Api.athelete_profile_img(user))
 
                     days = []
                     for day in user_data_pro['training_days']:
@@ -941,7 +944,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 user = self.get_username()
                 with open(f"user_data/{user}.json", "w") as file:
                     value = self.query()
-
+                    print(value)
                     goal_cals = calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"])
                     json.dump(
                     {
@@ -1057,9 +1060,9 @@ if __name__ == "__main__":
 
 # 6 - uploaded activity description
 
-# 7 - user profile picture
+# 7 - 
 
-# 8 - 
+# 8 - website doesnt support short people eg smaller then 100
 
 
 # NOTE
@@ -1081,6 +1084,8 @@ if __name__ == "__main__":
 # 3 - add number in cneter of calder circuls
 
 # 4 - Let users signup with a username that has special characters
+
+# 5 - user profile picture
 
 
 #NOTE
