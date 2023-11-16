@@ -91,6 +91,7 @@ def upload(user:str, name:str, type:str, start_date_local:str,
         headers = {"Authorization": "Bearer "  + refresh_tokens(client_id, client_secret, load(user)[0])[0]
     }) 
 
+# get the user strava id
 @cache(max_age=10*60)
 def athelete_id(user):
     athelete_url = "https://www.strava.com/api/v3/athlete"
@@ -102,6 +103,7 @@ def athelete_id(user):
         athelete_url, headers = header).json()
     return athelete_data['id']  
 
+# gets the user strava profile icon
 @cache(max_age=10*60)
 def athelete_profile_img(user):
     athelete_url = f"https://www.strava.com/athletes/{athelete_id(user)}"
@@ -111,7 +113,7 @@ def athelete_profile_img(user):
     print(start, end, page[max(0, start-100):end+100])
     return page[start:end]
     
-
+# gets the user strava profile icon
 @cache(max_age=10*60)
 def athelete_profile_img(user):
     athelete_url = "https://www.strava.com/api/v3/athlete"
