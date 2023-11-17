@@ -47,27 +47,31 @@ class FittnessServer(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
 
-    # not currently used
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length']) # gets the size of data
-        post_data = self.rfile.read(content_length) # gets the data itself
-        content = json.loads(post_data.decode('utf-8'))
-        match content["title"]:
-            case "edit-json":
-                data = json.load("data/"+content["body"][0])
-                del data["food_log"][content["body"][1]]
+    # def do_POST(self):
+    #     content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+    #     post_data = self.rfile.read(content_length) # <--- Gets the data itself
+    #     content = json.loads(post_data.decode('utf-8'))
+    #     match content["title"]:
+    #         case "edit-json":
+    #             data = json.load("data/"+content["body"][0])
+    #             del data["food_log"][content["body"][1]]
 
-                response = "deletion-successful"
-            case _:
-                response = "err:invalid-title"
+            #     response = "deletion-successful"
+            # case _:
+            #     response = "err:invalid-title"
 
-        self._set_response()
-        if type(response) != type(""):
-            response = json.dumps(response)
-        self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
-        print("request fulfilled")
+        # self._set_response()
+        # if type(response) != type(""):
+        #     response = json.dumps(response)
+        # self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
+        # print("request fulfilled")
 
-    # redirects user to specified link
+    #     self._set_response()
+    #     if type(response) != type(""):
+    #         response = json.dumps(response)
+    #     self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
+    #     print("request fulfilled")
+
     def redirect(self, link):
         self.set_response()
         with open("web/html/redirect.html", "r") as file:
@@ -392,7 +396,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                 else:
                     data = {"date":date, "food_log":[]}
 
-                with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
+                if not os.path.exists(f"nutrition_data/{user}.json"):
+                    with open(f"nutrition_data/{user}.json", "w") as file:
+                        json.dump({}, file)
+
+                with open(f"nutrition_data/{user}.json", "r") as user_data_file:
                     user_data = json.load(user_data_file)
 
                 
@@ -489,7 +497,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 
                 user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
-                with open(f"perm_nutrition_log/{user}.json", "w") as user_data_file:
+                with open(f"user_data/{user}.json", "w") as user_data_file:
                     json.dump(user_data, user_data_file)
                 
                 self.redirect("/logfood")
