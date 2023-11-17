@@ -958,10 +958,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                         "muscle_goals":value["muscle_goals"],
                         "cardio":value["cardio"],
                         "fav_cardio": {
-                            "running": "fav_cardio_running" in value,
-                            "cycling": "fav_cardio_cycling" in value,
-                            "swimming": "fav_cardio_swimming" in value,
-                            "other": value["other"].replace("+", " ")
+                            "running": "fav_cardio_running" == value["fav_cardio"],
+                            "cycling": "fav_cardio_cycling" == value["fav_cardio"],
+                            "swimming": "fav_cardio_swimming" == value["fav_cardio"],
+                            "other": value["other"].replace("+", " ") if "fav_cardio_other_box" == value["fav_cardio"] else ""
                         },
                         "level":value["level"],
                         "weight_goal": value["weight_goal"],
@@ -1066,9 +1066,9 @@ if __name__ == "__main__": # checks if the file is being run localy
 
 # 6 - uploaded activity description
 
-# 7 - add cookie to rember user acctped cookies
+# 7 - sign up question optinal
 
-# 8 - website doesnt support short people eg smaller then 100
+# 8 - for oliver magil: website doesnt support short people eg smaller then 100
 
 
 # NOTE
@@ -1093,10 +1093,11 @@ if __name__ == "__main__": # checks if the file is being run localy
 
 # 5 - user profile picture
 
+# 6 - add cookie to rember user acctped cookies
+
 
 #NOTE
 """
 add a pb chart that calculates rate of improvement, prediciton times. thing that emails specific people the session. Pace calculator.
-
 
 """

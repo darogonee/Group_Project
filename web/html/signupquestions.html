@@ -9,16 +9,8 @@
     <title>Fitness</title>
 </head>
 <body>
-  <div class="container">
-    <nav class="navbar">
-        <ul>
-            <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
-            <li class="right"><a onclick="logout()" id="signup-bt">Log Out</a></li>
-        </ul>
-    </nav>
-  </div> 
-  <form action="/signupquestions_action" method="get" class="signupqs">
-    <div id="pal" class="pal">
+  <form action="/signupquestions_action" method="get" class="signupqs" onsubmit="return validateForm()">
+    <div id="pal" class="input-needed">
       <h4>1. What is your current physical activity level?</h4>
       <input type="radio" id="sedentary" name="pal" value="sedentary">
       <label for="sedentary"><b>Sedentary</b> <p class="label-text">&emsp;&emsp;Exclusively sedentary activity/seated work with little or no strenuous leisure activity</p></label><br>
@@ -30,7 +22,7 @@
       <label for="very_active"><b>Very active</b> <p class="label-text">&emsp;&emsp;Heavy occupational work or highly active leisure</p></label><br>
     </div>
 
-    <div id="cardio" class="cardio">
+    <div id="cardio" class="input-needed">
       <h4>2. Do you aim to improve your cardiovascular fitness?</h4>
       <input type="radio" id="cardio_true" name="cardio" value="cardio_true">
       <label for="cardio_true">Yes</label><br>
@@ -38,8 +30,8 @@
       <label for="cardio_false">No</label><br>
     </div>
 
-    <div id="muscle_goals" class="muscle_goals">
-      <h4>3. What is your primary muscle goal? (Optional)</h4>
+    <div id="muscle_goals" class="input-needed">
+      <h4>3. What is your primary muscle goal?</h4>
       <input type="radio" id="strength" name="muscle_goals" value="strength">
       <label for="strength">Muscular Strength</label><br>
 
@@ -50,19 +42,19 @@
       <label for="endurance">Muscular Endurance</label><br>
     </div>
 
-    <div class="fav_cardio" id="fav_cardio">
-      <h4>4. Cardio (Optional): </h4>
+    <div class="input-needed" id="fav_cardio">
+      <h4>4. Cardio: </h4>
 
-      <input type="checkbox" id="running" name="fav_cardio_running" value="">
+      <input type="radio" id="running" name="fav_cardio" value="fav_cardio_running">
       <label for="running">Running</label><br>
 
-      <input type="checkbox" id="cycling" name="fav_cardio_cycling" value="">
+      <input type="radio" id="cycling" name="fav_cardio" value="fav_cardio_cycling">
       <label for="cycling">Cycling</label><br>
 
-      <input type="checkbox" id="swimming" name="fav_cardio_swimming" value="">
+      <input type="radio" id="swimming" name="fav_cardio" value="fav_cardio_swimming">
       <label for="swimming">Swimming</label><br>
 
-      <input type="checkbox" id="other_box" name="fav_cardio_other_box" value="">
+      <input type="radio" id="other_box" name="fav_cardio" value="fav_cardio_other_box">
       <label for="other_box">Other (please specify): </label>
       <input type="text" id="other" name="other" value="">
 
@@ -77,7 +69,7 @@
     </select>
 
     <h4>5. What is your weight goal?</h4>
-    <div id="weight_goal" class="weight_goal">
+    <div id="weight_goal" class="input-needed">
       <input type="radio" id="weightgain" name="weight_goal" value="gain">
       <label for="weightgain">Weight gain</label><br>
 
@@ -117,7 +109,7 @@
     <br>
 
     <h4>9. Sex: </h4>
-    <div class="sex" id="sex">
+    <div class="input-needed" id="sex">
       <input type="radio" id="male" name="sex" value="male">
       <label for="male">Male</label><br>
 
@@ -126,7 +118,7 @@
     </div>
 
     <h4>10. Equipment: </h4>
-    <div id="equipment" class="equipment">
+    <div id="equipment" class="input-needed">
       <input type="checkbox" id="Bench" name="equipment_bench" value="">
       <label for="Bench">Bench</label><br>
 
@@ -199,7 +191,7 @@
     
     <h4>11. What days are you able to workout?</h4>
 
-    <div id="workout_days" class="workout_days">
+    <div id="workout_days" class="input-needed">
       <input type="checkbox" id="monday" name="monday" value="">
       <label for="monday">Monday</label><br>
 
@@ -229,49 +221,30 @@
 
     <br><br><br>
 
-    <input type="submit" id="submit" value="Start your fitness journey" onclick="validateForm()">
+    <input type="submit" id="submit" value="Start your fitness journey">
 
 
   </form>
 </body>
 <script>
   function validateForm() {
-      const day_checkboxes = document.querySelectorAll('.workout_days input[type="checkbox"]');
-      const pal_radio = document.querySelectorAll('.pal input[type="radio"]')
-      const weight_goal_radio = document.querySelectorAll('.weight_goal input[type="radio"]');
-      const sex_radio = document.querySelectorAll('.sex input[type="radio"]')
-      var checkArray = [checkIfChecked(day_checkboxes), checkIfChecked(pal_radio), checkIfChecked(weight_goal_radio), checkIfChecked(sex_radio)]
-      var allChecked = false
+    const failed = document.querySelectorAll('.required');
+    for (i = 0; i < failed.length; i++) {
+      failed[i].classList.remove("required")
+    }
+    const inputs = document.querySelectorAll('.input-needed');
 
-      count = 0
-      for (var i = 0; i<=4; i++) {
-        if (checkArray[i] == true) {
-          count++;
-        } else {
-          break
+    category_loop: for (i = 0; i < inputs.length; i++) {
+      const options = inputs[i].querySelectorAll("[type='checkbox'], [type='radio']");
+      console.log(options)
+      for (j = 0; j < options.length; j++) {
+        if (options[j].checked) {
+          continue category_loop
         }
       }
-
-      if (count == 4) {
-        allChecked == true
-      } else {
-        alert("Please enter a value into all fields (excluding equipment).")
-      }
-    }
-
-  function checkIfChecked(input_to_check){
-    atLeastOneChecked = false
-
-    for (var i = 0; i < input_to_check.length; i++) {
-      if (input_to_check[i].checked) {
-        atLeastOneChecked = true;
-        break;
-      }
-    }
-    if (atLeastOneChecked) {
-      return true;
-    } else {
-      return false;
+      inputs[i].scrollIntoView()
+      inputs[i].classList.add("required")
+      return false
     }
   }
 

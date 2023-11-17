@@ -628,7 +628,7 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
 
 .duration input[type="number"] {
     display: inline;
-    width: 40px; /* Adjust the width as needed */
+    width: 60px; /* Adjust the width as needed */
 }
 
 .reps-sets {
@@ -707,4 +707,8 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
 .food_log_container input, .food_log_container select {
     padding: 8px;
     font-size: 16px;
+}
+
+.required h4 {
+    color: red;
 }

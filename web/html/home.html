@@ -281,8 +281,9 @@ for (const week of month.children) {
     i++
   }
 }
-
-function radial_animate() { 
+</script>
+<script>
+  function radial_animate() { 
           $('svg.radial-progress').each(function( index, value ) { 
 
               $(this).find($('circle.bar--animated')).removeAttr( 'style' );    
@@ -347,11 +348,14 @@ function radial_animate() {
       $window.on('scroll', check_if_in_view);
       $window.on('load', check_if_in_view);
 
-      function closeCookiePopUp() {
-        var cookieDiv = document.getElementById("cookie-consent-banner");
-        cookieDiv.style.display = "none"
-        console.log("y")
-      }
-
+      
+</script>
+<script>
+  function closeCookiePopUp() {
+    var cookieDiv = document.getElementById("cookie-consent-banner");
+    cookieDiv.style.display = "none"
+    document.cookie = "accepted=1; max-age="+(60*60*24*30)
+  }
+  if (document.cookie.includes("accepted")) {closeCookiePopUp()}
 
 </script>
