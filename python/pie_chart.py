@@ -12,7 +12,7 @@ def generate_pie_chart(percentages: list, labels: list, colours: list, image_nam
     fig.patch.set_facecolor('none')
     ax.set_facecolor('none')
     plt.tight_layout()
-    plt.savefig(f'web/images/generated/user_charts/{user}/{image_name}.png')
+    plt.savefig(f'web/images/generated/user_charts/{user}/{image_name}')
 
 # create a slider and saves it to a file
 def generate_slider(label: str):

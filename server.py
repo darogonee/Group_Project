@@ -203,15 +203,15 @@ class FittnessServer(BaseHTTPRequestHandler):
         match self.path.split("?")[0]:
             case "/regenerate_my_program":
                 user = self.get_username()
-                
-                with open(f"program/{user}.json", "r") as read_user_data: # read user's current program
-                    user_data = json.load(read_user_data)
-                
+
+                user_data = self.get_user_data("user_data")
+                my_program_data = self.get_user_data("program")
+            
                 program = create_program(user_data)  # create new program
-                user_data["program"] = program
+                my_program_data["program"] = program
                 
-                with open(f"program/{user}.json", "w") as write_user_data: # write new program
-                    json.dump(user_data, write_user_data)
+                with open(f"program/{user}.json", "w") as write_my_program: # write new program
+                    json.dump(program, write_my_program)
 
                 self.redirect("/myprogram") # redirect to myprogram page
 
@@ -279,7 +279,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 calories_display = f"Calories: {total_calories} kcal ({round(abs(calories_under_goal)*100)}% {calories_sign})</p>"
 
                                 # generate and save pie chart to user folder
-                                generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent), f"pie_chart_{date}", user)
+                                generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent), f"pie_chart_{date}.png", user)
                                 food = food.replace("template_macros", f"{carbs_display}<br><br>{protein_display}<br><br>{fat_display}<br><br>{calories_display}")
                                 food = food.replace("template_pie_chart", f"<img src='images/generated/user_charts/{user}/pie_chart_{date}.png'")
                     
@@ -294,17 +294,18 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/myprogram.html", "r") as myprogram_file:
                     with open("web/html/html-template/myprogram-template.html", "r") as myprogram_template_file:
                         myprogram_template = myprogram_template_file.read()
-                        data = self.get_user_data("program")
+                        my_program_data = self.get_user_data("program")
+                        user_data = self.get_user_data("user_data")
                         username = self.get_username()
                         myprogram_file = myprogram_file.read()
                         myprogram_file = myprogram_file.replace("template_profile_img", python.Api.athelete_profile_img(username))
-                        if "program" not in data:
-                            program = create_program(data)
-                            data["program"] = program
+                        if "program" not in my_program_data:
+                            program = create_program(user_data)
+                            my_program_data["program"] = program
                             with open(f"program/{username}.json", "w") as file:
-                                json.dump(data, file)
+                                json.dump(my_program_data, file)
                         else:
-                            program = data["program"]
+                            program = my_program_data["program"]
 
                         tbody = ""
                         myprogram = myprogram_template
@@ -362,14 +363,14 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 # load permanent nutrition log
                 with open(f"perm_nutrition_log/{user}.json", "r") as file:
-                    user_data = json.load(file)
+                    perm_nutrition_data = json.load(file)
 
-                if "nutrition_log" in user_data: # if there is a log
-                    for date_data in user_data["nutrition_log"].values(): 
+                if "nutrition_log" in perm_nutrition_data: # if there is a log
+                    for date_data in perm_nutrition_data["nutrition_log"].values(): 
                         date_data["data_transferred"] = "False" # data transferred ensures that all data is transferred from temp to perm nutrition log
 
-                with open(f"perm_nutrition_log/{user}.json", "w") as write_user_data_file:
-                    json.dump(user_data, write_user_data_file)
+                with open(f"perm_nutrition_log/{user}.json", "w") as write_perm_nutrition:
+                    json.dump(perm_nutrition_data, write_perm_nutrition)
 
 
             case "/action_logfoodauto": 
@@ -396,16 +397,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                 else:
                     data = {"date":date, "food_log":[]}
 
-                if not os.path.exists(f"nutrition_data/{user}.json"):
-                    with open(f"nutrition_data/{user}.json", "w") as file:
+                if not os.path.exists(f"perm_nutrition_log/{user}.json"):
+                    with open(f"perm_nutrition_log/{user}.json", "w") as file:
                         json.dump({}, file)
 
-                with open(f"nutrition_data/{user}.json", "r") as user_data_file:
-                    user_data = json.load(user_data_file)
+                with open(f"perm_nutrition_log/{user}.json", "r") as perm_nutrition_log:
+                    perm_nutrition_data = json.load(perm_nutrition_log)
 
                 
-                if "nutrition_log" in user_data.keys(): 
-                    if date in user_data["nutrition_log"].keys(): # perm nutrition log exists
+                if "nutrition_log" in perm_nutrition_data.keys(): 
+                    if date in perm_nutrition_data["nutrition_log"].keys(): # perm nutrition log exists
                         existing_food_log = True
                     else:
                         existing_food_log = False
@@ -418,14 +419,14 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                  # if food log with date given in query exists in temp file, add this data to perm file
                 if existing_food_log:
-                    if user_data["nutrition_log"][date]["data_transferred"] == "False": # data not transferred from temp -> perm
-                        for i in range(len(user_data["nutrition_log"][date]["food"])): # number of foods logged in date
-                            data["food_log"].append(user_data["nutrition_log"][date]["food"][i]) # add to permanent food log  
+                    if perm_nutrition_data["nutrition_log"][date]["data_transferred"] == "False": # data not transferred from temp -> perm
+                        for i in range(len(perm_nutrition_data["nutrition_log"][date]["food"])): # number of foods logged in date
+                            data["food_log"].append(perm_nutrition_data["nutrition_log"][date]["food"][i]) # add to permanent food log  
                             
-                        user_data["nutrition_log"][date]["data_transferred"] = "True" # data is transferred
+                        perm_nutrition_data["nutrition_log"][date]["data_transferred"] = "True" # data is transferred
 
-                        with open(f"perm_nutrition_log/{user}.json", "w") as write_user_data: # write to perm food log
-                            json.dump(user_data, write_user_data)
+                        with open(f"perm_nutrition_log/{user}.json", "w") as write_perm_nutrition: # write to perm food log
+                            json.dump(perm_nutrition_data, write_perm_nutrition)
 
                 try:
                     nutrition = nc(quantity, units, name) # get macros and calories of specified food
@@ -481,8 +482,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open(f"temp_nutrition_log/{user}.json", "r") as nutrition_log:
                     logged_data = json.load(nutrition_log)
 
-                with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
-                    user_data = json.load(user_data_file)
+                with open(f"perm_nutrition_log/{user}.json", "r") as perm_nutrition_log:
+                    perm_nutrition_data = json.load(perm_nutrition_log)
 
                 # setting nessasery veriables
                 total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
@@ -492,13 +493,13 @@ class FittnessServer(BaseHTTPRequestHandler):
                 date = logged_data["date"]
 
                 # checks if the user has nutrition file
-                if not "nutrition_log" in user_data: 
-                    user_data["nutrition_log"] = {}
+                if not "nutrition_log" in perm_nutrition_data: 
+                    perm_nutrition_data["nutrition_log"] = {}
                 
-                user_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
+                perm_nutrition_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
-                with open(f"user_data/{user}.json", "w") as user_data_file:
-                    json.dump(user_data, user_data_file)
+                with open(f"perm_nutrition_log/{user}.json", "w") as perm_nutrition_data_file:
+                    json.dump(perm_nutrition_data, perm_nutrition_data_file)
                 
                 self.redirect("/logfood")
 
@@ -681,8 +682,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 
 
                 with open("web/html/home.html", "r") as home_file:
-                    with open(f"perm_nutrition_log/{user}.json", "r") as user_data_file:
-                        nutrition_data = json.load(user_data_file)
+                    with open(f"perm_nutrition_log/{user}.json", "r") as perm_nutrition_data_file:
+                        perm_nutrition_log = json.load(perm_nutrition_data_file)
 
                     with open(f"user_data/{user}.json", "r") as user_data_file:
                         user_data = json.load(user_data_file)
@@ -721,9 +722,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                         cords = decode_polyline(recent_activity['map']['summary_polyline'])
                         most_north, most_south, most_east, most_west, size = self.map_bounds(cords)
     
-                    if "nutrition_log" in nutrition_data and "goal_cals" in user_data: # checks if user has logged any food
-                        if date in nutrition_data["nutrition_log"]:
-                            total_calories = nutrition_data["nutrition_log"][date]["totals"]["total_calories"]
+                    if "nutrition_log" in perm_nutrition_log and "goal_cals" in user_data: # checks if user has logged any food
+                        if date in perm_nutrition_log["nutrition_log"]:
+                            total_calories = perm_nutrition_log["nutrition_log"][date]["totals"]["total_calories"]
                             goal_cals = user_data["goal_cals"]
                             calories_remaining = int(float(goal_cals)) - int(float(total_calories))
                             
@@ -740,17 +741,17 @@ class FittnessServer(BaseHTTPRequestHandler):
                             # self.wfile.write(cal_progress_final.encode())
 
                             # sets a bunch of veriables
-                            total_carbs = float(nutrition_data["nutrition_log"][date]["totals"]["total_carbs"])
-                            total_protein = float(nutrition_data["nutrition_log"][date]["totals"]["total_protein"])
-                            total_fat = float(nutrition_data["nutrition_log"][date]["totals"]["total_fat"])
-                            total_calories = float(nutrition_data["nutrition_log"][date]["totals"]["total_calories"])
+                            total_carbs = float(perm_nutrition_log["nutrition_log"][date]["totals"]["total_carbs"])
+                            total_protein = float(perm_nutrition_log["nutrition_log"][date]["totals"]["total_protein"])
+                            total_fat = float(perm_nutrition_log["nutrition_log"][date]["totals"]["total_fat"])
+                            total_calories = float(perm_nutrition_log["nutrition_log"][date]["totals"]["total_calories"])
 
                             carbs_calories_percent = int((total_carbs * 4)/total_calories * 100) 
                             protein_calories_percent = int((total_protein * 4)/total_calories * 100)
                             fat_calories_percent = int((total_fat * 9)/total_calories * 100)
                             
                             # ues the veriable set to great a piechart and saves it the users generated images file
-                            generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent),  "homepage_macros_pie_chart", user)
+                            generate_pie_chart([carbs_calories_percent, protein_calories_percent, fat_calories_percent], ["Carbohydrates", "Protein", "Fat"], self.get_pie_colours(carbs_calories_percent, protein_calories_percent, fat_calories_percent),  f"pie_chart_{date}.png", user)
                         else: # if the havent loged any food
                             total_calories = "N/A"
                             goal_cals = "N/A"
@@ -765,8 +766,8 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     calories_content_body = f"{str(total_calories)}/{str(goal_cals)}<br>({str(calories_percent_eaten)}% of goal)<br>{str(calories_remaining)} calories remaining"
                     
-                    if os.path.exists(f"web/images/generated/user_charts/{user}/homepage_macros_pie_chart.png"): # checks if the userr has a generated image
-                        macros_content_body = f'<img src="images/generated/user_charts/{user}/homepage_macros_pie_chart.png" style="width:50%;" class="centre">'
+                    if os.path.exists(f"web/images/generated/user_charts/{user}/pie_chart_{date}.png"): # checks if the userr has a generated image
+                        macros_content_body = f'<img src="images/generated/user_charts/{user}/pie_chart_{date}.png" style="width:50%;" class="centre">'
                     else:
                         macros_content_body = 'No food logged today'
 
@@ -862,8 +863,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("web/html/myprofile.html", "r") as file: # loads the html for the home page
                     myprofile_page = file.read()
                     myprofile_page = myprofile_page.replace("name-temp", user.replace("%40", "@"))
-                    user_data_pro = open(f"user_data/{user}.json")
-                    user_data_pro = json.load(user_data_pro)
+
+                    with open(f"user_data/{user}.json", "r") as user_data_file:
+                        user_data_pro = json.load(user_data_file)
 
                     birth_day = str(user_data_pro['dob']).split('-')
                     today = str(datetime.datetime.today()).split(' ')[0].split("-")
@@ -1026,7 +1028,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                 user_file = f"{user}.json"
 
                 if not os.path.exists(f"program/{user_file}"): # checks if the user has a program file
-                    open(f"program/{user_file}", "w")
+                    with open(f"program/{user_file}", "w") as file:
+                        json.dump({}, file)
                 
                 if not os.path.exists(f"temp_nutrition_log/{user_file}"): # checks if the user has a temp nutrition file
                     with open(f"temp_nutrition_log/{user_file}", "w") as file:
