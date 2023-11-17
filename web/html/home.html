@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://kit.fontawesome.com/795a04d998.js" crossorigin="anonymous"></script>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="main.js" defer></script>
@@ -23,85 +24,196 @@
   </style>
 </head>
 <body>
-    <div class="container">
+    <div class="nav-container">
         <nav class="navbar">
             <ul>
                 <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
                 <li><a href="/">Home</a></li>
                 <li><a href="/activities">Activities</a></li>
                 <li><a href="myprogram">My Program</a></li>
-                <li><a href="food&water">Food & Water</a></li>
+                <li><a href="food">Nutrition</a></li>
+                <li class="dropdown right startright"><a href="refresh?path=/">Refresh</a></li>
                 <li class="dropdown right">
                   <a href="#"><img src="/images/pluslogo2.svg" height="50px" width="50"></a>
                   <ul class="dropdown-content">
                     <li><a href="logexercise">Log exercise</a></li>
-                    <li><a href="logfood&water">Log food/water</a></li>
+                    <li><a href="logfood">Log food</a></li>
                   </ul>
                 </li>
                 <li class="dropdown">
-                  <a href="#"><img src="/images/user_icon.webp" height="50px" width="50px"></a>
+                  <a href="/"><img src="template_profile_img" height="50px" width="50px" class="profile"></a>
                   <ul class="dropdown-content">
                     <li><a href="myprofile">My Profile</a></li>
-                    <li><button onclick="logout()">Log out</button></li>
+                    <li><a onclick="logout()">Log out</a></li>
                   </ul>
                 </li>
             </ul>
         </nav>
     </div>
-    <h1>Home</h1>
+    <!-- <h1 class="major-title">Home</h1> -->
+    
     <div class="dashboard-container">
       <div class="recent-activity home-box">
         <!-- recent exercise stats + map -->
-        <h3>Recent exercise</h3>
+        <h3>Recent exercise <i class="fa-solid fa-dumbbell" style="color: #05aeef;"></i></h3>
         <div id="map"></div>
         <h4 class="tittle">Activity Type: template_type</h4>
         <h4 class="tittle">Date: template_date</h4>
         <h4 class="tittle">Time: template_time</h4>
         <h4 class="tittle">Distance: template_distance</h4>
       </div>
-      <div class="nutrition-water-box-container">
+      <div class="nutrition-box-container">
         <div class="estimated-calories home-box">
-          <h3>Calories</h3>
+          
           <p>calories_content</p>
+          calories_progress
         </div>
         <div class="macros home-box">
-          <h3>Macros</h3>
-        </div>
-        <div class="water home-box">
-          <h3>Water</h3>
+          <h3>Macros <i class="fa-solid fa-burger" style="color: #05aeef;"></i></h3>
+          <p>macros_content</p>
+          <div class="colour-gradient">Least Ideal&emsp;&emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; Most Ideal</div>
         </div>
       </div>
       <div class="training-box-container">
         <div class="training-calendar home-box">
-          <h3>Training Calendar</h3>
+          <table id="calendar">
+            <thead>
+              <h3>Training Calendar <i class="fa-solid fa-calendar-days" style="color: #05aeef;"></i></h3>
+              <tr>
+                <td>M
+                </td>
+                <td>T
+                </td>
+                <td>W
+                </td>
+                <td>T
+                </td>
+                <td>F
+                </td>
+                <td>S
+                </td>
+                <td>S
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+                <td>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="last-month home-box">
           <h3>Last month</h3>
-          <h4>Distance: template_lastm_distance</h4>
-          <h4>Number of Activities: template_lastm_activities</h4>
-          <h4>Totoal Time: template_lastm_ttime</h4>
+          <h4 class="tittle">Distance: template_lastm_distance</h4>
+          <h4 class="tittle">Number of Activities: template_lastm_activities</h4>
+          <h4 class="tittle">Totoal Time: template_lastm_ttime</h4>
         </div>
       </div>
-
-      <div class="recent-badges home-box">
-        <div class="exercise-streak home-box">
-
-        </div>
-        <h3>Recent Badges</h3>
-      </div>
-    
+      
     </div>
-
-
-
+    <div class="cookie-consent-banner" id="cookie-consent-banner">
+      <div class="cookie-consent-banner_inner">
+        <div class="cookie-consent-banner_copy">
+          <div class="cookie-consent-banner_header">THIS WEBSITE USES COOKIES</div>
+          <div class="cookie-consent-banner_description">We use cookies to give you the best user experience. Through accessing this website you consent to our cookies. We will not share any of your information with a third party and the cookies we use are essential only. </div>
+        </div>
+    
+        <a onclick="closeCookiePopUp()" class="cookie-consent-banner_cta">
+          OK
+        </a>
+        
+  
+      </div>
+    </div>
+    
 </body>
   
 
 <script>
+// Map
+
   topleft = template_topleft
   bottomright = template_bottomright
 var map = L.map("map", {
-    minZoom: 15.0,
+    minZoom: 12.0,
     maxBounds: [[topleft], [bottomright]],
     maxBoundsViscosity: 0.9
 }).setView([(topleft[0]+bottomright[0])/2, (topleft[1]+bottomright[1])/2], 15)
@@ -117,4 +229,129 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{noLabels}", {
 points = template_points
 line = L.polyline(points, {color: "red"})
 map.addLayer(line)
+
+// Icons
+
+icon = L.Icon.extend({
+  options: {
+    iconSize:     [40, 40], // size of the icon
+    iconAnchor:   [8, 42], // point of the icon which will correspond to marker's location
+  }
+});
+
+// Start
+startIcon = new icon({iconUrl: '/images/green_flag.svg'}), 
+L.marker(points[0], {icon: startIcon}).addTo(map);
+
+// End 
+endIcon = new icon({iconUrl: '/images/red_flag.svg'}), 
+L.marker(points[points.length-1], {icon: endIcon}).addTo(map);
+
+</script>
+
+<script>
+// Calendar
+
+const calendar = document.getElementById("calendar")
+const month = calendar.children[1]
+month_day = template_month_day
+month_data = template_month_data
+
+maxDist = 0
+maxTime = 0
+for (d = 0; d < month_data.length; d++) {
+  maxDist = Math.max(maxDist, month_data[d][0])
+  maxTime = Math.max(maxTime, month_data[d][1])
+}
+
+i = 2 - month_day
+for (const week of month.children) {
+  for (const day of week.children) {
+    if (i > 0 && i <= month_data.length) {
+      day.innerHTML = `
+
+<div class="progress-bar"  
+  style="
+    --dist: ${month_data[i-1][0]/maxDist*50}%; 
+    --time: ${month_data[i-1][1]/maxTime*50}%"
+>
+  <div>${month_data[i-1][0]}m<br>${month_data[i-1][1]}</div><span>${i}</span>
+</div>`
+    }  
+    i++
+  }
+}
+
+function radial_animate() { 
+          $('svg.radial-progress').each(function( index, value ) { 
+
+              $(this).find($('circle.bar--animated')).removeAttr( 'style' );    
+              // Get element in Veiw port
+              var elementTop = $(this).offset().top;
+              var elementBottom = elementTop + $(this).outerHeight();
+              var viewportTop = $(window).scrollTop();
+              var viewportBottom = viewportTop + $(window).height();
+              
+              if(elementBottom > viewportTop && elementTop < viewportBottom) {
+                  var percent = $(value).data('countervalue');
+                  var radius = $(this).find($('circle.bar--animated')).attr('r');
+                  var circumference = 2 * Math.PI * radius;
+                  var strokeDashOffset = circumference - ((percent * circumference) / 100);
+                  $(this).find($('circle.bar--animated')).animate({'stroke-dashoffset': strokeDashOffset}, 2800);
+              }
+          });
+      }
+ 
+      var $window = $(window);
+      function check_if_in_view() {    
+          $('.countervalue').each(function(){
+              if ($(this).hasClass('start')){
+                  var elementTop = $(this).offset().top;
+                  var elementBottom = elementTop + $(this).outerHeight();
+
+                  var viewportTop = $(window).scrollTop();
+                  var viewportBottom = viewportTop + $(window).height();
+
+                  if (elementBottom > viewportTop && elementTop < viewportBottom) {
+                            $(this).removeClass('start');
+                            $('.countervalue').text();
+                            var myNumbers = $(this).text();
+                            if (myNumbers == Math.floor(myNumbers)) {
+                                $(this).animate({
+                                    Counter: $(this).text()
+                                }, {
+                                    duration: 2800,
+                                    easing: 'swing',
+                                    step: function(now) {
+                                        $(this).text(Math.ceil(now)  + 'kcal');                                
+                                    }
+                                });
+                            } else {
+                                $(this).animate({
+                                    Counter: $(this).text()
+                                }, {
+                                    duration: 2800,
+                                    easing: 'swing',
+                                    step: function(now) {                                
+                                        $(this).text(now.toFixed(2)  + '$'); 
+                                    }
+                                });
+                            }
+
+                            radial_animate();
+                        }
+              }
+          });
+      }
+
+      $window.on('scroll', check_if_in_view);
+      $window.on('load', check_if_in_view);
+
+      function closeCookiePopUp() {
+        var cookieDiv = document.getElementById("cookie-consent-banner");
+        cookieDiv.style.display = "none"
+        console.log("y")
+      }
+
+
 </script>

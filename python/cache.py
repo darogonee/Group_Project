@@ -1,4 +1,5 @@
 # NOTE Big help from charliegregg
+
 from datetime import datetime, timedelta
 import time
 
@@ -16,6 +17,16 @@ def cache(max_age=60):
             def clear(*args, **kwargs):
                 # clear the cache for the given arguments
                 AgeCacheWrapper.cache.pop(repr((args, tuple(kwargs.items()))))
+                print(repr((args, tuple(kwargs.items()))))
+            @staticmethod
+            def clear_args(*args):
+                # clear the cache for the given arguments and no restrictions on keywords
+                matched = []
+                for cache_key in AgeCacheWrapper.cache:
+                    if cache_key.startswith(f"({repr((args))}"):
+                        matched.append(cache_key)
+                for match in matched:
+                    AgeCacheWrapper.cache.pop(match)
             @staticmethod
             def __call__(*args, **kwargs):
                 # find the cache key

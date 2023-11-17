@@ -9,33 +9,34 @@
     <title>Fitness</title>
 </head>
 <body>
-    <div class="container">
-        <nav class="navbar">
-            <ul>
-                <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
-                <li><a href="/">Home</a></li>
-                <li><a href="/activities">Activities</a></li>
-                <li><a href="myprogram">My Program</a></li>
-                <li><a href="food&water">Food & Water</a></li>
-                <li class="dropdown right">
-                  <a href="#"><img src="/images/plus.png" height="50px" width="50"></a>
-                  <ul class="dropdown-content">
-                    <li><a href="logexercise">Log exercise</a></li>
-                    <li><a href="logfood&water">Log food/water</a></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#"><img src="/images/user_icon.webp" height="50px" width="50px"></a>
-                  <ul class="dropdown-content">
-                    <li><a href="myprofile">My Profile</a></li>
-                    <li><button onclick="logout()">Log out</button></li>
-                  </ul>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    <h1>Log Exercise</h1>
-    <form action="logexercise" method="get">
+  <div class="nav-container">
+    <nav class="navbar">
+        <ul>
+            <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/activities">Activities</a></li>
+            <li><a href="myprogram">My Program</a></li>
+            <li><a href="food">Nutrition</a></li>
+            <li class="dropdown right startright"><a href="refresh?path=/">Refresh</a></li>
+            <li class="dropdown right">
+              <a href="#"><img src="/images/pluslogo2.svg" height="50px" width="50"></a>
+              <ul class="dropdown-content">
+                <li><a href="logexercise">Log exercise</a></li>
+                <li><a href="logfood">Log food</a></li>
+              </ul>
+            </li>
+            <li class="dropdown right">
+              <a href="/"><img src="template_profile_img" height="50px" width="50px" class="profile"></a>
+              <ul class="dropdown-content">
+                <li><a href="myprofile">My Profile</a></li>
+                <li><a onclick="logout()">Log out</a></li>
+              </ul>
+            </li>
+        </ul>
+    </nav>
+  </div>  
+    <form action="logexercise" method="get" class="signupqs logexercise">
+      <h1>Log Exercise <i class="fa-solid fa-dumbbell" style="color: #05aeef;"></i></h1>
       <label for="title">Title: </label>
       <input type="text" id="title" name="title">
       <br>
@@ -100,13 +101,15 @@
       <label for="workout-time">Time: </label>
       <input type="time" id="workout-time" name="workout-time">
       <br>
-      <label for="workout-hrs">Duration:</label>
-      <input type="number" id="workout-hrs" name="workout-hrs" min="0" max="24">
-      <label for="workout-hrs">hrs</label>
-      <input type="number" id="workout-mins" name="workout-mins" min="0" max="59">
-      <label for="workout-mins">mins</label>
-      <input type="number" id="workout-secs" name="workout-secs" min="0" max="59">
-      <label for="workout-secs">secs</label>
+      <div class="duration">
+        <label for="workout-hrs">Duration:</label>
+        <input type="number" id="workout-hrs" name="workout-hrs" min="0" max="24">
+        <label for="workout-hrs">hrs</label>
+        <input type="number" id="workout-mins" name="workout-mins" min="0" max="59">
+        <label for="workout-mins">mins</label>
+        <input type="number" id="workout-secs" name="workout-secs" min="0" max="59">
+        <label for="workout-secs">secs</label>
+      </div>
       <br>
       <label for="percieved-exertion">Percieved Exertion Rate: </label>
       <select name="percieved-exertion" id="percieved-exertion">
@@ -122,12 +125,15 @@
         <option value="10">10/10 (Maximum Exertion)</option>
       </select>
 
-      <div id="reps-sets" class="reps-sets" style="display:block">
-        <button id="add-to-table" class="add-to-table" type="button" onclick="addToTable()">+</button>
-        <!-- <button id="delete-exercise-from-table" class="delete-exercise-from-table">-</button> -->
+      <label for="description">Description: </label>
+      <br>
+      <textarea id="description" name="description" rows="3" cols="50"></textarea>
+
+      <div id="reps-sets" class="reps-sets" style="display:inline;">
         <table class="border-table" id="tb">
           <thead>
             <tr>
+              <th></th>
               <th>Exercise</th>
               <th>Reps/time (secs)</th>
               <th>Sets</th>
@@ -138,21 +144,18 @@
 
           </tbody>
         </table>
+        <button id="add-to-table" class="add-to-table" type="button" onclick="addToTable();">+ Add Exercise</button>
       </div>
 
-      <div class="elev-gain" id="elev-gain" style="display:none">
+      <div class="elev-gain" id="elev-gain-container" style="display:none">
         <label for="elev-gain">Elevation gain (m): </label>
         <input type="number" id="elev-gain" name="elev-gain" min="0">
       </div>
 
-      <div class="distance" id="distance" style="display:none">
-        <label for="distance">Distance (km): </label>
+      <div class="distance" id="distance-container" style="display:none">
+        <label for="distance">Distance (m): </label>
         <input type="number" id="distance" name="distance" min="0">
       </div>
-
-      <label for="description">Description</label>
-      <br>
-      <textarea id="description" name="description" rows="3" cols="50"></textarea>
 
       <br>
       <input type="submit" value="Submit">
@@ -161,12 +164,15 @@
 
 </body>
 <script>
+      window.onload = function() {
+        simulateClick()
+      }
       activitySelect = document.getElementById("sport")
 
-      elevGainInput = document.getElementById("elev-gain")
+      elevGainInput = document.getElementById("elev-gain-container")
 
       
-      distanceInput = document.getElementById("distance")
+      distanceInput = document.getElementById("distance-container")
 
 
       repsSetsInput = document.getElementById("reps-sets")

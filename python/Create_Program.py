@@ -188,6 +188,7 @@ reps_sets = {"strength":["3-5", "2-6"], "hypertrophy":["3-4", "6-12"], "enduranc
 
 get_levels = {"beginner":"beginner", "intermediate":["beginner", "intermediate"], "advanced":["beginner", "intermediate", "advanced"]}
 
+# generates a program based of the users
 def create_program(data):
     program = {"monday":None, "tuesday":None, "wednesday":None, "thursday":None, "friday":None, "saturday":None, "sunday":None}
     cardio = False
@@ -215,9 +216,9 @@ def create_program(data):
         weights = True
 
     # cardio?
-    if cardio == "cardio_True":
+    if cardio == "cardio_true":
         cardio = True
-    elif cardio == "cardio_False":
+    elif cardio == "cardio_false":
         cardio = False
 
     # both?
@@ -257,7 +258,7 @@ def create_program(data):
     random.shuffle(training_days)
 
     assigned_workouts = {}
-    if cardio:
+    if cardio and fav_cardio_bool:
         for cardio_type, val in fav_cardio_bool.items():
             if val == True:
                 fav_cardio.append(cardio_type)
@@ -301,11 +302,12 @@ def create_program(data):
             random_cardio = random.choice(fav_cardio)
             program[day] = random_cardio.capitalize()
 
+
     return program
 
     
 
-
+# check that the workout doesnt contain any thing the user doesnt want to do or doesnt have 
 def valid_exercises(user_level, user_equipment):
     with open("data/exercises.json", "r") as file:
         exercise_data = json.load(file)
@@ -335,6 +337,7 @@ def valid_exercises(user_level, user_equipment):
 
     return equipment_filtered_data
 
+# get vaild exerises and the traning calander
 def get_exercises(valid_exercises, daily_program):
     exercises = []
     for muscle_group in daily_program:

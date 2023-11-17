@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <script src="main.js" defer>
+  
+    </script>
+    <title>Fitness</title>
+</head>
+<body>
+    <div class="nav-container">
+      <nav class="navbar">
+            <ul>
+                <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/activities">Activities</a></li>
+                <li><a href="myprogram">My Program</a></li>
+                <li><a href="food">Nutrition</a></li>
+                <li class="dropdown right">
+                  <a href="#"><img src="/images/pluslogo2.svg" height="50px" width="50"></a>
+                  <ul class="dropdown-content">
+                    <li><a href="logexercise">Log exercise</a></li>
+                    <li><a href="logfood">Log food</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown right">
+                  <a href="/"><img src="template_profile_img" height="50px" width="50px" class="profile"></a>
+                  <ul class="dropdown-content">
+                    <li><a href="myprofile">My Profile</a></li>
+                    <li><a onclick="logout()">Log out</a></li>
+                  </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <h1>Log Food</h1>
+    <form method="get" action="action_logfoodauto">
+      <input type="date" id="log_food_date" name="log_food_date" required>
+      <br>
+    
+      <input type="number" id="food_quantity" name="amount" placeholder="quantity" required min="1">
+      <select name="food_units" id="food-units" required>
+        <option value="serve">serve/s</option>
+        <option value="kg">kg</option>
+        <option value="lb">lb</option>
+        <option value="g">g</option>
+      </select>
+      
+      <input type="text" id="food_name" name="food_name" placeholder="food" required>
+  
+      <input type="submit" id="submit" name="Add Food" value="Add Food">
+    
+      <table class="border-table">
+        <thead>
+          <tr>
+            <th>Quantity</th>
+            <th>Units</th>
+            <th>Food name</th>
+            <th>Calories (kcal)</th>
+            <th>Carbs (g)</th>
+            <th>Protein (g)</th>
+            <th>Fat (g)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <p class="NA">template_nutrition</p>
+        </tbody>
+      </table>
+    </form>
+    <form method="get" action="action_confirm_food_log">
+      <input type="submit" id="submit" name="Complete Daily Food Log" value="Log Food">
+    </form>
+    
+</body>
+<script>
+  // document.addEventListener("DOMContentLoaded", function () {
+  //   const date = new Date();
+  //   var day = date.getDate();
+  //   if (day < 10) {
+  //     day = "0" + day
+  //   }
+  //   var month = date.getMonth() + 1;
+  //   var year = date.getFullYear();
+  //   var currentDate = `${year}-${month}-${day}`
+  //   console.log(currentDate)
+  //   document.getElementById("log_food_date").value = currentDate;
+  // })  
+
+  function updateDatePicker() {
+            const datePicker = document.getElementById("datepicker");
+            const selectedDate = new Date(datePicker.value);
+            setDatePickerValue(selectedDate);
+        }
+
+        function setDatePickerValue(date) {
+            const datePicker = document.getElementById("datepicker");
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+            datePicker.value = `${year}-${month}-${day}`;
+        }
+
+        function navigateDate(offset) {
+            const datePicker = document.getElementById("datepicker");
+            const currentDate = new Date(datePicker.value);
+            currentDate.setDate(currentDate.getDate() + offset);
+            setDatePickerValue(currentDate);
+        }
+
+        function setToday() {
+            const today = new Date();
+            setDatePickerValue(today);
+        }
+
+        // Set the initial date to today
+        document.addEventListener("DOMContentLoaded", function () {
+            setToday();
+        });
+</script>
+</html>

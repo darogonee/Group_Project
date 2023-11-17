@@ -1,14 +1,40 @@
+@import url('https://fonts.googleapis.com/css?family=Alice:300,400,600,700&&display=swap');
+
+:root {
+    --time-color: blue;
+    --dist-color: orange;
+    --default-color: rgba(0, 0, 0, 0);
+}
+
 body {
     background: #c1e6ff;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+    padding: 100px;
 }
 
-.center {
-    margin: auto;
-    width: 50%;
-    padding: 10px;
+.signupqs {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.border-table, th, td {
+
+
+.border-table {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding-bottom: 100px;
+}
+
+.border-table th {
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+.border-table td {
     border: 2px solid black;
     border-collapse: collapse;
 }
@@ -19,7 +45,7 @@ body {
 }
 
 .login, .signup {
-    background-image: url("images/login-bg.jpeg");
+    background-image: url("images/home_login_screen.jpg");
     background-repeat: no-repeat;
     background-size: 110%, 110%;
 }
@@ -28,23 +54,32 @@ body {
     font-family: 'Lucida Grande';
 }
 
-h1, h2 {
+h1,
+h2 {
     color: black;
     font-family: 'Roboto';
     font-size: 32px;
 }
 
-  
+.table-align {
+    padding-left: 6%;
+}
+
 table thead tr th {
     text-align: left;
 }
+
 h3 {
-    text-align: center;    
+    text-align: center;
 }
 
 table {
     width: 90%;
-} 
+}
+
+.no-border {
+    border: none;
+}
 
 thead {
     text-align: left;
@@ -54,23 +89,33 @@ tbody {
     text-align: left;
 }
 
-body, ul {
+body,
+ul {
     margin: 0;
     padding: 0;
 }
 
-.container {
+.nav-container {
     background-color: #333;
+}
+
+:has(.nav-container) {
+    padding-top: 100px;
 }
 
 .navbar {
     background-color: #333;
+    position: fixed;
+    top: 0;
+    z-index: 1001;
+    width: calc(100% + 1px);
+    height: 100px;
 }
 
 
 .navbar ul {
-    list-style-type: none; 
-    display: flex; 
+    list-style-type: none;
+    display: flex;
     align-items: center;
 }
 
@@ -83,9 +128,9 @@ body, ul {
 .navbar a {
     text-decoration: none;
     color: #fff;
-    padding: 10px 20px; 
-    transition: background-color 0.3s; 
-    font-size: 2vh;
+    padding: 10px 20px;
+    transition: background-color 0.3s;
+    font-size: 15pt;
 }
 
 .dropdown-content {
@@ -95,7 +140,7 @@ body, ul {
     z-index: 1;
     left: -90%;
     top: 100%;
-    width: 200px; 
+    width: 200px;
 }
 
 .dropdown-content li {
@@ -112,11 +157,19 @@ body, ul {
 }
 
 .navbar a:hover .dropdown-content:hover {
-    background-color: #555; 
+    background-color: #555;
 }
-.right{
+
+.right:last-child {
     display: inline;
-    margin-left: auto;
+    position: fixed;
+    right: 0;
+}
+
+.right.startright {
+    position: static;
+    padding-left: calc(100vw - 1000px);
+    /* 1000px is the width of the other things in the container */
 }
 
 .signin {
@@ -138,10 +191,11 @@ body, ul {
     padding-top: 100px;
 }
 
-#username, #password-reentry, #password-signup{
+#username, #password-reentry, #password-signup {
     width: 100%;
     height: 30px;
 }
+
 #password {
     width: 100%;
     padding-top: 1.5%;
@@ -164,7 +218,7 @@ p {
 }
 
 #toggle-password {
-    width:20px
+    width: 20px
 }
 
 .dashboard-container {
@@ -174,40 +228,28 @@ p {
 
 .recent-activity {
     flex: 1;
-    padding-bottom: 250px;
+    padding-bottom: 250px; 
     border: 1px solid #333;
 }
 
-.estimated-calories, .macros, .water {
+.estimated-calories,
+.macros {
     flex: 1;
-    padding-bottom: 84px;
+    padding-bottom: 118px; 
     border: 1px solid #333;
 }
 
-.training-calendar, .last-month {
+.training-calendar,
+.last-month {
     flex: 1;
-    padding-bottom: 125px;
+    padding-bottom: 125px; 
     border: 1px solid #333;
 }
-.nutrition-water-box-container, .training-box-container {
+
+.nutrition-box-container,
+.training-box-container {
     flex: 1;
-    flex-direction: column;
-}
-
-.exercise-streak {
-    float: left;
-    width: 76px;
-    height: 76px;
-    border: 1px solid #333;
-}
-
-.recent-badges {
-    border: 1px solid #333;
-    display: flex;
-    flex-direction: column;
-    flex: 0.1;
-}
-  
+} 
 
 .nonlink {
     text-decoration: none;
@@ -228,32 +270,38 @@ th {
 
 input#password {
     appearance: none;
-    border:none;
+    border: none;
 }
 
 input#username {
     color: grey;
 }
+.profile {
+    border-radius: 50%;
+}
 
-.input-box{
-    display: flex; 
+.input-box {
+    display: flex;
     align-items: center;
     border: 1px solid grey;
     border-radius: 1.5px;
 }
 
-#signup-bt, #login-bt{
+#signup-bt,
+#login-bt {
     transition-duration: 100ms;
 }
-#signup-bt:hover, #login-bt:hover{
+
+#signup-bt:hover,
+#login-bt:hover {
     background-color: rgb(171, 0, 0);
 }
 
-.input-box:has(input:active){
-    border: 1px solid blue;
+.input-box:has(input:active) {
+    border: 1px solid rgb(255, 255, 255);
 }
 
-#inline_label { 
+#inline_label {
     font-weight: bold;
 }
 
@@ -264,6 +312,399 @@ input#username {
     font-size: 0px;
 }
 
+#calendar {
+    font-family: monospace;
+    text-align: center;
+    border: #c1e6ff;
+}
+
+#calendar thead * {
+    border: none;
+}
+
+#calendar>thead>tr>td {
+    padding-left: 12px;
+}
+
+#calendar tbody tr td {
+    border: none;
+}
+
 .tittle {
     text-align: center;
+}
+
+a {
+    cursor: pointer;
+}
+
+.colour-gradient {
+    width: 80%;
+    text-align: center;
+    margin: auto;
+    padding: 10px;
+    height: 10px;
+    border: 2px solid black;
+    background: linear-gradient(to right, rgb(255, 0, 0), rgb(255, 255, 0), rgb(0, 255, 0))
+}
+
+.progress-bar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background:
+        radial-gradient(closest-side, white 79%, transparent 80% 100%),
+        conic-gradient(var(--time-color) var(--time), var(--default-color) var(--time), var(--default-color) calc(100% - var(--dist)), var(--dist-color) 0%);
+}
+.progress-bar div {
+    opacity: 0;
+    transition-duration: 0.2s;
+    transition-property: all;
+    height: 0;
+    position: relative;
+    width: min-content;
+    padding: 3px;
+}
+.progress-bar:hover div {
+    opacity: 80%;
+    transition-duration: 0.2s;
+    transition-property: all;
+    height: min-content;
+    background-color: black;
+    color: white
+}
+.progress-bar span {
+    padding-left: 7px;
+}
+.progress-bar:hover span {
+    display: none;
+}
+
+:has(.nav-container .navbar) {
+    padding-top: 75px;
+}
+
+.macros {
+    text-align: center;
+}
+
+.macros img {
+    min-width: 80%;
+}
+
+
+/*Required CSS*/
+svg.radial-progress {
+    height: auto;
+    max-width: 240px;
+    padding: 0;
+    transform: rotate(-90deg);
+    width: 100%;
+    background-image: linear-gradient(-225deg, #FF057C 0%, #8D0B93 50%, #321575 100%);
+    border-radius: 50%;
+}
+
+section.svg-container svg.radial-progress:nth-child(even) {
+    margin: 0 15px;
+}
+
+svg.radial-progress circle {
+    fill: transparent;
+    stroke: #fff;
+}
+
+svg.radial-progress circle.bar-static {
+    stroke: #fafafa !important;
+}
+
+svg.radial-progress circle.bar--animated {
+    stroke-dasharray: 219.91148575129;
+    stroke: #ffffff;
+    stroke-dashoffset: 219.91148575129;
+    stroke-width: 4px;
+    stroke-linecap: round;
+}
+
+svg.radial-progress text {
+    fill: #fafafa;
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 700;
+    text-anchor: middle;
+    text-shadow: 0 0 5px #0000007a;
+}
+
+radial-progress-container {
+    text-align: center;
+    margin: 0;
+    flex-wrap: wrap;
+    font-family: 'Alice', serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 900'%3E%3Cdefs%3E%3ClinearGradient id='a' x1='0' x2='0' y1='1' y2='0' gradientTransform='rotate(0,0.5,0.5)'%3E%3Cstop offset='0' stop-color='%23ff057c'/%3E%3Cstop offset='1' stop-color='%23321575'/%3E%3C/linearGradient%3E%3ClinearGradient id='b' x1='0' x2='0' y1='0' y2='1'%3E%3Cstop offset='0' stop-color='%23F00'/%3E%3Cstop offset='1' stop-color='%23FC0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='%23FFF' fill-opacity='0' stroke-miterlimit='10'%3E%3Cg stroke='url(%23a)' stroke-width='7.26'%3E%3Cpath d='M1409 581 1450.35 511 1490 581z'/%3E%3Ccircle stroke-width='2.4200000000000004' transform='' cx='500' cy='100' r='40'/%3E%3Cpath transform='' d='M400.86 735.5h-83.73c0-23.12 18.74-41.87 41.87-41.87S400.86 712.38 400.86 735.5z'/%3E%3C/g%3E%3Cg stroke='url(%23b)' stroke-width='2.2'%3E%3Cpath transform='' d='M149.8 345.2 118.4 389.8 149.8 434.4 181.2 389.8z'/%3E%3Crect stroke-width='4.840000000000001' transform='' x='1039' y='709' width='100' height='100'/%3E%3Cpath transform='' d='M1426.8 132.4 1405.7 168.8 1363.7 168.8 1342.7 132.4 1363.7 96 1405.7 96z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-position: bottom;
+    background-size: cover;
+}
+
+section.svg-container {
+    width: 52%;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+section.svg-container:nth-last-of-type(1) svg.radial-progress {
+    background: linear-gradient(260deg, #ff0300, #ffc900);
+}
+
+section.svg-container:nth-last-of-type(0) svg.radial-progress {
+    background-image: linear-gradient(60deg, #3d3393 0%, #2b76b9 37%, #2cacd1 65%, #35eb93 100%);
+}
+
+.signupqs input {
+    margin-bottom: 10px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.signupqs select {
+    margin-bottom: 10px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.signupqs input[type="submit"] {
+    background-color: #14bbee;
+    color: black;
+    cursor: pointer;
+    width: 50%;
+    display: block;
+    padding: 10px;
+    margin: 20px auto; 
+}
+
+.signupqs input[type="submit"]:hover {
+    background-color: #2377ed;
+}
+
+.label-text {
+    font-size: 12px;
+}
+
+.cookie-consent-banner {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2147483645;
+    box-sizing: border-box;
+    width: 100%;
+  
+    background-color: #F1F6F4;
+  }
+  
+  .cookie-consent-banner_inner {     
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 0;
+  }
+  
+  .cookie-consent-banner_copy { 
+    margin-bottom: 16px;
+  }
+  
+  .cookie-consent-banner_header {
+    margin-bottom: 8px;
+    font-family: "CeraPRO-Bold", sans-serif, arial;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  
+  .cookie-consent-banner_description {
+    font-family: "CeraPRO-Regular", sans-serif, arial;
+    font-weight: normal;
+    color: #838F93;
+    font-size: 16px;
+    line-height: 24px;
+  }
+  
+  .cookie-consent-banner_cta {
+    box-sizing: border-box;
+    display: inline-block;
+    min-width: 164px;
+    padding: 11px 13px;
+    border-radius: 2px;
+    background-color: #2CE080;
+    color: #FFF;
+    text-decoration: none;
+    text-align: center;
+    font-family: "CeraPRO-Regular", sans-serif, arial;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+  }
+  
+  .cookie-consent-banner_cta--secondary { 
+    padding: 9px 13px;
+    
+    border: 2px solid #3A4649;
+    
+    background-color: transparent;
+    
+    color: #14bbee;
+  }
+  
+  .cookie-consent-banner_cta:hover {
+    background-color: #20BA68;
+  }
+ 
+  
+  .cookie-consent-banner_cta:last-child {
+    margin-left: 16px;
+  }
+
+
+
+.logexercise input,
+.logexercise select,
+.logexercise textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.logexercise table {
+    width: 100%;
+    margin-top: 15px;
+    border-collapse: collapse;
+}
+
+.logexercise th,
+.logexercise td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.logexercise th {
+    background-color: #f2f2f2;
+}
+
+#add-to-table, #delete-row {
+    background-color: #2377ed;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#add-to-table:hover, #delete-row:hover{
+    background-color: #ed2623;
+}
+
+.logexercise input[type="submit"] {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.logexercise input[type="submit"]:hover {
+    background-color: #0073a8;
+}
+
+.logexercise label {
+    margin-right: 5px; /* Adjust the margin as needed for spacing */
+}
+
+.duration input[type="number"] {
+    display: inline;
+    width: 40px; /* Adjust the width as needed */
+}
+
+.reps-sets {
+    display: flex;
+    align-items: center;
+}
+
+.add-to-table {
+    margin-right: 100px; /* Adjust the margin as needed for spacing */
+}
+
+.logexercise th {
+    font-weight: 100;
+}
+
+.food_log_container {
+    width: 60%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.input-group input,
+.input-group select {
+    flex-basis: calc(48% - 10px);
+    padding: 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+.food_log_container input[type="submit"] {
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.food_log_container .border-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.food_log_container th, .food_log_container td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.food_log_container th {
+    background-color: #f2f2f2;
+}
+
+.NA {
+    text-align: center;
+    font-style: italic;
+    color: #999;
+    margin: 10px 0;
+}
+
+.food_log_container input, .food_log_container select {
+    padding: 8px;
+    font-size: 16px;
 }

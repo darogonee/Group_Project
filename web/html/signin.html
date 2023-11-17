@@ -10,30 +10,36 @@
                 <li class="right"><a href="signup" id="signup-bt">Sign Up</a></li>
             </ul>
         </nav>
-    </div>
-    <div class="signin-container">
-        <div class="signin">
-            <div class="logintext">
-                <h1>Login</h1>
-            </div>
-            <div class="loginbody">
-                <form action="/action_signin" method="get">
-                    <label for="username">Username</label>
-                    <br>
-                    <input type="text" id="username" name="username"><br><br>
-                    <label for="password">Password</label> 
-                    <br>
-                    <div class="input-box">
-                        <input type="password" id="password" name="password">
-                        <img src="/images/eyeslash.png" id="toggle-password">
-                    </div>
-                    <p>Don't have an account? <a href="signup">Sign Up</a></p>
-                    <br>
-                    <input type="submit" value="Log In" id="login-bt">
-                </form>
+    </div> 
+    <section>
+        <div class="signin-container">
+            <div class="signin">
+                <div class="logintext">
+                    <h1>Login</h1>
+                </div>
+                <div class="loginbody">
+                    <form action="/action_signin" method="get">
+                        <label for="username">Username</label>
+                        <br>
+                        <input type="text" id="username" name="username"><br><br>
+                        <label for="password">Password</label> 
+                        <br>
+                        <div class="input-box">
+                            <input type="password" id="password" name="password">
+                            <img src="/images/eyeslash.png" id="toggle-password">
+                        </div>
+                        <div class="forget">
+                        <label for=""><input type="checkbox">Remember Me</label> 
+                        </div>
+                        <p>Don't have an account? <a href="signup">Sign Up</a></p>
+                        <br>
+                        <input type="submit" value="Log In" id="login-bt">
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 <script>
     const passwordInput = document.getElementById('password');

@@ -9,32 +9,33 @@
     <title>Fitness</title>
 </head>
 <body>
-    <div class="container">
-        <nav class="navbar">
+    <div class="nav-container">
+      <nav class="navbar">
             <ul>
                 <li><img src="/images/zamologo_name.png" height="50px" width="50px"></li>
                 <li><a href="/">Home</a></li>
                 <li><a href="/activities">Activities</a></li>
                 <li><a href="myprogram">My Program</a></li>
-                <li><a href="food&water">Food & Water</a></li>
+                <li><a href="food">Nutrition</a></li>
+                <li class="dropdown right startright"><a href="refresh?path=/myprogram">Refresh</a></li>
                 <li class="dropdown right">
-                  <a href="#"><img src="/images/plus.png" height="50px" width="50"></a>
+                  <a href="#"><img src="/images/pluslogo2.svg" height="50px" width="50"></a>
                   <ul class="dropdown-content">
                     <li><a href="logexercise">Log exercise</a></li>
-                    <li><a href="logfood&water">Log food/water</a></li>
+                    <li><a href="logfood">Log food</a></li>
                   </ul>
                 </li>
-                <li class="dropdown">
-                  <a href="#"><img src="/images/user_icon.webp" height="50px" width="50px"></a>
+                <li class="dropdown right">
+                  <a href="/"><img src="template_profile_img" height="50px" width="50px" class="profile"></a>
                   <ul class="dropdown-content">
                     <li><a href="myprofile">My Profile</a></li>
-                    <li><button onclick="logout()">Log out</button></li>
+                    <li><a onclick="logout()">Log out</a></li>
                   </ul>
                 </li>
             </ul>
         </nav>
     </div>
-    <h1>My Program</h1>
+    <h1 class="table-align">My Program</h1>
     <table class="border-table">
       <thead>
         <tr>
@@ -50,7 +51,7 @@
       </tbody>
     </table>
     <br>
-    <form action="regenerate_my_program" method="get">
+    <form action="regenerate_my_program" method="get" class="table-align">
       <input id="submit" type="submit" name="submit" value="↻">
       <label for="submit">Regenerate workout plan</label>
     </form>

@@ -1,6 +1,7 @@
 
 from datetime import datetime
 
+# calculates the users pal
 def get_pal(pal_reported: str):
     if pal_reported == "sedentary":
         pal = 1.45
@@ -13,6 +14,7 @@ def get_pal(pal_reported: str):
 
     return pal
 
+# converts between imperical and metric. weight
 def imperial_to_metric_weight(weight, weight_units):
     if weight_units == "lb":
         metric_weight = weight/2.205
@@ -24,12 +26,13 @@ def imperial_to_metric_weight(weight, weight_units):
     metric_weight = round(metric_weight)
     return metric_weight
 
+# converts between imperical and metric. height
 def imperial_to_metric_height(height, height_units):
     if height_units == "in":
         metric_height = (height*2.54)/100
     elif height_units == "ft":
         metric_height = (height*30.48)/100
-    elif height_units == "m":
+    elif height_units == "cm":
         metric_height = height/100
     else:
         metric_height = height
@@ -37,6 +40,7 @@ def imperial_to_metric_height(height, height_units):
     metric_height = round(metric_height)
     return metric_height
 
+# determines the user age based of there dob
 def calculateAge(dob):
     current_date = datetime.now()
 
@@ -46,7 +50,7 @@ def calculateAge(dob):
 
     return age 
 
-
+# calculates the user eer using the age, weight, height, sex, pal
 def calculate_eer(age, weight, height, sex, pal):
     bmi = weight/(height**2)
 
@@ -76,6 +80,7 @@ def calculate_eer(age, weight, height, sex, pal):
 
     return eer
 
+# calculates the users requirded cals
 def calculate_goal_cals(eer, weight_goal):
     if weight_goal == "gain":
         goal_cals = eer + 500
@@ -87,7 +92,7 @@ def calculate_goal_cals(eer, weight_goal):
     goal_cals = round(goal_cals)
     return goal_cals
 
-
+# calculates the users required water
 def water_requirement(weight):
     water = 0.033 * weight
     return water
