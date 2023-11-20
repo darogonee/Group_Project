@@ -479,27 +479,28 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/action_confirm_food_log":
                 self.set_response()
                 user = self.get_username()
-                with open(f"temp_nutrition_log/{user}.json", "r") as nutrition_log:
-                    logged_data = json.load(nutrition_log)
+            
+                perm_nutrition_data = self.get_user_data("perm_nutrition_log")
 
-                with open(f"perm_nutrition_log/{user}.json", "r") as perm_nutrition_log:
-                    perm_nutrition_data = json.load(perm_nutrition_log)
+                logged_data = self.get_user_data("temp_nutrition_log")
 
-                # setting nessasery veriables
-                total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
-                total_carbs = str(round(sum(float(item["carbs"]) for item in logged_data["food_log"]), 1))
-                total_fat = str(round(sum(float(item["fat"]) for item in logged_data["food_log"]), 1))
-                total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
-                date = logged_data["date"]
-
-                # checks if the user has nutrition file
-                if not "nutrition_log" in perm_nutrition_data: 
-                    perm_nutrition_data["nutrition_log"] = {}
                 
-                perm_nutrition_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
-                with open(f"perm_nutrition_log/{user}.json", "w") as perm_nutrition_data_file:
-                    json.dump(perm_nutrition_data, perm_nutrition_data_file)
+                if "date" in logged_data:
+                    # setting nessasery veriables
+                    total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
+                    total_carbs = str(round(sum(float(item["carbs"]) for item in logged_data["food_log"]), 1))
+                    total_fat = str(round(sum(float(item["fat"]) for item in logged_data["food_log"]), 1))
+                    total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
+                    date = logged_data["date"]
+                    # checks if the user has nutrition file
+                    if not "nutrition_log" in perm_nutrition_data: 
+                        perm_nutrition_data["nutrition_log"] = {}
+                    
+                    perm_nutrition_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
+
+                    with open(f"perm_nutrition_log/{user}.json", "w") as perm_nutrition_data_file:
+                        json.dump(perm_nutrition_data, perm_nutrition_data_file)
                 
                 self.redirect("/logfood")
 
