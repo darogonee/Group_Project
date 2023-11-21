@@ -64,9 +64,15 @@
       </div>
       <div class="nutrition-box-container">
         <div class="estimated-calories home-box">
-          
-          <p>calories_content</p>
-          calories_progress
+          <div class="radial-progress-container">
+            <section class="svg-container">
+              <svg class="radial-progress" data-countervalue="60" viewBox="0 0 80 80">
+                  <circle class="bar-static" cx="40" cy="40" r="35"></circle>
+                  <circle class="bar--animated" cx="40" cy="40" r="35" style="stroke-dashoffset: 217.8;"></circle>
+                  <text class="countervalue start" x="50%" y="57%" transform="matrix(0, 1, -1, 0, 80, 0)">60</text>
+              </svg>
+          </section>
+        </div>
         </div>
         <div class="macros home-box">
           <h3>Macros <i class="fa-solid fa-burger" style="color: #05aeef;"></i></h3>
@@ -283,7 +289,12 @@ for (const week of month.children) {
 }
 </script>
 <script>
-  function radial_animate() { 
+  function radial_animate(current,goal) { 
+    if (current > goal){
+      progress = goal
+    }else{
+      progress = current
+    }
           $('svg.radial-progress').each(function( index, value ) { 
 
               $(this).find($('circle.bar--animated')).removeAttr( 'style' );    
@@ -294,15 +305,16 @@ for (const week of month.children) {
               var viewportBottom = viewportTop + $(window).height();
               
               if(elementBottom > viewportTop && elementTop < viewportBottom) {
-                  var percent = $(value).data('countervalue');
+                  $('.countervalue').text(current+"kcal");
+                  var percent = progress;
                   var radius = $(this).find($('circle.bar--animated')).attr('r');
                   var circumference = 2 * Math.PI * radius;
-                  var strokeDashOffset = circumference - ((percent * circumference) / 100);
+                  var strokeDashOffset = circumference - ((percent * circumference) / goal);
                   $(this).find($('circle.bar--animated')).animate({'stroke-dashoffset': strokeDashOffset}, 2800);
               }
           });
       }
- 
+// To check If it is in Viewport 
       var $window = $(window);
       function check_if_in_view() {    
           $('.countervalue').each(function(){
@@ -334,7 +346,7 @@ for (const week of month.children) {
                                     duration: 2800,
                                     easing: 'swing',
                                     step: function(now) {                                
-                                        $(this).text(now.toFixed(2)  + '$'); 
+                                        $(this).text(now.toFixed(2)  + 'kcal'); 
                                     }
                                 });
                             }
@@ -344,18 +356,24 @@ for (const week of month.children) {
               }
           });
       }
+      const baseurl = new URL(window.location.href)
+  async function sendPOST(body){
+    const response = await fetch(baseurl.origin, {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+    const content = await response.json()
+    console.log(content)
+    return content
+}
 
-      $window.on('scroll', check_if_in_view);
-      $window.on('load', check_if_in_view);
+sendPOST({"title":"get-calories"}).then(function(calorie_info){
+  radial_animate(parseFloat(calorie_info.response[0]),calorie_info.response[1])
 
-      
-</script>
-<script>
-  function closeCookiePopUp() {
-    var cookieDiv = document.getElementById("cookie-consent-banner");
-    cookieDiv.style.display = "none"
-    document.cookie = "accepted=1; max-age="+(60*60*24*30)
-  }
-  if (document.cookie.includes("accepted")) {closeCookiePopUp()}
+})
+
 
 </script>
