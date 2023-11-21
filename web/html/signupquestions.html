@@ -11,7 +11,7 @@
 <body>
   <form action="/signupquestions_action" method="get" class="signupqs" onsubmit="return validateForm()">
     <div id="pal" class="input-needed">
-      <h4>1. What is your current physical activity level?</h4>
+      <h4>What is your current physical activity level?</h4>
       <input type="radio" id="sedentary" name="pal" value="sedentary">
       <label for="sedentary"><b>Sedentary</b> <p class="label-text">&emsp;&emsp;Exclusively sedentary activity/seated work with little or no strenuous leisure activity</p></label><br>
       <input type="radio" id="minimally_active" name="pal" value="minimally_active">
@@ -23,15 +23,15 @@
     </div>
 
     <div id="cardio" class="input-needed">
-      <h4>2. Do you aim to improve your cardiovascular fitness?</h4>
-      <input type="radio" id="cardio_true" name="cardio" value="cardio_true">
+      <h4>Do you aim to improve your cardiovascular fitness?</h4>
+      <input type="radio" id="cardio_true" name="cardio" value="cardio_true" onclick="toggleCardioSection()">
       <label for="cardio_true">Yes</label><br>
-      <input type="radio" id="cardio_false" name="cardio" value="cardio_false">
+      <input type="radio" id="cardio_false" name="cardio" value="cardio_false" onclick="toggleCardioSection()">
       <label for="cardio_false">No</label><br>
     </div>
 
     <div id="muscle_goals" class="input-needed">
-      <h4>3. What is your primary muscle goal?</h4>
+      <h4>What is your primary muscle goal?</h4>
       <input type="radio" id="strength" name="muscle_goals" value="strength">
       <label for="strength">Muscular Strength</label><br>
 
@@ -42,8 +42,8 @@
       <label for="endurance">Muscular Endurance</label><br>
     </div>
 
-    <div class="input-needed" id="fav_cardio">
-      <h4>4. Cardio: </h4>
+    <div id="fav_cardio">
+      <h4>Cardio: </h4>
 
       <input type="radio" id="running" name="fav_cardio" value="fav_cardio_running">
       <label for="running">Running</label><br>
@@ -68,7 +68,7 @@
       <option value="advanced">Advanced</option>
     </select>
 
-    <h4>5. What is your weight goal?</h4>
+    <h4>What is your weight goal?</h4>
     <div id="weight_goal" class="input-needed">
       <input type="radio" id="weightgain" name="weight_goal" value="gain">
       <label for="weightgain">Weight gain</label><br>
@@ -82,7 +82,7 @@
 
     <br><br>
 
-    <label for="weight" id="inline_label">6. Weight: </label>
+    <label for="weight" id="inline_label">Weight: </label>
     <input type="number" id="weight" name="weight" required>
 
     <select name="weight-units" id="weight-units" required>
@@ -93,7 +93,7 @@
 
     <br>
 
-    <label for="height" id="inline_label">7. Height: </label>
+    <label for="height" id="inline_label">Height: </label>
     <input type="number" id="height" name="height" required>
 
     <select name="height-units" id="height-units" required>
@@ -103,12 +103,12 @@
 
     <br>
 
-    <label for="dob" id="inline_label">8. D.O.B: </label>
+    <label for="dob" id="inline_label">D.O.B: </label>
     <input type="date" id="dob" name="date_of_birth" required>
 
     <br>
 
-    <h4>9. Sex: </h4>
+    <h4>Sex: </h4>
     <div class="input-needed" id="sex">
       <input type="radio" id="male" name="sex" value="male">
       <label for="male">Male</label><br>
@@ -116,11 +116,11 @@
       <input type="radio" id="female" name="sex" value="female">
       <label for="male">Female</label><br>
 
-      <input type="radio" id="intersex" name="intersex" value="intersex">
+      <input type="radio" id="intersex" name="sex" value="intersex">
       <label for="intersex">Intersex</label><br>
     </div>
 
-    <h4>10. Equipment: </h4>
+    <h4>Equipment: </h4>
     <div id="equipment" class="input-needed">
       <input type="checkbox" id="Bench" name="equipment_bench" value="">
       <label for="Bench">Bench</label><br>
@@ -192,7 +192,7 @@
       <label for="Dip machine">Dip machine</label><br>
     </div>
     
-    <h4>11. What days are you able to workout?</h4>
+    <h4>What days are you able to workout?</h4>
 
     <div id="workout_days" class="input-needed">
       <input type="checkbox" id="monday" name="monday" value="">
@@ -219,7 +219,7 @@
     
     <br><br>
 
-    <label for="rhr" id="inline_label">12. Resting Heart Rate (RHR): </label>
+    <label for="rhr" id="inline_label">Resting Heart Rate (RHR): </label>
     <input type="number" id="rhr" name="rhr" value="" min="0" max="220" required >
 
     <br><br><br>
@@ -230,6 +230,13 @@
   </form>
 </body>
 <script>
+  function toggleCardioSection() {
+    const cardioSection = document.getElementById("fav_cardio");
+    const cardioTrue = document.getElementById("cardio_true");
+
+    cardioSection.style.display = cardioTrue.checked ? "block" : "none";
+  }
+
   function validateForm() {
     const failed = document.querySelectorAll('.required');
     for (i = 0; i < failed.length; i++) {
@@ -250,6 +257,11 @@
       return false
     }
   }
+
+
+
+
+
 
 </script>
 </html>

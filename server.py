@@ -966,8 +966,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "running": "fav_cardio_running" == value["fav_cardio"],
                             "cycling": "fav_cardio_cycling" == value["fav_cardio"],
                             "swimming": "fav_cardio_swimming" == value["fav_cardio"],
-                            "other": value["other"].replace("+", " ") if "fav_cardio_other_box" == value["fav_cardio"] else ""
-                        },
+                            "other": (value["other"].replace("+", " ") if "fav_cardio_other_box" == value["fav_cardio"] else ""),
+                        } if "fav_cardio" in value else None,
                         "level":value["level"],
                         "weight_goal": value["weight_goal"],
                         "weight-units": value["weight-units"],
