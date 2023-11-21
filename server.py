@@ -1038,3 +1038,5 @@ if __name__ == "__main__": # checks if the file is being run localy
 # 1 - make a button that connects with strava in my profile
 
 # 2 - navbar covers stuff. only on firefox? maby?
+
+# 3 - user profile pic disaperes after food is logged?
