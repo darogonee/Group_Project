@@ -452,7 +452,6 @@ radial-progress-container {
 }
 
 section.svg-container {
-    width: 52%;
     max-width: 100%;
     display: flex;
     align-items: center;
@@ -714,4 +713,7 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
 
 .required h4 {
     color: red;
+}
+#calorie-percent{
+    text-align: center;
 }

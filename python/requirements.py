@@ -61,23 +61,31 @@ def calculate_eer(age, weight, height, sex, pal):
                 eer = 113.5 - (61.9*age) + pal*(26.7 * weight + 903 * height)
             elif sex == "female":
                 eer = 160.3 - (30.8*age)  + pal*(10 * weight + 934 * height)
+            elif sex == "intesex":
+                eer = ((113.5 - (61.9*age) + pal*(26.7 * weight + 903 * height)) + (160.3 - (30.8*age)  + pal*(10 * weight + 934 * height)))/2
         elif age > 18:
             if sex == "male":
                 eer = 661.8 - 9.53*age + pal*(15.91* weight + 539.6* height)
             elif sex == "female":
                 eer = 354.1 - 6.91*age + pal*(9.36* weight + 726* height)
+            elif sex == "intesex":
+                eer = ((661.8 - 9.53*age + pal*(15.91* weight + 539.6* height))/(354.1 - 6.91*age + pal*(9.36* weight + 726* height)))/2
     elif bmi > 25:
         if age <= 18:
             if sex == "male":
                 eer = -114.1-50.9*age + pal * (19.5*weight + 1161.4*height)
             elif sex == "female":
                 eer = 389.2 - 41.2*age + pal * (15 * weight  + 701.6 * height)
+            elif sex == "intersex":
+                eer = ((-114.1-50.9*age + pal * (19.5*weight + 1161.4*height))+(389.2 - 41.2*age + pal * (15 * weight  + 701.6 * height)))/2
+
         elif age > 18:
             if sex == "male":
                 eer = 1085.6 - 10.08*age  + pal*(13.7* weight + 416* height)
             elif sex == "female":
                 eer = 447.6 - 7.95*age  + pal*(11.4* weight + 619* height)
-
+            elif sex == "intersex":
+                eer = ((1085.6 - 10.08*age  + pal*(13.7* weight + 416* height))+(447.6 - 7.95*age  + pal*(11.4* weight + 619* height)))/2
     return eer
 
 # calculates the users requirded cals
