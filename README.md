@@ -12,3 +12,4 @@ signup
 login
 the plus button is how you add exercises and specifics such as the distance 
 the activities page shows your past activities 
+

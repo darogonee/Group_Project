@@ -47,30 +47,31 @@ class FittnessServer(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
 
-    # def do_POST(self):
-    #     content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
-    #     post_data = self.rfile.read(content_length) # <--- Gets the data itself
-    #     content = json.loads(post_data.decode('utf-8'))
-    #     match content["title"]:
-    #         case "edit-json":
-    #             data = json.load("data/"+content["body"][0])
-    #             del data["food_log"][content["body"][1]]
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length']) # <--- Gets the size of data
+        post_data = self.rfile.read(content_length) # <--- Gets the data itself
+        content = json.loads(post_data.decode('utf-8'))
+        match content["title"]:
+            case "edit-json":
+                data = json.load("data/"+content["body"][0])
+                del data["food_log"][content["body"][1]]
 
-            #     response = "deletion-successful"
-            # case _:
-            #     response = "err:invalid-title"
+                response = "deletion-successful"
+            case "get-calories":
+                date = self.get_current_date()
+                perm_nutrition = self.get_user_data("perm_nutrition_log")
+                user_info = self.get_user_data("user_data")
+                total_calories = perm_nutrition["nutrition_log"][date]["totals"]["total_calories"]
+                goal_calories = user_info["goal_cals"]
+                response = [total_calories, goal_calories]
+            case _:
+                response = "err:invalid-title"
 
-        # self._set_response()
-        # if type(response) != type(""):
-        #     response = json.dumps(response)
-        # self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
-        # print("request fulfilled")
-
-    #     self._set_response()
-    #     if type(response) != type(""):
-    #         response = json.dumps(response)
-    #     self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
-    #     print("request fulfilled")
+        self.set_response()
+        if type(response) != type(""):
+            response = json.dumps(response)
+        self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
+        print("request fulfilled")
 
     def redirect(self, link):
         self.set_response()
@@ -479,27 +480,28 @@ class FittnessServer(BaseHTTPRequestHandler):
             case "/action_confirm_food_log":
                 self.set_response()
                 user = self.get_username()
-                with open(f"temp_nutrition_log/{user}.json", "r") as nutrition_log:
-                    logged_data = json.load(nutrition_log)
+            
+                perm_nutrition_data = self.get_user_data("perm_nutrition_log")
 
-                with open(f"perm_nutrition_log/{user}.json", "r") as perm_nutrition_log:
-                    perm_nutrition_data = json.load(perm_nutrition_log)
+                logged_data = self.get_user_data("temp_nutrition_log")
 
-                # setting nessasery veriables
-                total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
-                total_carbs = str(round(sum(float(item["carbs"]) for item in logged_data["food_log"]), 1))
-                total_fat = str(round(sum(float(item["fat"]) for item in logged_data["food_log"]), 1))
-                total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
-                date = logged_data["date"]
-
-                # checks if the user has nutrition file
-                if not "nutrition_log" in perm_nutrition_data: 
-                    perm_nutrition_data["nutrition_log"] = {}
                 
-                perm_nutrition_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
 
-                with open(f"perm_nutrition_log/{user}.json", "w") as perm_nutrition_data_file:
-                    json.dump(perm_nutrition_data, perm_nutrition_data_file)
+                if "date" in logged_data:
+                    # setting nessasery veriables
+                    total_calories = str(round(sum(float(item["calories"]) for item in logged_data["food_log"]), 1))
+                    total_carbs = str(round(sum(float(item["carbs"]) for item in logged_data["food_log"]), 1))
+                    total_fat = str(round(sum(float(item["fat"]) for item in logged_data["food_log"]), 1))
+                    total_protein = str(round(sum(float(item["protein"]) for item in logged_data["food_log"]), 1))
+                    date = logged_data["date"]
+                    # checks if the user has nutrition file
+                    if not "nutrition_log" in perm_nutrition_data: 
+                        perm_nutrition_data["nutrition_log"] = {}
+                    
+                    perm_nutrition_data["nutrition_log"][date] = {"food":logged_data["food_log"], "totals":{"total_calories":total_calories, "total_carbs":total_carbs, "total_fat":total_fat, "total_protein":total_protein}}
+
+                    with open(f"perm_nutrition_log/{user}.json", "w") as perm_nutrition_data_file:
+                        json.dump(perm_nutrition_data, perm_nutrition_data_file)
                 
                 self.redirect("/logfood")
 
@@ -733,14 +735,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 calories_percent_eaten = "0"
                             else:
                                 calories_percent_eaten = int(round(int(float(total_calories)) / int(goal_cals) * 100))
-                            
-                            # body = ""
-                            # with open("web/html/html-template/calories-progress-template.html") as template_cal_progress:
-                            #     body = template_cal_progress.read().replace("template_cals_remaining", str(calories_remaining))
-
-                            # cal_progress_final = home_file.read().replace("calories_progress", body)                         
-                            # self.wfile.write(cal_progress_final.encode())
-
+                        
                             # sets a bunch of veriables
                             total_carbs = float(perm_nutrition_log["nutrition_log"][date]["totals"]["total_carbs"])
                             total_protein = float(perm_nutrition_log["nutrition_log"][date]["totals"]["total_protein"])
@@ -974,8 +969,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "running": "fav_cardio_running" == value["fav_cardio"],
                             "cycling": "fav_cardio_cycling" == value["fav_cardio"],
                             "swimming": "fav_cardio_swimming" == value["fav_cardio"],
-                            "other": value["other"].replace("+", " ") if "fav_cardio_other_box" == value["fav_cardio"] else ""
-                        },
+                            "other": (value["other"].replace("+", " ") if "fav_cardio_other_box" == value["fav_cardio"] else ""),
+                        } if "fav_cardio" in value else None,
                         "level":value["level"],
                         "weight_goal": value["weight_goal"],
                         "weight-units": value["weight-units"],
