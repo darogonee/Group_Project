@@ -17,7 +17,6 @@ def cache(max_age=60):
             def clear(*args, **kwargs):
                 # clear the cache for the given arguments
                 AgeCacheWrapper.cache.pop(repr((args, tuple(kwargs.items()))))
-                print(repr((args, tuple(kwargs.items()))))
             @staticmethod
             def clear_args(*args):
                 # clear the cache for the given arguments and no restrictions on keywords
