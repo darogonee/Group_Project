@@ -454,7 +454,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         if food_not_found:
                             food_final = food_final.replace("</body>", food_not_found_alert_script + "</body>")  
-
+                        food_final = food_final.replace("template_profile_img", python.Api.athelete_profile_img(user))
                         self.wfile.write(food_final.encode()) # replace the old info in the file with the new info
                     
             case "/action_confirm_food_log":
@@ -578,11 +578,11 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/action_signin":
                 with open("data/passwords.json", "r") as file:
-                    data = json.load(file)  
+                    data = json.load(file)
                 values = self.query()
-                username = values["username"].lower()
+                username = values["username"].lower().replace("+", "")
                 if username in data: # checks if the user already exists
-                    hash_password = password_hash(values["password"], data[username][1])
+                    hash_password = password_hash(values["password"].replace("+", ""), data[username][1])
                     self.send_response(200)
                     self.send_header("Content-type", "text/html")
                     if hash_password == data[username][0]: # checks if the password the user put in is the same as the password in the password json file
@@ -597,17 +597,17 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("data/passwords.json", "r") as file:
                     data = json.load(file)
                 values = self.query()
-                username = values["username"].lower()
+                username = values["username"].lower().replace("+", "")
                 if username in data: # checks if the user already exist
                     self.redirect("/signin") # if it does take the user to the login page
                     return
-                if len(username) < 3 or len(username) > 24 or values["password"] != values["password-rentry"]: # if it doesnt exist check the legn of the password entered
+                if len(username) < 3 or len(username) > 24 or values["password"].replace("+", "") != values["password-rentry"].replace("+", ""): # if it doesnt exist check the legn of the password entered
                     self.redirect("/signup")
                     return
                 
                 salt = uuid.uuid4().hex
                 
-                hash_password = password_hash(values["password"], salt) # hashes the password the user put in origanly
+                hash_password = password_hash(values["password"].replace("+", ""), salt) # hashes the password the user put in origanly
 
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -846,7 +846,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                             elif user_data_pro['fav_cardio'][type] == True:
                                 myprofile_page = myprofile_page.replace("fav-sport-temp", type)
                     else:
-                        myprofile_page = myprofile_page.replace("fav-sport-temp", "NA")
+                        myprofile_page = myprofile_page.replace("fav-sport-temp", "N/A")
                     myprofile_page = (myprofile_page.replace("lvl-temp", user_data_pro['level'])
                         .replace("weight-goal-temp", user_data_pro['weight_goal'])
                         .replace("weight-units-temp", user_data_pro['weight-units'])
@@ -891,7 +891,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         description = activity["description"].replace("{", "") 
                         description = description.replace("}", "")
                     except AttributeError:
-                        description = "NA"
+                        description = "N/A"
                     activity_page = (activity_page.replace("template_name", str(activity["name"]))
                         .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
                         .replace("template_moving_time", str(round(int(activity["moving_time"])/60, 2)))
@@ -1038,5 +1038,3 @@ if __name__ == "__main__": # checks if the file is being run localy
 # 1 - make a button that connects with strava in my profile
 
 # 2 - navbar covers stuff. only on firefox? maby?
-
-# 3 - user profile pic disaperes after food is logged?

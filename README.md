@@ -7,6 +7,7 @@ clone the code
   cd zamo
 ```
 open the server.py file and run it 
+recommended to use chrome
 copy the link 
 signup 
 login
