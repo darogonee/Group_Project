@@ -214,6 +214,8 @@
   bottomright = template_bottomright
 var map = L.map("map", {
     minZoom: 12.0,
+    maxZoom: 20,
+    // maxZoom: 100,
     maxBounds: [[topleft], [bottomright]],
     maxBoundsViscosity: 0.9
 }).setView([(topleft[0]+bottomright[0])/2, (topleft[1]+bottomright[1])/2], 15)
@@ -224,7 +226,6 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png?{noLabels}", {
     maxZoom: 30,
     noLabels: true
 }).addTo(map)
-
 
 points = template_points
 line = L.polyline(points, {color: "red"})

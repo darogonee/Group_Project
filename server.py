@@ -379,7 +379,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                 query = self.query()
                 name = query["food_name"]
-
+                
                 if query["food_name"] == "Secret":
                     self.redirect("/pace_cau")
                     return
@@ -525,9 +525,10 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
-                                activity = activity.replace("template_date", str(formatted_date))
-                                activity = activity.replace("template_id", str(activity_data[i]['id'])) 
+                                activity = (activity.replace("template_date", str(formatted_date))
+                                .replace("template_id", str(activity_data[i]['id'])))
 
+                                
                                 
                                 if "-" not in activity_data[i]["name"]:
                                     activity_string = str(activity_data[i]["name"])[:25]
@@ -825,7 +826,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 value = self.query()             
                 date = value['workout-date'].split("-")
                 times = value['workout-time'].split("%3A")
-                workout_time = (int(value['workout-hrs'])*3600) + (int(value['workout-mins'])*60) + int(value['workout-secs']) 
+                workout_time = (int(value['workout-hrs'] or "0")*3600) + (int(value['workout-mins'] or "0")*60) + int(value['workout-secs'] or "0") 
                 timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(times[0]), int(times[1]))
                 
                 # the comment section code for the upload activites section
@@ -920,35 +921,37 @@ class FittnessServer(BaseHTTPRequestHandler):
                 user = self.get_username()
                 with open("web/html/html-template/individual_activitie.html", "r") as file:
                     id = int(self.query()["id"])
-                    for activity in python.Api.get_user_activites(user): # goes through the last 200 activites 
-                        if id == activity["id"]:
-                            activity_page = file.read()
-                            activity_page = (activity_page.replace("template_name", str(activity["name"]))
-                                .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
-                                .replace("template_moving_time", str(round(int(activity["moving_time"])/60, 2)))
-                                .replace("template_elapsed_time", str(round(int(activity["elapsed_time"])/60, 2)))
-                                .replace("template_total_elevation_gain", str(activity["total_elevation_gain"]))
-                                .replace("template_type", str(activity["type"]))
-                                .replace("template_sport_type", str(activity["sport_type"]))
-                                .replace("template_start_date", str(activity["start_date"]).split("T")[0])
-                                .replace("template_kudos_count", str(activity["kudos_count"]))
-                                .replace("template_achievement_count", str(activity["achievement_count"]))
-                                .replace("template_comment_count", str(activity["comment_count"]))
-                                .replace("template_achievement_count", str(activity["achievement_count"]))
-                                .replace("template_athlete_count", str(activity["athlete_count"]))
-                                .replace("template_trainer", str(activity["trainer"]))
-                                .replace("template_commute", str(activity["commute"]))
-                                .replace("template_private", str(activity["private"]))
-                                .replace("template_visibility", str(activity["visibility"].replace("_", " ")))
-                                .replace("template_average_speed", str(activity["average_speed"]))
-                                .replace("template_max_speed", str(activity["max_speed"])))
-                            try:
-                                activity_page = (activity_page.replace("template_elev_high", str(activity["elev_high"]))
-                                    .replace("template_elev_low", str(activity["elev_low"])))
-                            except:
-                                activity_page = (activity_page.replace("template_elev_high", str(0))
-                                    .replace("template_elev_low", str(0)))
-                            self.wfile.write(activity_page.encode())
+                    activity = python.Api.get_user_activity(user, id)
+                    activity_page = file.read()
+                    description = activity["description"].replace("{", "")
+                    description = description.replace("}", "")
+                    activity_page = (activity_page.replace("template_name", str(activity["name"]))
+                        .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
+                        .replace("template_moving_time", str(round(int(activity["moving_time"])/60, 2)))
+                        .replace("template_elapsed_time", str(round(int(activity["elapsed_time"])/60, 2)))
+                        .replace("template_total_elevation_gain", str(activity["total_elevation_gain"]))
+                        .replace("template_type", str(activity["type"]))
+                        .replace("template_sport_type", str(activity["sport_type"]))
+                        .replace("template_start_date", str(activity["start_date"]).split("T")[0])
+                        .replace("template_kudos_count", str(activity["kudos_count"]))
+                        .replace("template_achievement_count", str(activity["achievement_count"]))
+                        .replace("template_comment_count", str(activity["comment_count"]))
+                        .replace("template_achievement_count", str(activity["achievement_count"]))
+                        .replace("template_athlete_count", str(activity["athlete_count"]))
+                        .replace("template_trainer", str(activity["trainer"]))
+                        .replace("template_commute", str(activity["commute"]))
+                        .replace("template_private", str(activity["private"]))
+                        .replace("template_visibility", str(activity["visibility"].replace("_", " ")))
+                        .replace("template_average_speed", str(round((activity["average_speed"]*3.6))))
+                        .replace("template_max_speed", str(round((activity["max_speed"]*3.6))))
+                        .replace("template_description", description.replace("ZAMO_DATA", "")))
+                    try:
+                        activity_page = (activity_page.replace("template_elev_high", str(activity["elev_high"]))
+                            .replace("template_elev_low", str(activity["elev_low"])))
+                    except:
+                        activity_page = (activity_page.replace("template_elev_high", str(0))
+                            .replace("template_elev_low", str(0)))
+                    self.wfile.write(activity_page.encode())
 
             case "/signupquestions": # loads the sign up questions
                 self.set_response()
@@ -1065,19 +1068,19 @@ if __name__ == "__main__": # checks if the file is being run localy
 
 # TODO
 
-# 1 - only one fav sport    
+# 1 -  
 
 # 2 -
 
-# 3 - fav activity
+# 3 - 
 
 # 4 - make a button that connects with strava in my profile
 
-# 5 - 
+# 5 - log food stuff
 
 # 6 - uploaded activity description
 
-# 7 - sign up question optinal
+# 7 - # yes know cardio / fav sport
 
 # 8 - for oliver magil: website doesnt support short people eg smaller then 100
 
@@ -1094,17 +1097,7 @@ if __name__ == "__main__": # checks if the file is being run localy
 
 ### Think done needs bug testing BUG 
 
-# 1 - Make My Profile look nice
-
-# 2 - when user creates activity the user cant indivully view them
-
-# 3 - add number in cneter of calder circuls
-
-# 4 - Let users signup with a username that has special characters
-
-# 5 - user profile picture
-
-# 6 - add cookie to rember user acctped cookies
+# 1 - wird individule speed thing
 
 
 #NOTE
