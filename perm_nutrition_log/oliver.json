@@ -1,1 +1,1 @@
-{}
+{"nutrition_log": {"2023-11-21": {"food": [{"name": "apple juice", "quantity": "100", "units": "serve", "calories": "11586.6", "carbs": "2784.9", "fat": "32.4", "protein": "24.9"}, {"name": "pizza", "quantity": "100", "units": "kg", "calories": "262899.8", "carbs": "32877.0", "fat": "9752.2", "protein": "11369.4"}], "totals": {"total_calories": "274486.4", "total_carbs": "35661.9", "total_fat": "9784.6", "total_protein": "11394.3"}, "data_transferred": "False"}}}
