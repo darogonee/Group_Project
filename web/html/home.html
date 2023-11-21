@@ -230,6 +230,8 @@
   bottomright = template_bottomright
   var map = L.map("map", {
     minZoom: 12.0,
+    maxZoom: 20,
+    // maxZoom: 100,
     maxBounds: [[topleft], [bottomright]],
     maxBoundsViscosity: 0.9
   }).setView([(topleft[0] + bottomright[0]) / 2, (topleft[1] + bottomright[1]) / 2], 15)
@@ -239,8 +241,7 @@
     attribution: "template_activity_name",
     maxZoom: 30,
     noLabels: true
-  }).addTo(map)
-
+}).addTo(map)
 
   points = template_points
   line = L.polyline(points, { color: "red" })
