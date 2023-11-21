@@ -87,21 +87,19 @@
     </div>
     
 </body>
-<script>
-  // document.addEventListener("DOMContentLoaded", function () {
-  //   const date = new Date();
-  //   var day = date.getDate();
-  //   if (day < 10) {
-  //     day = "0" + day
-  //   }
-  //   var month = date.getMonth() + 1;
-  //   var year = date.getFullYear();
-  //   var currentDate = `${year}-${month}-${day}`
-  //   console.log(currentDate)
-  //   document.getElementById("log_food_date").value = currentDate;
-  // })  
+<script> 
+
+  function restrictDate() {
+    var selectedDate = new Date(document.getElementById("datepicker").value);
+    var currentDate =  new Date();
+    if (selectedDate > currentDate) {
+      alert("Please enter a date not in the future.");
+      setToday();
+    }
+  }
 
   function updateDatePicker() {
+            restrictDate()
             const datePicker = document.getElementById("datepicker");
             const selectedDate = new Date(datePicker.value);
             setDatePickerValue(selectedDate);
@@ -118,6 +116,9 @@
         function navigateDate(offset) {
             const datePicker = document.getElementById("datepicker");
             const currentDate = new Date(datePicker.value);
+            if (offset == 1) {
+              restrictDate()
+            }
             currentDate.setDate(currentDate.getDate() + offset);
             setDatePickerValue(currentDate);
         }
