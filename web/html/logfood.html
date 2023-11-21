@@ -78,8 +78,19 @@
     </div>
     
 </body>
-<script>
+<script> 
+
+  function restrictDate() {
+    var selectedDate = new Date(document.getElementById("datepicker").value);
+    var currentDate =  new Date();
+    if (selectedDate > currentDate) {
+      alert("Please enter a date not in the future.");
+      setToday();
+    }
+  }
+
   function updateDatePicker() {
+            restrictDate()
             const datePicker = document.getElementById("datepicker");
             const selectedDate = new Date(datePicker.value);
             setDatePickerValue(selectedDate);
@@ -96,6 +107,9 @@
         function navigateDate(offset) {
             const datePicker = document.getElementById("datepicker");
             const currentDate = new Date(datePicker.value);
+            if (offset == 1) {
+              restrictDate()
+            }
             currentDate.setDate(currentDate.getDate() + offset);
             setDatePickerValue(currentDate);
         }
