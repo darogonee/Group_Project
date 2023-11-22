@@ -22,8 +22,6 @@ body {
     border-radius: 20px
 }
 
-
-
 .border-table {
     border: 1px solid black;
     border-collapse: collapse;
@@ -55,8 +53,7 @@ body {
     font-family: 'Lucida Grande';
 }
 
-h1,
-h2 {
+h1, h2 {
     color: black;
     font-family: 'Roboto';
     font-size: 32px;
@@ -170,7 +167,6 @@ ul {
 .right.startright {
     position: static;
     padding-left: calc(100vw - 1000px);
-    /* 1000px is the width of the other things in the container */
 }
 
 .signin {
@@ -182,7 +178,6 @@ ul {
     border-radius: 10px;
     padding-bottom: 100%;
     background-color: white;
-    /* opacity: 0.5; */
 }
 
 .signin-container {
@@ -263,7 +258,6 @@ table {
     padding: 10px;
 }
 
-
 th {
     text-align: center;
     font-size: 16px;
@@ -288,13 +282,11 @@ input#username {
     border-radius: 1.5px;
 }
 
-#signup-bt,
-#login-bt {
+#signup-bt, #login-bt {
     transition-duration: 100ms;
 }
 
-#signup-bt:hover,
-#login-bt:hover {
+#signup-bt:hover, #login-bt:hover {
     background-color: rgb(171, 0, 0);
 }
 
@@ -392,7 +384,6 @@ a {
 .macros img {
     min-width: 80%;
 }
-
 
 /*Required CSS*/
 svg.radial-progress {
@@ -568,8 +559,6 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
   .cookie-consent-banner_cta:last-child {
     margin-left: 16px;
   }
-
-
 
 .logexercise input,
 .logexercise select,

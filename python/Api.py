@@ -35,7 +35,6 @@ def refresh_tokens(client_id, client_secret, refresh_token):
             f"https://www.strava.com/oauth/token?client_id={client_id}&client_secret={client_secret}&refresh_token={refresh_token}&grant_type=refresh_token").json()
         return res["access_token"], res["refresh_token"]
     except KeyError as e:
-        print(res, refresh_token)
         return None
 
 # uses the custom cache decoration the cache the user info to load page fatser
