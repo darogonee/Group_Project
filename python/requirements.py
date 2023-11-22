@@ -21,7 +21,7 @@ def imperial_to_metric_weight(weight, weight_units): # convert to kg
     elif weight_units == "st":
         metric_weight = weight*6.35
     else:
-        metric_weight = weight
+        metric_weight = weight #kg
     return metric_weight
 
 # converts between imperical and metric. height
