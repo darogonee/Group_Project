@@ -1,22 +1,129 @@
-Name: template_name<br>
-Distance: template_distance km<br>
-Moving time: template_moving_time<br>
-Elapsed time: template_elapsed_time<br>
-Total elevation gain: template_total_elevation_gain<br>
-Type: template_type<br>
-Sport Type: template_sport_type<br>
-Start date: template_start_date<br>
-Kudos count: template_kudos_count<br>
-Comment count: template_comment_count<br>
-Athlete count: template_athlete_count<br>
-Trainer: template_trainer<br>
-Commute: template_commute<br>
-Private: template_private<br>
-Visibility: template_visibility<br>
-Average speed: template_average_speed km/h<br>
-Maxspeed: template_max_speed km/h<br>
-Elev_high: template_elev_high m<br>
-Elev_low: template_elev_low m<br>
-Achievement count: template_achievement_count<br>
-Description: template_description<br>
-<button onclick="history.back()">Back</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    
+    <script src="main.js" defer></script>
+    <title>Fitness</title>
+</head>
+<body>
+  <div class="nav-container">
+    <nav class="navbar">
+        <ul>
+            <li><a href="/"><img src="/images/zamologo_name.png" height="50px" width="50px"></a></li>
+            <li><a href="/">Home</a></li>
+            <li><a href="/activities">Activities</a></li>
+            <li><a href="myprogram">My Program</a></li>
+            <li><a href="food">Nutrition</a></li>
+            <li class="dropdown right startright"><a href="refresh?path=/">Refresh</a></li>
+            <li class="dropdown right">
+              <a href="#"><img src="/images/pluslogo2.svg" height="50px" width="50"></a>
+              <ul class="dropdown-content">
+                <li><a href="logexercise">Log exercise</a></li>
+                <li><a href="logfood">Log food</a></li>
+              </ul>
+            </li>
+            <li class="dropdown right">
+              <a href="/"><img src="template_profile_img" height="50px" width="50px" class="profile"></a>
+              <ul class="dropdown-content">
+                <li><a href="myprofile">My Profile</a></li>
+                <li><a onclick="logout()">Log out</a></li>
+              </ul>
+            </li>
+        </ul>
+    </nav>
+  </div>
+  <div class="activity-details">
+    <h1>template_name</h1>
+    <table class="individual-activity-table">
+        <tr>
+            <td><strong>Name:</strong></td>
+            <td>template_name</td>
+        </tr>
+        <tr>
+            <td><strong>Distance:</strong></td>
+            <td>template_distance km</td>
+        </tr>
+        <tr>
+            <td><strong>Moving Time:</strong></td>
+            <td>template_moving_time s</td>
+        </tr>
+        <tr>
+            <td><strong>Elapsed Time:</strong></td>
+            <td>template_elapsed_time s</td>
+        </tr>
+        <tr>
+            <td><strong>Total Elevation Gain:</strong></td>
+            <td>template_total_elevation_gain m</td>
+        </tr>
+        <tr>
+            <td><strong>Type:</strong></td>
+            <td>template_type</td>
+        </tr>
+        <tr>
+            <td><strong>Sport Type:</strong></td>
+            <td>template_sport_type</td>
+        </tr>
+        <tr>
+            <td><strong>Start Date:</strong></td>
+            <td>template_start_date</td>
+        </tr>
+        <tr>
+            <td><strong>Kudos Count:</strong></td>
+            <td>template_kudos_count</td>
+        </tr>
+        <tr>
+            <td><strong>Comment Count:</strong></td>
+            <td>template_comment_count</td>
+        </tr>
+        <tr>
+            <td><strong>Athlete Count:</strong></td>
+            <td>template_athlete_count</td>
+        </tr>
+        <tr>
+            <td><strong>Trainer:</strong></td>
+            <td>template_trainer</td>
+        </tr>
+        <tr>
+            <td><strong>Commute:</strong></td>
+            <td>template_commute</td>
+        </tr>
+        <tr>
+            <td><strong>Private:</strong></td>
+            <td>template_private</td>
+        </tr>
+        <tr>
+            <td><strong>Visibility:</strong></td>
+            <td>template_visibility</td>
+        </tr>
+        <tr>
+            <td><strong>Average Speed:</strong></td>
+            <td>template_average_speed km/h</td>
+        </tr>
+        <tr>
+            <td><strong>Max Speed:</strong></td>
+            <td>template_max_speed km/h</td>
+        </tr>
+        <tr>
+            <td><strong>Elevation High:</strong></td>
+            <td>template_elev_high m</td>
+        </tr>
+        <tr>
+            <td><strong>Elevation Low:</strong></td>
+            <td>template_elev_low m</td>
+        </tr>
+        <tr>
+            <td><strong>Achievement Count:</strong></td>
+            <td>template_achievement_count</td>
+        </tr>
+        <tr>
+            <td><strong>Description:</strong></td>
+            <td>template_description</td>
+        </tr>
+    </table>
+    <button onclick="history.back()">Back</button>
+</div>
+</body>

@@ -304,7 +304,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 sets_body = ""
                                 muscle_group_body = ""
                                 for exercise in exercises: # iterates over exercises in program
-                                    name_body += f"<a href='https://www.muscleandstrength.com/exercises/{exercise['exercise_name'].lower().replace(' ', '-')}.html'>{exercise['exercise_name']}</a>" + "<br>" #links wesbite that gives tutorial on how to do exercise
+                                    name_body += f"<a href='https://www.youtube.com/results?search_query={exercise['exercise_name'].lower()}'>{exercise['exercise_name']}</a>" + "<br>" #links wesbite that gives tutorial on how to do exercise
                                     reps_body += exercise["reps"] + "<br>"
                                     sets_body += exercise["sets"] + "<br>"
                                     muscle_group_body += exercise["muscle_group"] + "<br>"
