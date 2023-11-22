@@ -600,7 +600,7 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
     background-color: #f2f2f2;
 }
 
-#add-to-table, #delete-row {
+#add-to-table, #delete-row, #edit-qs {
     background-color: #2377ed;
     color: white;
     border: none;
@@ -609,8 +609,8 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
     cursor: pointer;
 }
 
-#add-to-table:hover, #delete-row:hover{
-    background-color: #ed2623;
+#add-to-table:hover, #delete-row:hover, #edit-qs:hover{
+    background-color: #4341ae;
 }
 
 .logexercise input[type="submit"] {
@@ -734,3 +734,93 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
   .blue {
     background-color: blue;
   }
+
+.info-table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+}
+
+.info-table th, .info-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.info-table th {
+    background-color: #333;
+    color: #fff;
+}
+
+.activity-details {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+.individual-activity-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.individual-activity-table, .individual-activity-table th, .individual-activity-table td {
+    border: 1px solid #ddd;
+}
+
+.individual-activity-table th, .individual-activity-table td {
+    padding: 12px;
+    text-align: left;
+}
+
+.individual-activity-table th {
+    background-color: #333;
+    color: #fff;
+}
+
+.activity-details button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    margin-top: 20px;
+    display: block;
+}
+
+.activity-details button:hover {
+    background-color: #555;
+}
+
+.nonlink:hover {
+    text-decoration: underline;
+}
+
+.profile {
+    border-radius: 50%;
+}
+
+.user-profile {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-profile td {
+    border: 1px solid #ddd;
+    padding: 12px;
+}
+
+.user-profile td:first-child {
+    font-weight: bold;
+}
+
+#edit-qs a{
+    text-decoration: none;
+    color: white;
+}
