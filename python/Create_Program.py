@@ -305,8 +305,6 @@ def create_program(data):
 
     return program
 
-    
-
 # check that the workout doesnt contain any thing the user doesnt want to do or doesnt have 
 def valid_exercises(user_level, user_equipment):
     with open("data/exercises.json", "r") as file:
