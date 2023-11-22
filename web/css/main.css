@@ -354,11 +354,11 @@ a {
 }
 
 .progress-bar {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background:
-        radial-gradient(closest-side, white 79%, transparent 80% 100%),
+        radial-gradient(closest-side, white 69%, transparent 70% 100%),
         conic-gradient(var(--time-color) var(--time), var(--default-color) var(--time), var(--default-color) calc(100% - var(--dist)), var(--dist-color) 0%);
 }
 .progress-bar div {
@@ -725,6 +725,9 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
     width: 15px;
     /* margin-bottom: 15px; */
     border: 1px solid black;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
   }
   
   .orange {
@@ -823,4 +826,9 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
 #edit-qs a{
     text-decoration: none;
     color: white;
+}
+
+.wid {
+    margin: 8px;
+    padding-left: 12px;
 }

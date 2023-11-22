@@ -1,7 +1,6 @@
 '''
 Zamo Fitness App
 Programmed by Oliver Thiessen, Oliver Magill, Alex Tran, and Lewis Clennett
-
 '''
 
 # required imports
