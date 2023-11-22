@@ -35,7 +35,6 @@ def refresh_tokens(client_id, client_secret, refresh_token):
             f"https://www.strava.com/oauth/token?client_id={client_id}&client_secret={client_secret}&refresh_token={refresh_token}&grant_type=refresh_token").json()
         return res["access_token"], res["refresh_token"]
     except KeyError as e:
-        print(res, refresh_token)
         return None
 
 # uses the custom cache decoration the cache the user info to load page fatser
@@ -50,6 +49,17 @@ def get_user_activites(user, param = {'per_page': 200, 'page': 1}):
     my_dataset = requests.get(
         activites_url, headers = header, params = param).json()
     return my_dataset
+
+@cache(max_age=10*60)
+def get_user_activity(user, id):
+    url = f"https://www.strava.com/api/v3/activities/{id}"
+
+    header = {'Authorization': 'Bearer ' +
+              refresh_tokens(client_id, client_secret, load(user)[0])[0]}
+
+    activity = requests.get(
+        url, headers = header, params = {"id": id}).json()
+    return activity
 
 # saves the users refresh_token and access_token to a file
 def save(access_token, refresh_token, path):

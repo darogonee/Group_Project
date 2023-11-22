@@ -26,18 +26,17 @@ MIME_TYPES = {
 }
 
 food_not_found_alert_script = """
-                <script>
-                    window.onload = function() {
-                        alert("Food not found. Please enter a valid food");
-                    };
-                </script>
-                """
+<script>
+    window.onload = function() {
+        alert("Food not found. Please enter a valid food");
+    };
+</script>
+"""
 
-# NOTE restart server aprox 30 days NOTE
+# NOTE restart server aprox 30 days
 
 hostName = "localhost"
 serverPort = 8080
-
 uuid2user = {}
 
 class FittnessServer(BaseHTTPRequestHandler):
@@ -188,18 +187,6 @@ class FittnessServer(BaseHTTPRequestHandler):
         
         return sign
     
-    # def remove_existing_chart(self, page, template, content, image_name):
-    #     with open(page, "r") as read_page:
-    #         with open(template, "r") as page_template_file:
-    #             body = ""
-    #             template = page_template_file.read()
-    #             template = template.replace(content, "")
-
-    #         body += template
-    #         final = read_page.read().replace(content, body)
-    #         self.wfile.write(final.encode())
-                    
-    
     def do_GET(self):
         match self.path.split("?")[0]:
             case "/regenerate_my_program":
@@ -289,7 +276,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     food_final = food_file.replace("template_nutrition_table", tbody)
                     self.wfile.write(food_final.encode()) # write replaced html to html file
 
-
             case "/myprogram":
                 self.set_response()
                 with open("web/html/myprogram.html", "r") as myprogram_file:
@@ -318,7 +304,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                                 sets_body = ""
                                 muscle_group_body = ""
                                 for exercise in exercises: # iterates over exercises in program
-                                    name_body += f"<a href='https://www.muscleandstrength.com/exercises/{exercise['exercise_name'].lower().replace(' ', '-')}.html'>{exercise['exercise_name']}</a>" + "<br>" #links wesbite that gives tutorial on how to do exercise
+                                    name_body += f"<a href='https://www.youtube.com/results?search_query={exercise['exercise_name'].lower()}'>{exercise['exercise_name']}</a>" + "<br>" #links wesbite that gives tutorial on how to do exercise
                                     reps_body += exercise["reps"] + "<br>"
                                     sets_body += exercise["sets"] + "<br>"
                                     muscle_group_body += exercise["muscle_group"] + "<br>"
@@ -373,18 +359,12 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open(f"perm_nutrition_log/{user}.json", "w") as write_perm_nutrition:
                     json.dump(perm_nutrition_data, write_perm_nutrition)
 
-
             case "/action_logfoodauto": 
                 user = self.get_username()
                 self.set_response()
 
                 query = self.query()
-                name = query["food_name"]
-
-                if query["food_name"] == "Secret":
-                    self.redirect("/pace_cau")
-                    return
-                
+                name = query["food_name"]    
                 quantity = query["amount"]
                 units = query["food_units"]
                 date = query["log_food_date"]
@@ -474,7 +454,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         if food_not_found:
                             food_final = food_final.replace("</body>", food_not_found_alert_script + "</body>")  
-
+                        food_final = food_final.replace("template_profile_img", python.Api.athelete_profile_img(user))
                         self.wfile.write(food_final.encode()) # replace the old info in the file with the new info
                     
             case "/action_confirm_food_log":
@@ -527,22 +507,18 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                                 input_datetime = datetime.datetime.strptime(activity_data[i]["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                                 formatted_date = input_datetime.strftime("%a, %d/%m/%Y")         
-                                activity = activity.replace("template_date", str(formatted_date))
-                                activity = activity.replace("template_id", str(activity_data[i]['id'])) 
-
-                                
+                                activity = (activity.replace("template_date", str(formatted_date))
+                                .replace("template_id", str(activity_data[i]['id'])))
+                           
                                 if "-" not in activity_data[i]["name"]:
                                     activity_string = str(activity_data[i]["name"])[:25]
                                     if len(str(activity_data[i]["name"])) >= 25:
                                         activity_string = activity_string + "..."
-                                    activity = activity.replace("template_name", activity_string)
-                                    
+                                    activity = activity.replace("template_name", activity_string)                                 
                                 else:
-                                    activity = activity.replace("template_name", str(activity_data[i]["name"]).split("-")[0])
+                                    activity = activity.replace("template_name", str(activity_data[i]["name"]).split("-")[0])  
 
-                
-                                formatted_time = time.strftime('%H:%M:%S', time.gmtime(activity_data[i]["moving_time"]))
-                                                            
+                                formatted_time = time.strftime('%H:%M:%S', time.gmtime(activity_data[i]["moving_time"]))                                                          
                                 activity = activity.replace("template_time", str(formatted_time))
                                 distancekm = round(activity_data[i]["distance"]/1000, 2)
                                 activity = activity.replace("template_distancekm", str(distancekm)+" km")
@@ -559,8 +535,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                         activities_file = activities_file.replace("template_profile_img", python.Api.athelete_profile_img(user))
                         activity_final = activities_file.replace("template_activities", tbody) # replaces template_activities with tbody                                          
                         self.wfile.write(activity_final.encode())
-
-                        
+     
             case "/logout":
                 uuid2user.pop(self.get_cookie()['user']) # removes the cookie from the users browser
 
@@ -603,11 +578,11 @@ class FittnessServer(BaseHTTPRequestHandler):
 
             case "/action_signin":
                 with open("data/passwords.json", "r") as file:
-                    data = json.load(file)  
+                    data = json.load(file)
                 values = self.query()
-                username = values["username"].lower()
+                username = values["username"].lower().replace("+", "")
                 if username in data: # checks if the user already exists
-                    hash_password = password_hash(values["password"], data[username][1])
+                    hash_password = password_hash(values["password"].replace("+", ""), data[username][1])
                     self.send_response(200)
                     self.send_header("Content-type", "text/html")
                     if hash_password == data[username][0]: # checks if the password the user put in is the same as the password in the password json file
@@ -622,17 +597,17 @@ class FittnessServer(BaseHTTPRequestHandler):
                 with open("data/passwords.json", "r") as file:
                     data = json.load(file)
                 values = self.query()
-                username = values["username"].lower()
+                username = values["username"].lower().replace("+", "")
                 if username in data: # checks if the user already exist
                     self.redirect("/signin") # if it does take the user to the login page
                     return
-                if len(username) < 3 or len(username) > 24 or values["password"] != values["password-rentry"]: # if it doesnt exist check the legn of the password entered
+                if len(username) < 3 or len(username) > 24 or values["password"].replace("+", "") != values["password-rentry"].replace("+", ""): # if it doesnt exist check the legn of the password entered
                     self.redirect("/signup")
                     return
                 
                 salt = uuid.uuid4().hex
                 
-                hash_password = password_hash(values["password"], salt) # hashes the password the user put in origanly
+                hash_password = password_hash(values["password"].replace("+", ""), salt) # hashes the password the user put in origanly
 
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
@@ -644,9 +619,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 self.set_cookie(username) # sets the cookie to the users username
                 
                 with open("web/html/redirect.html", "r") as file:
-                    self.wfile.write(file.read().replace("url", "/signupqs").encode())
-
-            
+                    self.wfile.write(file.read().replace("url", "/signupqs").encode()) 
 
             case "/signup": # loads the signup pages html
                 self.set_response()
@@ -680,25 +653,27 @@ class FittnessServer(BaseHTTPRequestHandler):
                 if not os.path.exists(f"user_data/{user}.json"): # checks if the users answered the sign up questions
                     self.redirect("/signupquestions")
                     return
-                date = self.get_current_date()
-                
+                date = self.get_current_date()   
 
                 with open("web/html/home.html", "r") as home_file:
                     with open(f"perm_nutrition_log/{user}.json", "r") as perm_nutrition_data_file:
                         perm_nutrition_log = json.load(perm_nutrition_data_file)
 
                     with open(f"user_data/{user}.json", "r") as user_data_file:
-                        user_data = json.load(user_data_file)
-                        
+                        user_data = json.load(user_data_file)         
 
                     now = datetime.datetime.now()
                     startofmonth = datetime.date(now.year, now.month, 1)
-                    month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s')})
-                    
+                    try:
+                        month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s')})
+                    except ValueError as e:
+                        print(f"Windows Erro: {e}")
+                        month_activitys = []
+                        
                     # sets a defult veriable for recent_activity
                     recent_activity = {'resource_state': 2, 'athlete': {'id': 0, 'resource_state': 1}, 'name': 'n/a', 'distance': 0, 'moving_time': 0, 'elapsed_time': 0, 'total_elevation_gain': 0, 'type': 'Run', 'sport_type': 'Run', 'workout_type': 0, 'id': 0, 'start_date': '2023-11-02T07:19:42Z', 'start_date_local': '2023-11-02T18:19:42Z', 'timezone': '(GMT+10:00) Australia/Hobart', 'utc_offset': 39600.0, 'location_city': None, 'location_state': None, 'location_country': None, 'achievement_count': 0, 'kudos_count': 3, 'comment_count': 0, 'athlete_count': 1, 'photo_count': 0, 'map': {'id': 'a10151679572', 'summary_polyline': '', 'resource_state': 2}, 'trainer': False, 'commute': False, 'manual': True, 'private': False, 'visibility': 'everyone', 'flagged': False, 'gear_id': 'g15342740', 'start_latlng': [], 'end_latlng': [], 'average_speed': 3.342, 'max_speed': 0, 'has_heartrate': False, 'heartrate_opt_out': False, 'display_hide_heartrate_option': False, 'upload_id': None, 'external_id': None, 'from_accepted_tag': False, 'pr_count': 0, 'total_photo_count': 0, 'has_kudoed': False}
 
-                    #NOTE ITS EPIC ITS lambda: check if `activity` has a map and summary_polyline
+                    #NOTE ITS EPIC ITS lambda: checks if `activity` has a map and summary_polyline
                     check_map = lambda activity: "map" in activity and "summary_polyline" in activity['map'] and activity['map']['summary_polyline']
 
                     # keeps going back intill it find an activite with a summary polyline
@@ -711,11 +686,14 @@ class FittnessServer(BaseHTTPRequestHandler):
                             emptym += 1
                             startofmonthnext = startofmonth
                             startofmonth = datetime.date(now.year, now.month-emptym, 1)
-                            month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s'), 'befor': startofmonthnext.strftime('%s')})
+                            try:
+                                month_activitys = python.Api.get_user_activites(user, param = {'per_page': 200, 'page': 1, 'after': startofmonth.strftime('%s'), 'before': startofmonthnext.strftime('%s')})
+                            except ValueError as e:
+                                print(f"Windows Erro: {e}")
+                                month_activitys = []
                         else:
                             recent_activity = month_activitys[i]
-                            break
-                      
+                            break              
 
                     cords = []
                     most_north = most_south = most_east = most_west = size = 0
@@ -773,8 +751,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                     month_day, month_length = calendar.monthrange(startofmonth.year, startofmonth.month)
                     day_data = [[0, 0] for _ in range(month_length)]
-
-                    
+               
                     month_distance = 0
                     month_time = 0
                     for activity in month_activitys: # goes throught the last month activites and add there time and distance together
@@ -783,7 +760,7 @@ class FittnessServer(BaseHTTPRequestHandler):
 
                         start_time = datetime.datetime.strptime(activity["start_date_local"], "%Y-%m-%dT%H:%M:%SZ")
                         day = start_time.day-1
-
+                        
                         day_data[day][0] += activity['distance']
                         day_data[day][1] += activity['moving_time']
 
@@ -808,7 +785,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     )
                     self.wfile.write(home_page.encode())
 
-
             case "/logexercise":
                 self.set_response()
                 user = self.get_username()
@@ -820,7 +796,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                 value = self.query()             
                 date = value['workout-date'].split("-")
                 times = value['workout-time'].split("%3A")
-                workout_time = (int(value['workout-hrs'])*3600) + (int(value['workout-mins'])*60) + int(value['workout-secs']) 
+                workout_time = (int(value['workout-hrs'] or "0")*3600) + (int(value['workout-mins'] or "0")*60) + int(value['workout-secs'] or "0") 
                 timestamp = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(times[0]), int(times[1]))
                 
                 # the comment section code for the upload activites section
@@ -850,7 +826,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                     workout_time, value['distance'], value['elev-gain'], value['description'], 0, 0, 
                     int(value['percieved-exertion']), exercises)
 
-
             case "/myprofile":
                 self.set_response()
                 user = self.get_username()
@@ -871,12 +846,15 @@ class FittnessServer(BaseHTTPRequestHandler):
                         .replace("muscle-goals-temp", user_data_pro['muscle_goals'])
                         .replace("cardio-temp", user_data_pro['cardio'])
                     )
-                    for type in user_data_pro['fav_cardio']:
-                        if user_data_pro['fav_cardio']['other'] != '':
-                            type = user_data_pro['fav_cardio']['other']
-                            myprofile_page = myprofile_page.replace("fav-sport-temp", type)
-                        elif user_data_pro['fav_cardio'][type] == True:
-                            myprofile_page = myprofile_page.replace("fav-sport-temp", type)
+                    if user_data_pro['fav_cardio']:
+                        for type in user_data_pro['fav_cardio']:
+                            if user_data_pro['fav_cardio']['other'] != '':
+                                type = user_data_pro['fav_cardio']['other']
+                                myprofile_page = myprofile_page.replace("fav-sport-temp", type)
+                            elif user_data_pro['fav_cardio'][type] == True:
+                                myprofile_page = myprofile_page.replace("fav-sport-temp", type)
+                    else:
+                        myprofile_page = myprofile_page.replace("fav-sport-temp", "N/A")
                     myprofile_page = (myprofile_page.replace("lvl-temp", user_data_pro['level'])
                         .replace("weight-goal-temp", user_data_pro['weight_goal'])
                         .replace("weight-units-temp", user_data_pro['weight-units'])
@@ -915,35 +893,39 @@ class FittnessServer(BaseHTTPRequestHandler):
                 user = self.get_username()
                 with open("web/html/html-template/individual_activitie.html", "r") as file:
                     id = int(self.query()["id"])
-                    for activity in python.Api.get_user_activites(user): # goes through the last 200 activites 
-                        if id == activity["id"]:
-                            activity_page = file.read()
-                            activity_page = (activity_page.replace("template_name", str(activity["name"]))
-                                .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
-                                .replace("template_moving_time", str(round(int(activity["moving_time"])/60, 2)))
-                                .replace("template_elapsed_time", str(round(int(activity["elapsed_time"])/60, 2)))
-                                .replace("template_total_elevation_gain", str(activity["total_elevation_gain"]))
-                                .replace("template_type", str(activity["type"]))
-                                .replace("template_sport_type", str(activity["sport_type"]))
-                                .replace("template_start_date", str(activity["start_date"]).split("T")[0])
-                                .replace("template_kudos_count", str(activity["kudos_count"]))
-                                .replace("template_achievement_count", str(activity["achievement_count"]))
-                                .replace("template_comment_count", str(activity["comment_count"]))
-                                .replace("template_achievement_count", str(activity["achievement_count"]))
-                                .replace("template_athlete_count", str(activity["athlete_count"]))
-                                .replace("template_trainer", str(activity["trainer"]))
-                                .replace("template_commute", str(activity["commute"]))
-                                .replace("template_private", str(activity["private"]))
-                                .replace("template_visibility", str(activity["visibility"].replace("_", " ")))
-                                .replace("template_average_speed", str(activity["average_speed"]))
-                                .replace("template_max_speed", str(activity["max_speed"])))
-                            try:
-                                activity_page = (activity_page.replace("template_elev_high", str(activity["elev_high"]))
-                                    .replace("template_elev_low", str(activity["elev_low"])))
-                            except:
-                                activity_page = (activity_page.replace("template_elev_high", str(0))
-                                    .replace("template_elev_low", str(0)))
-                            self.wfile.write(activity_page.encode())
+                    activity = python.Api.get_user_activity(user, id)
+                    activity_page = file.read()
+                    try:
+                        description = activity["description"]
+                    except AttributeError:
+                        description = "N/A"
+                    activity_page = (activity_page.replace("template_name", str(activity["name"]))
+                        .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
+                        .replace("template_moving_time", str(round(int(activity["moving_time"])/60, 2)))
+                        .replace("template_elapsed_time", str(round(int(activity["elapsed_time"])/60, 2)))
+                        .replace("template_total_elevation_gain", str(activity["total_elevation_gain"]))
+                        .replace("template_type", str(activity["type"]))
+                        .replace("template_sport_type", str(activity["sport_type"]))
+                        .replace("template_start_date", str(activity["start_date"]).split("T")[0])
+                        .replace("template_kudos_count", str(activity["kudos_count"]))
+                        .replace("template_achievement_count", str(activity["achievement_count"]))
+                        .replace("template_comment_count", str(activity["comment_count"]))
+                        .replace("template_achievement_count", str(activity["achievement_count"]))
+                        .replace("template_athlete_count", str(activity["athlete_count"]))
+                        .replace("template_trainer", str(activity["trainer"]))
+                        .replace("template_commute", str(activity["commute"]))
+                        .replace("template_private", str(activity["private"]))
+                        .replace("template_visibility", str(activity["visibility"].replace("_", " ")))
+                        .replace("template_average_speed", str(round((activity["average_speed"]*3.6))))
+                        .replace("template_max_speed", str(round((activity["max_speed"]*3.6))))
+                        .replace("template_description", str(description)))
+                    try:
+                        activity_page = (activity_page.replace("template_elev_high", str(activity["elev_high"]))
+                            .replace("template_elev_low", str(activity["elev_low"])))
+                    except:
+                        activity_page = (activity_page.replace("template_elev_high", str(0))
+                            .replace("template_elev_low", str(0)))
+                    self.wfile.write(activity_page.encode())
 
             case "/signupquestions": # loads the sign up questions
                 self.set_response()
@@ -955,7 +937,6 @@ class FittnessServer(BaseHTTPRequestHandler):
                 user = self.get_username() # get the user username
                 with open(f"user_data/{user}.json", "w") as file:
                     value = self.query()
-                    print(value)
                     goal_cals = calculate_goal_cals(calculate_eer(calculateAge(value["date_of_birth"]), imperial_to_metric_weight(int(value["weight"]), value["weight-units"]), imperial_to_metric_height(int(value["height"]), value["height-units"]), value["sex"], get_pal(str(value["pal"]))), value["weight_goal"])
                     json.dump( # dumps all the info collected from the signup questions into a new file for each user
                     {
@@ -966,8 +947,8 @@ class FittnessServer(BaseHTTPRequestHandler):
                             "running": "fav_cardio_running" == value["fav_cardio"],
                             "cycling": "fav_cardio_cycling" == value["fav_cardio"],
                             "swimming": "fav_cardio_swimming" == value["fav_cardio"],
-                            "other": value["other"].replace("+", " ") if "fav_cardio_other_box" == value["fav_cardio"] else ""
-                        },
+                            "other": (value["other"].replace("+", " ") if "fav_cardio_other_box" == value["fav_cardio"] else ""),
+                        } if "fav_cardio" in value else None,
                         "level":value["level"],
                         "weight_goal": value["weight_goal"],
                         "weight-units": value["weight-units"],
@@ -1058,52 +1039,9 @@ if __name__ == "__main__": # checks if the file is being run localy
     webServer.server_close()
     print("Server stopped.")
 
+
 # TODO
 
-# 1 - only one fav sport    
+# 1 - make a button that connects with strava in my profile
 
-# 2 -
-
-# 3 - fav activity
-
-# 4 - make a button that connects with strava in my profile
-
-# 5 - 
-
-# 6 - uploaded activity description
-
-# 7 - sign up question optinal
-
-# 8 - for oliver magil: website doesnt support short people eg smaller then 100
-
-
-# NOTE
-
-# 1 - add pb list 
-
-# 2 - badges from strava and put on home page 
-
-# 4 - 
-
-# NOTE/BUG/FIXME/TODO
-
-### Think done needs bug testing BUG 
-
-# 1 - Make My Profile look nice
-
-# 2 - when user creates activity the user cant indivully view them
-
-# 3 - add number in cneter of calder circuls
-
-# 4 - Let users signup with a username that has special characters
-
-# 5 - user profile picture
-
-# 6 - add cookie to rember user acctped cookies
-
-
-#NOTE
-"""
-add a pb chart that calculates rate of improvement, prediciton times. thing that emails specific people the session. Pace calculator.
-
-"""
+# 2 - if no activitys log calander breaks

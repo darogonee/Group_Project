@@ -1,4 +1,4 @@
-# NOTE Big help from charliegregg
+# NOTE Big help from Charlie Gregg
 
 from datetime import datetime, timedelta
 import time

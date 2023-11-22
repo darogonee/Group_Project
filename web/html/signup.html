@@ -1,6 +1,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="main.css">
+    <script src="https://kit.fontawesome.com/795a04d998.js" crossorigin="anonymous"></script>
 </head>
 <body class="signup">
     <div class="container">
@@ -14,7 +15,7 @@
     <div class="signin-container">
         <div class="signin">
             <div class="logintext">
-                <h1>Sign Up</h1>
+                <h1 class="login-title">Sign Up</h1>
             </div>
             <div class="loginbody">
                 <form action="/action_signup" method="get">
@@ -25,14 +26,14 @@
                     <br>
                     <div class="input-box">
                         <input type="password" id="password" name="password">
-                        <img src="/images/eyeslash.png" id="toggle-password">
+                        <i class="fa-regular fa-eye-slash" id="toggle-password" style="color:black;"></i>
                     </div>
                     <br>
                     <label for="password-reentry">Re-enter password</label> 
                     <br>
                     <input type="password" id="password-reentry" name="password-rentry">
                     
-                    <p>Already have an account? <a href="signin">Log In</a></p>
+                    <p>Already have an account? <a href="signin" class="noaccount">Log In</a></p>
                     <br>
                     <input type="submit" value="Sign Up" id="signup-bt">
                 </form>
@@ -47,10 +48,10 @@
     showPasswordIcon.addEventListener('click', function () {
         if (passwordInput.type == "text") {
             passwordInput.type = 'password';
-            showPasswordIcon.src = "images/eyeslash.png"
+            showPasswordIcon.className = "fa-regular fa-eye-slash"
         } else{
             passwordInput.type = 'text';
-            showPasswordIcon.src = "images/eye.png"
+            showPasswordIcon.className= "fa-regular fa-eye"
         }
     });
 </script>
