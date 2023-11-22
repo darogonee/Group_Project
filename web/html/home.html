@@ -91,6 +91,8 @@
         <table id="calendar">
           <thead>
             <h3>Training Calendar <i class="fa-solid fa-calendar-days" style="color: #05aeef;"></i></h3>
+            <div class='box blue'></div>The blue reprasent that percent conpaird to the max time<br>
+            <div class='box orange'></div>The orange reprasent that percent conpaird to the max distance
             <tr>
               <td>M
               </td>
@@ -215,10 +217,7 @@
       </a>
     </div>
   </div>
-
 </body>
-
-
 <script>
   // Map
 
@@ -282,13 +281,12 @@
     for (const day of week.children) {
       if (i > 0 && i <= month_data.length) {
         day.innerHTML = `
-
 <div class="progress-bar"  
   style="
     --dist: ${month_data[i - 1][0] / maxDist * 50}%; 
     --time: ${month_data[i - 1][1] / maxTime * 50}%"
 >
-  <div>${month_data[i - 1][0]}m<br>${month_data[i - 1][1]}</div><span>${i}</span>
+  <div class="wid">${(month_data[i - 1][0]/1000).toFixed(1)}km<br>${(month_data[i - 1][1]/60).toFixed(0)}min</div><span>${i}</span>
 </div>`
       }
       i++
