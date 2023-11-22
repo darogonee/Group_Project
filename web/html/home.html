@@ -92,7 +92,8 @@
         <table id="calendar">
           <thead>
             <h3>Training Calendar <i class="fa-solid fa-calendar-days" style="color: #05aeef;"></i></h3>
-
+            <div class='box blue'></div>The blue represents the percent compaired to the max time<br>
+            <div class='box orange'></div>The orange represents the percent compaired to the max distance
             <tr>
               <td>M
               </td>
@@ -198,7 +199,7 @@
         <h3>Last month</h3>
         <h4 class="tittle">Distance: template_lastm_distance</h4>
         <h4 class="tittle">Number of Activities: template_lastm_activities</h4>
-        <h4 class="tittle">Totoal Time: template_lastm_ttime</h4>
+        <h4 class="tittle">Total Time: template_lastm_ttime</h4>
       </div>
     </div>
 
@@ -269,8 +270,8 @@
   month_day = template_month_day
   month_data = template_month_data
 
-  maxDist = 0
-  maxTime = 0
+  maxDist = 0.1
+  maxTime = 0.1
   for (d = 0; d < month_data.length; d++) {
     maxDist = Math.max(maxDist, month_data[d][0])
     maxTime = Math.max(maxTime, month_data[d][1])
