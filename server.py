@@ -81,7 +81,6 @@ class FittnessServer(BaseHTTPRequestHandler):
         if type(response) != type(""):
             response = json.dumps(response)
         self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
-        print("request fulfilled")
 
     def redirect(self, link):
         self.set_response()
@@ -403,10 +402,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                     else:
                         existing_food_log = False
                     
-                try:
+                if "date" in data:
                     if date != data["date"]: # if query date is not date in temp log, 
                         data = {"date":date, "food_log":[]} 
-                except KeyError:
+                else:
                     data = {"date":date, "food_log":[]}
 
                  # if food log with date given in query exists in temp file, add this data to perm file
@@ -892,7 +891,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     for key,value in user_data_pro['equipment'].items():
                         if value:
                             equipment.append(key)
-                    myprofile_page = myprofile_page.replace("equipment-temp", "<br><br>".join(equipment)) # replace equipment-temp with the list created
+                    myprofile_page = myprofile_page.replace("equipment-temp", "<br><br>".join(equipment).replace("-", " ").title()) # replace equipment-temp with the list created
 
                     if python.Api.check(user): # checks if the user has the strava info  
                         myprofile_page = myprofile_page.replace("Strava Api: False", "Strava Api: True")                
@@ -906,9 +905,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                     id = int(self.query()["id"])
                     activity = python.Api.get_user_activity(user, id)
                     activity_page = file.read()
-                    try:
+                    if "description" in activity:
                         description = activity["description"]
-                    except AttributeError:
+                    else:
                         description = "N/A"
                     activity_page = (activity_page.replace("template_name", str(activity["name"]))
                         .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
@@ -1055,10 +1054,3 @@ if __name__ == "__main__": # checks if the file is being run localy
         pass
     webServer.server_close()
     print("Server stopped.")
-
-
-# TODO
-
-# 1 - make a button that connects with strava in my profile
-
-# 2 - if no activitys log calander breaks
