@@ -850,7 +850,10 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
 .wid {
     margin: 8px;
     padding-left: 12px;
+    width: 50px;
+    overflow-x: visible;
 }
+
 h3 {
     display: block;
     font-size: 1.17em;

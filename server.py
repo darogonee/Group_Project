@@ -917,13 +917,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                         .replace("template_visibility", str(activity["visibility"].replace("_", " ")))
                         .replace("template_average_speed", str(round((activity["average_speed"]*3.6))))
                         .replace("template_max_speed", str(round((activity["max_speed"]*3.6))))
-                        .replace("template_description", str(description)))
+                        .replace("template_description", str(description))
+                        .replace("template_profile_img", python.Api.athelete_profile_img(user))
+                        )
                     try:
                         activity_page = (activity_page.replace("template_elev_high", str(activity["elev_high"]))
                             .replace("template_elev_low", str(activity["elev_low"])))
                     except:
                         activity_page = (activity_page.replace("template_elev_high", str(0))
                             .replace("template_elev_low", str(0)))
+                    
                     self.wfile.write(activity_page.encode())
 
             case "/signupquestions": # loads the sign up questions
