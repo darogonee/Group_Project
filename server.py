@@ -15,7 +15,7 @@ from python.polyline_decoder import decode_polyline
 from python.requirements import *
 from datetime import datetime
 
-import time, json, datetime, uuid, os, calendar
+import time, json, datetime, uuid, os, calendar, sys
 import python.Api
 
 MIME_TYPES = {
@@ -37,6 +37,18 @@ food_not_found_alert_script = """
 hostName = "localhost"
 serverPort = 8080
 uuid2user = {}
+
+def get_platform():
+    platforms = {
+        'linux1' : 'Linux',
+        'linux2' : 'Linux',
+        'darwin' : 'OS X',
+        'win32' : 'Windows'
+    }
+    if sys.platform not in platforms:
+        return sys.platform
+    
+    return platforms[sys.platform]
 
 class FittnessServer(BaseHTTPRequestHandler):
     # sets response to 200 (Okay)
@@ -1032,6 +1044,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(file_data)
 
 if __name__ == "__main__": # checks if the file is being run localy  
+    if get_platform() == "Windows":
+        print("Doesn't support Widnows")
+        quit()
     webServer = HTTPServer((hostName, serverPort), FittnessServer)
     print(f"Server started http://{hostName}:{serverPort}")
     try:
