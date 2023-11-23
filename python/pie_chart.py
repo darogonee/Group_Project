@@ -9,10 +9,10 @@ def generate_pie_chart(percentages: list, labels: list, colours: list, image_nam
     y = np.array(percentages)
     fig, ax = plt.subplots()
     ax.pie(y, labels=labels, autopct='%.1f%%', colors=colours, startangle=90, wedgeprops=dict(edgecolor='black', linewidth=2))
-    fig.patch.set_facecolor('none')
+    fig.patch.set_facecolor('none') #transparent
     ax.set_facecolor('none')
     plt.tight_layout()
-    plt.savefig(f'web/images/generated/user_charts/{user}/{image_name}')
+    plt.savefig(f'web/images/generated/user_charts/{user}/{image_name}') # save pie chart to specified path
 
 # create a slider and saves it to a file
 def generate_slider(label: str):
