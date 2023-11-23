@@ -892,7 +892,11 @@ class FittnessServer(BaseHTTPRequestHandler):
                     for key,value in user_data_pro['equipment'].items():
                         if value:
                             equipment.append(key)
+<<<<<<< HEAD
                     myprofile_page = myprofile_page.replace("equipment-temp", "<br><br>".join(equipment).replace("-", " ").title()) # replace equipment-temp with the list created
+=======
+                    myprofile_page = myprofile_page.replace("equipment-temp", "<br><br>".join(equipment)) # replace equipment-temp with the list created
+>>>>>>> 9a3d3034af00ae12d1142eb9fb88f8cc38ae8034
 
                     if python.Api.check(user): # checks if the user has the strava info  
                         myprofile_page = myprofile_page.replace("Strava Api: False", "Strava Api: True")                
