@@ -1,5 +1,5 @@
 '''
-Zamo Fitness App
+Zamo Fitne`s`s App
 Programmed by Oliver Thiessen, Oliver Magill, Alex Tran, and Lewis Clennett
 '''
 
