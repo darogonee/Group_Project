@@ -7,7 +7,7 @@
 }
 
 body {
-    background: #f0f0f0;
+    background: #c1e6ff;
     overflow-x: hidden;
     overscroll-behavior-y: none;
     /* padding: 100px; */
@@ -376,8 +376,9 @@ a {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    color: black;
     background:
-        radial-gradient(closest-side, white 69%, transparent 70% 100%),
+        radial-gradient(closest-side, lightgray 69%, transparent 70% 100%),
         conic-gradient(var(--time-color) var(--time), var(--default-color) var(--time), var(--default-color) calc(100% - var(--dist)), var(--dist-color) 0%);
 }
 
