@@ -81,7 +81,6 @@ class FittnessServer(BaseHTTPRequestHandler):
         if type(response) != type(""):
             response = json.dumps(response)
         self.wfile.write(bytes('{"response":'+response+',"title":"'+content["title"]+'"}',"utf-8"))
-        print("request fulfilled")
 
     def redirect(self, link):
         self.set_response()
@@ -403,10 +402,10 @@ class FittnessServer(BaseHTTPRequestHandler):
                     else:
                         existing_food_log = False
                     
-                try:
+                if "date" in data:
                     if date != data["date"]: # if query date is not date in temp log, 
                         data = {"date":date, "food_log":[]} 
-                except KeyError:
+                else:
                     data = {"date":date, "food_log":[]}
 
                  # if food log with date given in query exists in temp file, add this data to perm file
@@ -906,9 +905,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                     id = int(self.query()["id"])
                     activity = python.Api.get_user_activity(user, id)
                     activity_page = file.read()
-                    try:
+                    if "description" in activity:
                         description = activity["description"]
-                    except AttributeError:
+                    else:
                         description = "N/A"
                     activity_page = (activity_page.replace("template_name", str(activity["name"]))
                         .replace("template_distance", str(round(int(activity["distance"])/1000, 2)))
@@ -1044,9 +1043,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(file_data)
 
 if __name__ == "__main__": # checks if the file is being run localy  
-    if get_platform() == "Windows":
-        print("Doesn't support Widnows")
-        quit()
+    # if get_platform() == "Windows":
+    #     print("Doesn't support Widnows")
+    #     quit()
     webServer = HTTPServer((hostName, serverPort), FittnessServer)
     print(f"Server started http://{hostName}:{serverPort}")
     try:
