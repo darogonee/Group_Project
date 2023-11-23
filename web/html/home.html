@@ -55,7 +55,7 @@
   <div class="dashboard-container">
     <div class="recent-activity home-box">
       <!-- recent exercise stats + map -->
-      <h3>Recent exercise <i class="fa-solid fa-dumbbell" style="color: #05aeef;"></i></h3>
+      <h3>Recent exercise <i class="fa-solid fa-dumbbell" style="color: #05aeef;"></i></h3> <br>
       <div id="map"></div>
       <h4 class="tittle">Activity Type: template_type</h4>
       <h4 class="tittle">Date: template_date</h4>
@@ -64,7 +64,7 @@
     </div>
     <div class="nutrition-box-container">
       <div class="estimated-calories home-box">
-        <h3>Calories <i class="fa-solid fa-fire" style="color: #05aeef;"></i></h3>
+        <h3>Calories <i class="fa-solid fa-fire" style="color: #05aeef;"></i></h3><br><br>
         <div class="radial-progress-container">
           <section class="svg-container">
             <svg class="radial-progress" data-countervalue="60" viewBox="0 0 80 80">
@@ -74,9 +74,10 @@
             </svg>
           </section>
         </div>
+        <br>
         <div>
-          <h3>You have consumed</h3>
-          <h1 id="calorie-percent">N/A %</h1>
+          <h3> You have consumed </h3> 
+          <h1 id="calorie-percent"> N/A % </h1>
           <h3>of your calorie goal</h3>
         </div>
       </div>
@@ -91,8 +92,6 @@
         <table id="calendar">
           <thead>
             <h3>Training Calendar <i class="fa-solid fa-calendar-days" style="color: #05aeef;"></i></h3>
-            <div class='box blue'></div>The blue reprasent that percent conpaird to the max time<br>
-            <div class='box orange'></div>The orange reprasent that percent conpaird to the max distance
             <tr>
               <td>M
               </td>
@@ -193,12 +192,14 @@
             </tr>
           </tbody>
         </table>
+        <div class='box blue'></div>Time<br>
+        <div class='box orange'></div>Distance
       </div>
       <div class="last-month home-box">
         <h3>Last month</h3>
         <h4 class="tittle">Distance: template_lastm_distance</h4>
         <h4 class="tittle">Number of Activities: template_lastm_activities</h4>
-        <h4 class="tittle">Totoal Time: template_lastm_ttime</h4>
+        <h4 class="tittle">Total Time: template_lastm_ttime</h4>
       </div>
     </div>
 
@@ -269,8 +270,8 @@
   month_day = template_month_day
   month_data = template_month_data
 
-  maxDist = 0
-  maxTime = 0
+  maxDist = 0.1
+  maxTime = 0.1
   for (d = 0; d < month_data.length; d++) {
     maxDist = Math.max(maxDist, month_data[d][0])
     maxTime = Math.max(maxTime, month_data[d][1])
@@ -286,7 +287,7 @@
     --dist: ${month_data[i - 1][0] / maxDist * 50}%; 
     --time: ${month_data[i - 1][1] / maxTime * 50}%"
 >
-  <div class="wid">${(month_data[i - 1][0]/1000).toFixed(1)}km<br>${(month_data[i - 1][1]/60).toFixed(0)}min</div><span>${i}</span>
+  <div class="wid">${(month_data[i - 1][0]/1000).toFixed(1)}&nbsp;km<br>${(month_data[i - 1][1]/60).toFixed(0)}&nbsp;min</div><span>&nbsp;${i}</span>
 </div>`
       }
       i++

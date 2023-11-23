@@ -104,7 +104,7 @@
     <br>
 
     <label for="dob" id="inline_label">D.O.B: </label>
-    <input type="date" id="datepicker" name="date_of_birth" onchange="updateDatePicker()" required>
+    <input type="date" id="dob" name="date_of_birth" required>
 
     <br>
 
@@ -257,51 +257,4 @@
     }
   }
 </script>
-
-<script> // set the data
-  function restrictDate() {
-    var selectedDate = new Date(document.getElementById("datepicker").value);
-    var currentDate =  new Date();
-    if (selectedDate > currentDate) {
-      alert("Please enter a date not in the future.");
-      setToday();
-    }
-  }
-
-  function updateDatePicker() {
-            restrictDate()
-            const datePicker = document.getElementById("datepicker");
-            const selectedDate = new Date(datePicker.value);
-            setDatePickerValue(selectedDate);
-        }
-
-        function setDatePickerValue(date) {
-            const datePicker = document.getElementById("datepicker");
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-            datePicker.value = `${year}-${month}-${day}`;
-        }
-
-        function navigateDate(offset) {
-            const datePicker = document.getElementById("datepicker");
-            const currentDate = new Date(datePicker.value);
-            if (offset == 1) {
-              restrictDate()
-            }
-            currentDate.setDate(currentDate.getDate() + offset);
-            setDatePickerValue(currentDate);
-        }
-
-        function setToday() {
-            const today = new Date();
-            setDatePickerValue(today);
-        }
-
-        // Set the initial date to today
-        document.addEventListener("DOMContentLoaded", function () {
-            setToday();
-        });
-</script>
-
 </html>

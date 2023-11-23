@@ -1,7 +1,6 @@
 '''
 Zamo Fitness App
 Programmed by Oliver Thiessen, Oliver Magill, Alex Tran, and Lewis Clennett
-
 '''
 
 # required imports
@@ -896,8 +895,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     activity = python.Api.get_user_activity(user, id)
                     activity_page = file.read()
                     try:
-                        description = activity["description"].replace("{", "") 
-                        description = description.replace("}", "")
+                        description = activity["description"]
                     except AttributeError:
                         description = "N/A"
                     activity_page = (activity_page.replace("template_name", str(activity["name"]))
@@ -919,13 +917,16 @@ class FittnessServer(BaseHTTPRequestHandler):
                         .replace("template_visibility", str(activity["visibility"].replace("_", " ")))
                         .replace("template_average_speed", str(round((activity["average_speed"]*3.6))))
                         .replace("template_max_speed", str(round((activity["max_speed"]*3.6))))
-                        .replace("template_description", description.replace("ZAMO_DATA", "")))
+                        .replace("template_description", str(description))
+                        .replace("template_profile_img", python.Api.athelete_profile_img(user))
+                        )
                     try:
                         activity_page = (activity_page.replace("template_elev_high", str(activity["elev_high"]))
                             .replace("template_elev_low", str(activity["elev_low"])))
                     except:
                         activity_page = (activity_page.replace("template_elev_high", str(0))
                             .replace("template_elev_low", str(0)))
+                    
                     self.wfile.write(activity_page.encode())
 
             case "/signupquestions": # loads the sign up questions
@@ -1045,4 +1046,4 @@ if __name__ == "__main__": # checks if the file is being run localy
 
 # 1 - make a button that connects with strava in my profile
 
-# 2 - 
+# 2 - if no activitys log calander breaks
