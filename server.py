@@ -1043,9 +1043,9 @@ class FittnessServer(BaseHTTPRequestHandler):
                     self.wfile.write(file_data)
 
 if __name__ == "__main__": # checks if the file is being run localy  
-    # if get_platform() == "Windows":
-    #     print("Doesn't support Widnows")
-    #     quit()
+    if get_platform() == "Windows":
+        print("Doesn't support Widnows")
+        quit()
     webServer = HTTPServer((hostName, serverPort), FittnessServer)
     print(f"Server started http://{hostName}:{serverPort}")
     try:
