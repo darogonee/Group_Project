@@ -1,5 +1,5 @@
 '''
-Zamo Fitne`s`s App
+Zamo Fitness App
 Programmed by Oliver Thiessen, Oliver Magill, Alex Tran, and Lewis Clennett
 '''
 
@@ -892,7 +892,7 @@ class FittnessServer(BaseHTTPRequestHandler):
                     for key,value in user_data_pro['equipment'].items():
                         if value:
                             equipment.append(key)
-                    myprofile_page = myprofile_page.replace("equipment-temp", "<br><br>".join(equipment.replace("-", " "))) # replace equipment-temp with the list created
+                    myprofile_page = myprofile_page.replace("equipment-temp", "<br><br>".join(equipment)) # replace equipment-temp with the list created
 
                     if python.Api.check(user): # checks if the user has the strava info  
                         myprofile_page = myprofile_page.replace("Strava Api: False", "Strava Api: True")                
