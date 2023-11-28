@@ -108,7 +108,6 @@ body {
     top: 0;
     z-index: 1001;
     width: calc(100% + 1px);
-
 }
 
 
@@ -532,20 +531,28 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
 
 .cookie-consent-banner_copy {
     margin-bottom: 16px;
+    background-color: white;
+    border-radius: 10px;;
+}
+
+.cookie-consent-banner {
+    background-color: white;
+    border-radius: 10px;
+    position: -webkit-sticky;
+    position: sticky;
+    /* z-index: 100; */
 }
 
 .cookie-consent-banner_header {
     margin-bottom: 8px;
-    font-family: "CeraPRO-Bold", sans-serif, arial;
     font-weight: normal;
     font-size: 16px;
     line-height: 24px;
 }
 
 .cookie-consent-banner_description {
-    font-family: "CeraPRO-Regular", sans-serif, arial;
     font-weight: normal;
-    color: #838F93;
+    color: #000000;
     font-size: 16px;
     line-height: 24px;
 }
@@ -556,28 +563,28 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
     min-width: 164px;
     padding: 11px 13px;
     border-radius: 2px;
-    background-color: #2CE080;
-    color: #FFF;
+    background-color: rgb(3, 255, 3);
+    color: rgb(1, 0, 0);
     text-decoration: none;
     text-align: center;
-    font-family: "CeraPRO-Regular", sans-serif, arial;
     font-weight: normal;
     font-size: 16px;
     line-height: 20px;
+    border: 2px solid black;
 }
 
 .cookie-consent-banner_cta--secondary {
     padding: 9px 13px;
 
-    border: 2px solid #3A4649;
+    border: 2px solid #000000;
 
     background-color: transparent;
 
-    color: #14bbee;
+    color: #02171d;
 }
 
 .cookie-consent-banner_cta:hover {
-    background-color: #20BA68;
+    background-color: #0ade6d;
 }
 
 
@@ -614,7 +621,7 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
 }
 
 #add-to-table, #delete-row, #edit-qs {
-    background-color: #2377ed;
+    background-color: #008CBA;
     color: white;
     border: none;
     padding: 10px 15px;
@@ -623,7 +630,7 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
 }
 
 #add-to-table:hover, #delete-row:hover, #edit-qs:hover{
-    background-color: #4341ae;
+    background-color: #0073a8;
 }
 
 .logexercise input[type="submit"] {
@@ -700,6 +707,11 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
     cursor: pointer;
     border-radius: 5px;
 }
+
+.food_log_container input[type="submit"]:hover {
+    background-color: #0073a8;
+}
+
 
 .food_log_container .border-table {
     border-collapse: collapse;
@@ -811,6 +823,8 @@ section.svg-container:nth-last-of-type(0) svg.radial-progress {
     cursor: pointer;
     margin-top: 20px;
     display: block;
+    opacity: 70;
+    color: lightgray;
 }
 
 .activity-details button:hover {
@@ -861,4 +875,9 @@ h3 {
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     font-weight: bold;
+}
+
+.my-program a{
+    text-decoration: none;
+    color: black;
 }
